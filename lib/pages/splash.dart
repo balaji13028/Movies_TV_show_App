@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:dtlive/pages/bottombar.dart';
@@ -12,32 +13,75 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 class Splash extends StatefulWidget {
-  const Splash({Key? key}) : super(key: key);
+  const Splash({super.key});
 
   @override
   State<Splash> createState() => SplashState();
 }
 
 class SplashState extends State<Splash> {
+  late VideoPlayerController _controller;
+  bool _visible = false;
   String? seen;
   SharedPre sharedPre = SharedPre();
 
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 500)).then((value) {
+    isFirstCheck();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
+    playVideo();
+
+    Future.delayed(const Duration(milliseconds: 3000)).then((value) {
       if (!mounted) return;
-      isFirstCheck();
+      navigator();
     });
     super.initState();
+  }
+
+  playVideo() {
+    _controller = VideoPlayerController.asset("assets/videos/splashVideo.mp4");
+    _controller.initialize().then((_) {
+      _controller.setLooping(false);
+      Timer(const Duration(milliseconds: 100), () {
+        setState(() {
+          _controller.play();
+          _visible = true;
+        });
+        // _controller.addListener(() async {
+        //   checkStatus();
+        // });
+      });
+    });
+  }
+
+  checkStatus() async {
+    if (_controller.value.isCompleted) {
+      await navigator();
+    }
   }
 
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
+    _controller.removeListener(checkStatus);
+    _controller.dispose();
+    _controller;
     super.dispose();
+  }
+
+  _getVideoBackground() {
+    return AnimatedOpacity(
+      opacity: _visible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 1000),
+      child: VideoPlayer(_controller),
+    );
   }
 
   @override
@@ -48,10 +92,11 @@ class SplashState extends State<Splash> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         alignment: Alignment.center,
-        color: appBgColor,
-        child: MyImage(
-          imagePath: (kIsWeb || Constant.isTV) ? "appicon.png" : "splash.png",
-          fit: (kIsWeb || Constant.isTV) ? BoxFit.contain : BoxFit.cover,
+        // color: appBgColor,
+        child: Center(
+          child: _controller.value.isInitialized
+              ? VideoPlayer(_controller)
+              : const CircularProgressIndicator(),
         ),
       ),
     );
@@ -66,35 +111,40 @@ class SplashState extends State<Splash> {
     log('seen ==> $seen');
     log('Constant userID ==> ${Constant.userID}');
     if (!mounted) return;
-    if (kIsWeb || Constant.isTV) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return const TVHome(pageName: "");
-          },
-        ),
-      );
-    } else {
-      if (seen == "1") {
+  }
+
+  navigator() {
+    Future.delayed(const Duration(milliseconds: 0), () {
+      if (kIsWeb || Constant.isTV) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const Bottombar();
+              return const TVHome(pageName: "");
             },
           ),
         );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return const Intro();
-            },
-          ),
-        );
+        if (seen == "1") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const Bottombar();
+              },
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const Intro();
+              },
+            ),
+          );
+        }
       }
-    }
+    });
   }
 }

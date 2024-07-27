@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Intro extends StatefulWidget {
-  const Intro({Key? key}) : super(key: key);
+  const Intro({super.key});
 
   @override
   State<Intro> createState() => IntroState();
@@ -196,7 +196,7 @@ class IntroState extends State<Intro> {
                     minWidth: 0,
                     maxWidth: 170,
                   ),
-                  padding: const EdgeInsets.all(12),
+                  // padding: const EdgeInsets.s(12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: primaryDark,

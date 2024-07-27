@@ -143,6 +143,7 @@ flutter:
   assets: 
     - assets/
     - assets/images/
+    - assets/videos/
     - assets/locales/en.json
     - assets/locales/ar.json
     - assets/locales/hi.json

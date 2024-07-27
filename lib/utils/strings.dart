@@ -1,9 +1,9 @@
 //BottomNavigation START
 const bottomView1 = "Home";
-const bottomView2 = "Find";
-const bottomView3 = "Channels";
-const bottomView4 = "Store";
-const bottomView5 = "My Stuff";
+const bottomView2 = "Live TV";
+const bottomView3 = "TV Show";
+const bottomView4 = "Find";
+const bottomView5 = "Profile";
 const myProfile = "My Profile";
 //BottomNavigation END
 

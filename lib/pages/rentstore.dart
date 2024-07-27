@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dtlive/shimmer/shimmerutils.dart';
 import 'package:dtlive/utils/dimens.dart';
 import 'package:dtlive/webwidget/footerweb.dart';
@@ -16,7 +15,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class RentStore extends StatefulWidget {
-  const RentStore({Key? key}) : super(key: key);
+  const RentStore({super.key});
 
   @override
   State<RentStore> createState() => RentStoreState();
@@ -56,7 +55,7 @@ class RentStoreState extends State<RentStore> {
     } else {
       return Scaffold(
         backgroundColor: appBgColor,
-        appBar: Utils.myAppBar(context, "stor", true),
+        appBar: Utils.myAppBar(context, "Tv Show", true),
         body: SafeArea(
           child: _buildRentStore(),
         ),

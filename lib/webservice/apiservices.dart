@@ -258,11 +258,13 @@ class ApiService {
   Future<SectionTypeModel> sectionType() async {
     SectionTypeModel sectionTypeModel;
     String sectionType = "get_type";
-    Response response = await dio.post(
-      '$baseUrl$sectionType',
-      options: optHeaders,
-    );
-    sectionTypeModel = SectionTypeModel.fromJson(response.data);
+    // Response response = await dio.post(
+    //   '$baseUrl$sectionType',
+    //   options: optHeaders,
+    // );
+    var response;
+    sectionTypeModel =
+        SectionTypeModel.fromJson(response != null ? response.data : {});
     return sectionTypeModel;
   }
 

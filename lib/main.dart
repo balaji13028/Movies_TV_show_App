@@ -180,9 +180,9 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: appBgColor,
           ).copyWith(
             scrollbarTheme: const ScrollbarThemeData().copyWith(
-              thumbColor: MaterialStateProperty.all(white),
-              trackVisibility: MaterialStateProperty.all(true),
-              trackColor: MaterialStateProperty.all(whiteTransparent),
+              thumbColor: WidgetStateProperty.all(white),
+              trackVisibility: WidgetStateProperty.all(true),
+              trackColor: WidgetStateProperty.all(whiteTransparent),
             ),
           ),
           title: Constant.appName ?? "",
