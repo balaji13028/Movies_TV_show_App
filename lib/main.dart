@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dtlive/firebase_options.dart';
 import 'package:dtlive/pages/splash.dart';
+import 'package:dtlive/pagetransition.dart';
 import 'package:dtlive/provider/avatarprovider.dart';
 import 'package:dtlive/provider/castdetailsprovider.dart';
 import 'package:dtlive/provider/channelsectionprovider.dart';
@@ -163,6 +165,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
@@ -204,7 +207,23 @@ class _MyAppState extends State<MyApp> {
               ],
             );
           },
-          home: (kIsWeb) ? const TVHome(pageName: "") : const Splash(),
+          home: AnimatedSplashScreen(
+            curve: Curves.easeOutExpo,
+            splashIconSize: double.infinity,
+            duration: 80, // Duration for splash screen transition
+            splashTransition:
+                SplashTransition.fadeTransition, // Transition type
+            backgroundColor: Colors.white,
+            splash: SizedBox(
+              height: size.height,
+              width: size.width,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            pageTransitionType: PageTransitionType.fade,
+            nextScreen: (kIsWeb) ? const TVHome(pageName: "") : const Splash(),
+          ),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

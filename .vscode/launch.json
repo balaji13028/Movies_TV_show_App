@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Movies_TV_show_App",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Movies_TV_show_App (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Movies_TV_show_App (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "betterplayer",
+            "cwd": "packages\\betterplayer",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "betterplayer (profile mode)",
+            "cwd": "packages\\betterplayer",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "betterplayer (release mode)",
+            "cwd": "packages\\betterplayer",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "podplayer",
+            "cwd": "packages\\podplayer",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "podplayer (profile mode)",
+            "cwd": "packages\\podplayer",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "podplayer (release mode)",
+            "cwd": "packages\\podplayer",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

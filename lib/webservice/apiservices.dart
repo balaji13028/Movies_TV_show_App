@@ -29,6 +29,7 @@ import 'package:dtlive/model/videobyidmodel.dart';
 import 'package:dtlive/model/watchlistmodel.dart';
 import 'package:dtlive/utils/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiService {
   String baseUrl = Constant.baseurl;
@@ -41,15 +42,15 @@ class ApiService {
 
   ApiService() {
     dio = Dio();
-    // dio.interceptors.add(
-    //   PrettyDioLogger(
-    //     requestHeader: true,
-    //     requestBody: true,
-    //     responseBody: true,
-    //     responseHeader: false,
-    //     compact: false,
-    //   ),
-    // );
+    dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        compact: false,
+      ),
+    );
   }
 
   // general_setting API
@@ -258,11 +259,11 @@ class ApiService {
   Future<SectionTypeModel> sectionType() async {
     SectionTypeModel sectionTypeModel;
     String sectionType = "get_type";
-    // Response response = await dio.post(
-    //   '$baseUrl$sectionType',
-    //   options: optHeaders,
-    // );
-    var response;
+    Response response = await dio.post(
+      '$baseUrl$sectionType',
+      options: optHeaders,
+    );
+    // var response;
     sectionTypeModel =
         SectionTypeModel.fromJson(response != null ? response.data : {});
     return sectionTypeModel;
