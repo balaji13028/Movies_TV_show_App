@@ -29,8 +29,9 @@ class ChannelSectionModel {
         code: json["code"],
         status: json["status"],
         message: json["message"],
-        result:
-            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
+        result: json["result"] == null
+            ? []
+            : List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
         liveUrl: json["live_url"] != null
             ? List<LiveUrl>.from(
                 json["live_url"].map((x) => LiveUrl.fromJson(x)))

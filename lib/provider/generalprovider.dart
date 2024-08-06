@@ -44,6 +44,7 @@ class GeneralProvider extends ChangeNotifier {
     loading = true;
     pagesModel = await ApiService().getPages();
     debugPrint("getPages status :==> ${pagesModel.status}");
+    debugPrint("getPages list :==> ${pagesModel.result}");
     loading = false;
     notifyListeners();
   }

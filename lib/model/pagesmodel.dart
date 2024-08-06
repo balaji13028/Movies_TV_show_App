@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // To parse this JSON data, do
 // final pagesModel = pagesModelFromJson(jsonString);
 
@@ -55,4 +56,7 @@ class Result {
         "page_name": pageName,
         "url": url,
       };
+
+  @override
+  String toString() => 'Result(pageName: $pageName, url: $url)';
 }

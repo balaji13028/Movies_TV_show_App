@@ -30,6 +30,7 @@ import 'package:dtlive/provider/videobyidprovider.dart';
 import 'package:dtlive/provider/videodetailsprovider.dart';
 import 'package:dtlive/provider/videodownloadprovider.dart';
 import 'package:dtlive/provider/watchlistprovider.dart';
+import 'package:dtlive/restartapp_wiget.dart';
 import 'package:dtlive/tvpages/tvhome.dart';
 import 'package:dtlive/utils/color.dart';
 import 'package:dtlive/utils/constant.dart';
@@ -112,34 +113,31 @@ Future<void> main() async {
     // });
   }
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AvatarProvider()),
-        ChangeNotifierProvider(create: (_) => CastDetailsProvider()),
-        ChangeNotifierProvider(create: (_) => ChannelSectionProvider()),
-        ChangeNotifierProvider(create: (_) => EpisodeProvider()),
-        ChangeNotifierProvider(create: (_) => FindProvider()),
-        ChangeNotifierProvider(create: (_) => GeneralProvider()),
-        ChangeNotifierProvider(create: (_) => HomeProvider()),
-        ChangeNotifierProvider(create: (_) => PaymentProvider()),
-        ChangeNotifierProvider(create: (_) => PlayerProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileProvider()),
-        ChangeNotifierProvider(create: (_) => PurchaselistProvider()),
-        ChangeNotifierProvider(create: (_) => RentStoreProvider()),
-        ChangeNotifierProvider(create: (_) => SearchProvider()),
-        ChangeNotifierProvider(create: (_) => SectionByTypeProvider()),
-        ChangeNotifierProvider(create: (_) => SectionDataProvider()),
-        ChangeNotifierProvider(create: (_) => ShowDownloadProvider()),
-        ChangeNotifierProvider(create: (_) => ShowDetailsProvider()),
-        ChangeNotifierProvider(create: (_) => SubHistoryProvider()),
-        ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
-        ChangeNotifierProvider(create: (_) => VideoByIDProvider()),
-        ChangeNotifierProvider(create: (_) => VideoDetailsProvider()),
-        ChangeNotifierProvider(create: (_) => VideoDownloadProvider()),
-        ChangeNotifierProvider(create: (_) => WatchlistProvider()),
-      ],
-      child: const MyApp(),
-    ),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => AvatarProvider()),
+      ChangeNotifierProvider(create: (_) => CastDetailsProvider()),
+      ChangeNotifierProvider(create: (_) => ChannelSectionProvider()),
+      ChangeNotifierProvider(create: (_) => EpisodeProvider()),
+      ChangeNotifierProvider(create: (_) => FindProvider()),
+      ChangeNotifierProvider(create: (_) => GeneralProvider()),
+      ChangeNotifierProvider(create: (_) => HomeProvider()),
+      ChangeNotifierProvider(create: (_) => PaymentProvider()),
+      ChangeNotifierProvider(create: (_) => PlayerProvider()),
+      ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ChangeNotifierProvider(create: (_) => PurchaselistProvider()),
+      ChangeNotifierProvider(create: (_) => RentStoreProvider()),
+      ChangeNotifierProvider(create: (_) => SearchProvider()),
+      ChangeNotifierProvider(create: (_) => SectionByTypeProvider()),
+      ChangeNotifierProvider(create: (_) => SectionDataProvider()),
+      ChangeNotifierProvider(create: (_) => ShowDownloadProvider()),
+      ChangeNotifierProvider(create: (_) => ShowDetailsProvider()),
+      ChangeNotifierProvider(create: (_) => SubHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
+      ChangeNotifierProvider(create: (_) => VideoByIDProvider()),
+      ChangeNotifierProvider(create: (_) => VideoDetailsProvider()),
+      ChangeNotifierProvider(create: (_) => VideoDownloadProvider()),
+      ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+    ], child: const RestartWidget(child: MyApp())),
   );
 }
 
@@ -153,14 +151,34 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     if (!kIsWeb) Utils.enableScreenCapture();
     if (!kIsWeb) _getDeviceInfo();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  late AppLifecycleState previewsSate;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('state = $state');
+    if (state == AppLifecycleState.resumed &&
+            previewsSate == AppLifecycleState.detached ||
+        previewsSate == AppLifecycleState.inactive) {
+      return RestartWidget.restartApp(context);
+    }
+    // if(app)
   }
 
   @override
@@ -242,8 +260,11 @@ class _MyAppState extends State<MyApp> {
     if (Platform.isAndroid) {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      Constant.isTV =
+      bool isTv =
           androidInfo.systemFeatures.contains('android.software.leanback');
+      setState(() {
+        Constant.isTV = isTv;
+      });
       log("isTV =======================> ${Constant.isTV}");
     }
   }

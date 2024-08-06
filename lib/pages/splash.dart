@@ -50,21 +50,39 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   }
 
   playVideo() {
-    _controller = VideoPlayerController.asset(Constant.isTV
-        ? 'assets/videos/tv_splash_video.mp4'
-        : "assets/videos/mobile_splash_video.mp4");
-    _controller.initialize().then((_) {
-      _controller.setLooping(false);
-      Timer(const Duration(milliseconds: 100), () {
-        setState(() {
-          _controller.play();
-          _visible = true;
-        });
-        _controller.addListener(() async {
-          // checkStatus();
+    print('is tv');
+    if (Constant.isTV) {
+      print('is tv');
+      _controller =
+          VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
+      _controller.initialize().then((_) {
+        _controller.setLooping(false);
+        Timer(const Duration(milliseconds: 100), () {
+          setState(() {
+            _controller.play();
+            _visible = true;
+          });
+          _controller.addListener(() async {
+            // checkStatus();
+          });
         });
       });
-    });
+    } else {
+      _controller =
+          VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
+      _controller.initialize().then((_) {
+        _controller.setLooping(false);
+        Timer(const Duration(milliseconds: 100), () {
+          setState(() {
+            _controller.play();
+            _visible = true;
+          });
+          _controller.addListener(() async {
+            // checkStatus();
+          });
+        });
+      });
+    }
   }
 
   // checkStatus() async {
