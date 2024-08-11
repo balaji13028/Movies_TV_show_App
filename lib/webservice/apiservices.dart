@@ -54,15 +54,22 @@ class ApiService {
   }
 
   // general_setting API
-  Future<GeneralSettingModel> genaralSetting() async {
+  Future<GeneralSettingModel?> genaralSetting() async {
     GeneralSettingModel generalSettingModel;
     String generalsetting = "general_setting";
-    Response response = await dio.post(
-      '$baseUrl$generalsetting',
-      options: optHeaders,
-    );
-    generalSettingModel = GeneralSettingModel.fromJson(response.data);
-    return generalSettingModel;
+    try {
+      Response response = await dio.post(
+        '$baseUrl$generalsetting',
+        options: optHeaders,
+      );
+      log(response.toString());
+      generalSettingModel = GeneralSettingModel.fromJson(response.data);
+
+      return generalSettingModel;
+    } catch (e) {
+      // print(e);
+    }
+    return null;
   }
 
   // get_pages API

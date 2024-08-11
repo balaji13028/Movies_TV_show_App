@@ -22,19 +22,22 @@ class GeneralProvider extends ChangeNotifier {
 
   Future<void> getGeneralsetting() async {
     loading = true;
-    generalSettingModel = await ApiService().genaralSetting();
-    debugPrint("genaral_setting status :==> ${generalSettingModel.status}");
-    loading = false;
-    debugPrint('generalSettingData status ==> ${generalSettingModel.status}');
-    if (generalSettingModel.status == 200) {
-      if (generalSettingModel.result != null) {
-        for (var i = 0; i < (generalSettingModel.result?.length ?? 0); i++) {
-          await sharedPre.save(
-            generalSettingModel.result?[i].key.toString() ?? "",
-            generalSettingModel.result?[i].value.toString() ?? "",
-          );
-          debugPrint(
-              '${generalSettingModel.result?[i].key.toString()} ==> ${generalSettingModel.result?[i].value.toString()}');
+    var data = await ApiService().genaralSetting();
+    if (data != null) {
+      generalSettingModel = data;
+      debugPrint("genaral_setting status :==> ${generalSettingModel.status}");
+      loading = false;
+      debugPrint('generalSettingData status ==> ${generalSettingModel.status}');
+      if (generalSettingModel.status == 200) {
+        if (generalSettingModel.result != null) {
+          for (var i = 0; i < (generalSettingModel.result?.length ?? 0); i++) {
+            await sharedPre.save(
+              generalSettingModel.result?[i].key.toString() ?? "",
+              generalSettingModel.result?[i].value.toString() ?? "",
+            );
+            debugPrint(
+                '${generalSettingModel.result?[i].key.toString()} ==> ${generalSettingModel.result?[i].value.toString()}');
+          }
         }
       }
     }

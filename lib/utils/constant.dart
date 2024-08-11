@@ -1,7 +1,7 @@
 import 'package:dtlive/model/subtitlemodel.dart';
 
 class Constant {
-  static const String baseurl = 'https://media9tv.com/public/api/';
+  static const String baseurl = 'https://media9tv.com/api/';
 
   static String? appName = "Media9";
   static String? appPackageName = "com.divinetechs.dtlive";
