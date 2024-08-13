@@ -30,7 +30,7 @@ import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:provider/provider.dart';
-import 'package:razorpay_web/razorpay_web.dart';
+// import 'package:razorpay_web/razorpay_web.dart';
 
 final bool _kAutoConsume = Platform.isIOS || true;
 
@@ -1163,75 +1163,75 @@ class AllPaymentState extends State<AllPayment> {
 
   /* ********* Razorpay START ********* */
   void _initializeRazorpay() {
-    if (paymentProvider.paymentOptionModel.result?.razorpay != null) {
-      Razorpay razorpay = Razorpay();
-      var options = {
-        'key':
-            paymentProvider.paymentOptionModel.result?.razorpay?.isLive == "1"
-                ? paymentProvider
-                        .paymentOptionModel.result?.razorpay?.liveKey1 ??
-                    ""
-                : paymentProvider
-                        .paymentOptionModel.result?.razorpay?.testKey1 ??
-                    "",
-        'currency': Constant.currency,
-        'amount': (double.parse(paymentProvider.finalAmount ?? "") * 100),
-        'name': widget.itemTitle ?? "",
-        'description': widget.itemTitle ?? "",
-        'retry': {'enabled': true, 'max_count': 1},
-        'send_sms_hash': true,
-        'prefill': {'contact': userMobileNo, 'email': userEmail},
-        'external': {
-          'wallets': ['paytm']
-        }
-      };
-      razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
-      razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
-      razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
+    // if (paymentProvider.paymentOptionModel.result?.razorpay != null) {
+    //   Razorpay razorpay = Razorpay();
+    //   var options = {
+    //     'key':
+    //         paymentProvider.paymentOptionModel.result?.razorpay?.isLive == "1"
+    //             ? paymentProvider
+    //                     .paymentOptionModel.result?.razorpay?.liveKey1 ??
+    //                 ""
+    //             : paymentProvider
+    //                     .paymentOptionModel.result?.razorpay?.testKey1 ??
+    //                 "",
+    //     'currency': Constant.currency,
+    //     'amount': (double.parse(paymentProvider.finalAmount ?? "") * 100),
+    //     'name': widget.itemTitle ?? "",
+    //     'description': widget.itemTitle ?? "",
+    //     'retry': {'enabled': true, 'max_count': 1},
+    //     'send_sms_hash': true,
+    //     'prefill': {'contact': userMobileNo, 'email': userEmail},
+    //     'external': {
+    //       'wallets': ['paytm']
+    //     }
+    //   };
+    //   razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
+    //   razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
+    //   razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
 
-      try {
-        razorpay.open(options);
-      } catch (e) {
-        debugPrint('Razorpay Error :=========> $e');
-      }
-    } else {
-      Utils.showSnackbar(context, "", "payment_not_processed", true);
-    }
+    //   try {
+    //     razorpay.open(options);
+    //   } catch (e) {
+    //     debugPrint('Razorpay Error :=========> $e');
+    //   }
+    // } else {
+    //   Utils.showSnackbar(context, "", "payment_not_processed", true);
+    // }
   }
 
-  void handlePaymentErrorResponse(PaymentFailureResponse response) async {
-    /*
-    * PaymentFailureResponse contains three values:
-    * 1. Error Code
-    * 2. Error Description
-    * 3. Metadata
-    * */
-    Utils.showSnackbar(context, "fail", "payment_fail", true);
-    await paymentProvider.setCurrentPayment("");
-  }
+  // void handlePaymentErrorResponse(PaymentFailureResponse response) async {
+  //   /*
+  //   * PaymentFailureResponse contains three values:
+  //   * 1. Error Code
+  //   * 2. Error Description
+  //   * 3. Metadata
+  //   * */
+  //   Utils.showSnackbar(context, "fail", "payment_fail", true);
+  //   await paymentProvider.setCurrentPayment("");
+  // }
 
-  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    /*
-    * Payment Success Response contains three values:
-    * 1. Order ID
-    * 2. Payment ID
-    * 3. Signature
-    * */
-    // paymentId = response.paymentId;
-    debugPrint("paymentId ========> $paymentId");
-    Utils.showSnackbar(context, "success", "payment_success", true);
-    if (widget.payType == "Package") {
-      addTransaction(widget.itemId, widget.itemTitle,
-          paymentProvider.finalAmount, paymentId, widget.currency);
-    } else if (widget.payType == "Rent") {
-      addRentTransaction(widget.itemId, paymentProvider.finalAmount,
-          widget.typeId, widget.videoType);
-    }
-  }
+  // void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+  //   /*
+  //   * Payment Success Response contains three values:
+  //   * 1. Order ID
+  //   * 2. Payment ID
+  //   * 3. Signature
+  //   * */
+  //   // paymentId = response.paymentId;
+  //   debugPrint("paymentId ========> $paymentId");
+  //   Utils.showSnackbar(context, "success", "payment_success", true);
+  //   if (widget.payType == "Package") {
+  //     addTransaction(widget.itemId, widget.itemTitle,
+  //         paymentProvider.finalAmount, paymentId, widget.currency);
+  //   } else if (widget.payType == "Rent") {
+  //     addRentTransaction(widget.itemId, paymentProvider.finalAmount,
+  //         widget.typeId, widget.videoType);
+  //   }
+  // }
 
-  void handleExternalWalletSelected(ExternalWalletResponse response) {
-    debugPrint("============ External Wallet Selected ============");
-  }
+  // void handleExternalWalletSelected(ExternalWalletResponse response) {
+  //   debugPrint("============ External Wallet Selected ============");
+  // }
   /* ********* Razorpay END ********* */
 
   /* ********* Paytm START ********* */

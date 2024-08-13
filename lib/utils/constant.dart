@@ -45,6 +45,6 @@ class Constant {
   static int fixFourDigit = 1317;
   static int fixSixDigit = 161613;
 
-  static int bannerDuration = 10000; // in milliseconds
+  static int bannerDuration = 5000; // in milliseconds
   static int animationDuration = 800; // in milliseconds
 }

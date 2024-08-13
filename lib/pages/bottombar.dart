@@ -1,16 +1,21 @@
 import 'dart:io';
 
+import 'package:dtlive/model/rentmodel.dart';
 import 'package:dtlive/pages/channels.dart';
 import 'package:dtlive/pages/find.dart';
 import 'package:dtlive/pages/home.dart';
+import 'package:dtlive/pages/live_tv.dart';
 import 'package:dtlive/pages/setting.dart';
 import 'package:dtlive/pages/rentstore.dart';
+import 'package:dtlive/pages/tv_shows.dart';
+import 'package:dtlive/provider/bottombar_provider.dart';
 import 'package:dtlive/utils/color.dart';
 import 'package:dtlive/utils/strings.dart';
 import 'package:dtlive/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class Bottombar extends StatefulWidget {
   const Bottombar({super.key});
@@ -20,25 +25,27 @@ class Bottombar extends StatefulWidget {
 }
 
 class BottombarState extends State<Bottombar> {
+  // late BottombarProvider bottomPRovider;
   int selectedIndex = 0;
   DateTime? currentBackPressTime;
 
   static List<Widget> widgetOptions = <Widget>[
     const Home(pageName: ""),
-    const Channels(),
-    const RentStore(),
+    const LiveTv(),
+    const TvShows(),
     const Find(),
     const Setting(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bottomPRovider = Provider.of<BottombarProvider>(context);
+    selectedIndex = bottomPRovider.selectdindex;
     return Scaffold(
       body: Center(
         child: widgetOptions[selectedIndex],
@@ -158,7 +165,9 @@ class BottombarState extends State<Bottombar> {
               ),
             ),
           ],
-          onTap: _onItemTapped,
+          onTap: (index) async {
+            bottomPRovider.onItemTapped(index);
+          },
         ),
       ),
     );
@@ -189,7 +198,7 @@ class BottombarState extends State<Bottombar> {
       SystemNavigator.pop();
       return Future.value(true);
     } else {
-      _onItemTapped(0);
+      // bottomPRovider.onItemTapped(0);
       return Future.value(false);
     }
   }

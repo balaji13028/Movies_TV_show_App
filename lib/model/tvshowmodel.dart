@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ShowTvmodel {
+class TvShowModel {
   int? id;
   String? title;
   String? description;
@@ -15,7 +15,7 @@ class ShowTvmodel {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  ShowTvmodel({
+  TvShowModel({
     this.id,
     this.title,
     this.description,
@@ -47,8 +47,8 @@ class ShowTvmodel {
     };
   }
 
-  factory ShowTvmodel.fromMap(Map<String, dynamic> map) {
-    return ShowTvmodel(
+  factory TvShowModel.fromMap(Map<String, dynamic> map) {
+    return TvShowModel(
       id: map['id'] != null ? map['id'] as int : null,
       title: map['title'] != null ? map['title'] as String : null,
       description:
@@ -70,9 +70,4 @@ class ShowTvmodel {
           : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory ShowTvmodel.fromJson(String source) =>
-      ShowTvmodel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

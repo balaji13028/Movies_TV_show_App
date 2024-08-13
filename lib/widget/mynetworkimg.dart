@@ -9,12 +9,11 @@ class MyNetworkImage extends StatelessWidget {
   dynamic fit;
 
   MyNetworkImage(
-      {Key? key,
+      {super.key,
       required this.imageUrl,
       required this.fit,
       this.imgHeight,
-      this.imgWidth})
-      : super(key: key);
+      this.imgWidth});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class MyNetworkImage extends StatelessWidget {
       height: imgHeight,
       width: imgWidth,
       child: CachedNetworkImage(
-        imageUrl: imageUrl,
+        imageUrl: 'https://media9tv.com/storage/$imageUrl',
         fit: fit,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
@@ -36,9 +35,8 @@ class MyNetworkImage extends StatelessWidget {
           return MyImage(
             width: imgWidth,
             height: imgHeight,
-            imagePath: imageUrl.contains('land_')
-                ? "no_image_land.png"
-                : "no_image_port.png",
+            imagePath:
+                imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
             fit: BoxFit.cover,
           );
         },
@@ -46,10 +44,9 @@ class MyNetworkImage extends StatelessWidget {
           return MyImage(
             width: imgWidth,
             height: imgHeight,
-            imagePath: imageUrl.contains('land_')
-                ? "no_image_land.png"
-                : "no_image_port.png",
-            fit: BoxFit.cover,
+            imagePath:
+                imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
+            fit: BoxFit.contain,
           );
         },
       ),

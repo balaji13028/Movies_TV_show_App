@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,9 +7,11 @@ import 'package:dtlive/model/avatarmodel.dart';
 import 'package:dtlive/model/castdetailmodel.dart';
 import 'package:dtlive/model/couponmodel.dart';
 import 'package:dtlive/model/historymodel.dart';
+import 'package:dtlive/model/live_tv_model.dart';
 import 'package:dtlive/model/pagesmodel.dart';
 import 'package:dtlive/model/paymentoptionmodel.dart';
 import 'package:dtlive/model/paytmmodel.dart';
+import 'package:dtlive/model/slides_model.dart';
 import 'package:dtlive/model/sociallinkmodel.dart';
 import 'package:dtlive/model/subscriptionmodel.dart';
 import 'package:dtlive/model/channelsectionmodel.dart';
@@ -25,6 +28,7 @@ import 'package:dtlive/model/sectiondetailmodel.dart';
 import 'package:dtlive/model/sectionlistmodel.dart';
 import 'package:dtlive/model/sectiontypemodel.dart';
 import 'package:dtlive/model/successmodel.dart';
+import 'package:dtlive/model/tvshowmodel.dart';
 import 'package:dtlive/model/videobyidmodel.dart';
 import 'package:dtlive/model/watchlistmodel.dart';
 import 'package:dtlive/utils/constant.dart';
@@ -775,5 +779,97 @@ class ApiService {
     );
     historyModel = HistoryModel.fromJson(response.data);
     return historyModel;
+  }
+
+  ///Tv shows list
+  Future<List<TvShowModel>?> getTvvShowsList() async {
+    try {
+      String rentList = "show-tv";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => TvShowModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///Live tv list
+  Future<List<LiveTvModel>?> getLiveTvList() async {
+    try {
+      String rentList = "live-tv";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => LiveTvModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///homepage list of live tv and show tv list
+  Future getHomeScreenList() async {
+    try {
+      String home = "get-livetv-tvshow-homepage";
+      Response response = await dio.get(
+        '$baseUrl$home',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.data['data'];
+        //  list.map((item) => LiveTvModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Slides list
+  Future<List<SlidesModel>?> getSlidesList() async {
+    try {
+      String rentList = "slides";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => SlidesModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }

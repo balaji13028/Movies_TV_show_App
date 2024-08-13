@@ -8,12 +8,14 @@ import 'package:dtlive/firebase_options.dart';
 import 'package:dtlive/pages/splash.dart';
 import 'package:dtlive/pagetransition.dart';
 import 'package:dtlive/provider/avatarprovider.dart';
+import 'package:dtlive/provider/bottombar_provider.dart';
 import 'package:dtlive/provider/castdetailsprovider.dart';
 import 'package:dtlive/provider/channelsectionprovider.dart';
 import 'package:dtlive/provider/episodeprovider.dart';
 import 'package:dtlive/provider/findprovider.dart';
 import 'package:dtlive/provider/generalprovider.dart';
 import 'package:dtlive/provider/homeprovider.dart';
+import 'package:dtlive/provider/livetv_provider.dart';
 import 'package:dtlive/provider/paymentprovider.dart';
 import 'package:dtlive/provider/playerprovider.dart';
 import 'package:dtlive/provider/profileprovider.dart';
@@ -24,8 +26,10 @@ import 'package:dtlive/provider/sectionbytypeprovider.dart';
 import 'package:dtlive/provider/sectiondataprovider.dart';
 import 'package:dtlive/provider/showdetailsprovider.dart';
 import 'package:dtlive/provider/showdownloadprovider.dart';
+import 'package:dtlive/provider/slides_provider.dart';
 import 'package:dtlive/provider/subhistoryprovider.dart';
 import 'package:dtlive/provider/subscriptionprovider.dart';
+import 'package:dtlive/provider/tv_showprovider.dart';
 import 'package:dtlive/provider/videobyidprovider.dart';
 import 'package:dtlive/provider/videodetailsprovider.dart';
 import 'package:dtlive/provider/videodownloadprovider.dart';
@@ -45,7 +49,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb) {
     await FlutterDownloader.initialize();
@@ -137,6 +141,10 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => VideoDetailsProvider()),
       ChangeNotifierProvider(create: (_) => VideoDownloadProvider()),
       ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+      ChangeNotifierProvider(create: (_) => TvShowprovider()),
+      ChangeNotifierProvider(create: (_) => LivetvProvider()),
+      ChangeNotifierProvider(create: (_) => SlidesProvider()),
+      ChangeNotifierProvider(create: (_) => BottombarProvider()),
     ], child: const RestartWidget(child: MyApp())),
   );
 }
