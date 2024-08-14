@@ -88,7 +88,21 @@ class _TvShowsState extends State<TvShows> {
                     itemBuilder: (BuildContext context, int position) {
                       return InkWell(
                         borderRadius: BorderRadius.circular(4),
-                        onTap: () {},
+                        onTap: () async {
+                          dynamic isContinue = await Utils.openPlayer(
+                            context: context,
+                            playType: "Video",
+                            // videoId: ,
+                            // typeId: vTypeID,
+                            otherId: 0,
+                            videoUrl: tvShowprovider.tvshows[position].source
+                                .toString(),
+                            // trailerUrl: vUrl,
+                            uploadType: 'youtube',
+                            // videoThumb: videoThumb,
+                            // vStopTime: stopTime,
+                          );
+                        },
                         child: Container(
                             clipBehavior: Clip.hardEdge,
                             decoration: BoxDecoration(

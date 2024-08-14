@@ -506,7 +506,7 @@ class HomeState extends State<Home> {
                       ],
                       if (homeProvider.tvshowsList.isNotEmpty) ...[
                         Column(children: [
-                          /* Live Tv list */
+                          /* tvShows  list */
                           const SizedBox(height: 25),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -551,7 +551,22 @@ class HomeState extends State<Home> {
                             itemBuilder: (BuildContext context, int position) {
                               return InkWell(
                                 borderRadius: BorderRadius.circular(4),
-                                onTap: () {},
+                                onTap: () async {
+                                  dynamic isContinue = await Utils.openPlayer(
+                                    context: context,
+                                    playType: "Video",
+                                    // videoId: ,
+                                    // typeId: vTypeID,
+                                    otherId: 0,
+                                    videoUrl: homeProvider
+                                        .tvshowsList[position].source
+                                        .toString(),
+                                    // trailerUrl: vUrl,
+                                    uploadType: 'youtube',
+                                    // videoThumb: videoThumb,
+                                    // vStopTime: stopTime,
+                                  );
+                                },
                                 child: Container(
                                     clipBehavior: Clip.hardEdge,
                                     decoration: BoxDecoration(

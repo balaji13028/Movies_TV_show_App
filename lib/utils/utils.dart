@@ -231,15 +231,15 @@ class Utils {
   static Future<dynamic> openPlayer({
     required BuildContext context,
     required String? playType,
-    required int? videoId,
-    required int? videoType,
-    required int? typeId,
-    required int? otherId,
+    int? videoId,
+    int? videoType,
+    int? typeId,
+    int? otherId,
     required String? videoUrl,
-    required String? trailerUrl,
+    String? trailerUrl,
     required String? uploadType,
-    required String? videoThumb,
-    required int? vStopTime,
+    String? videoThumb,
+    int? vStopTime,
   }) async {
     dynamic isContinue;
     int? vID = (videoId ?? 0);

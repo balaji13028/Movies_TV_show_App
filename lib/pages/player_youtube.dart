@@ -23,8 +23,7 @@ class PlayerYoutube extends StatefulWidget {
       this.stopTime,
       this.vUploadType,
       this.videoThumb,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   State<PlayerYoutube> createState() => PlayerYoutubeState();
@@ -68,7 +67,7 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
       ),
     );
 
-    Future.delayed(Duration.zero).then((value) {
+    Future.delayed(const Duration(microseconds: 200)).then((value) {
       if (!mounted) return;
       setState(() {});
     });
