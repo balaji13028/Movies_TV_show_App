@@ -36,7 +36,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class TVHome extends StatefulWidget {
   final String? pageName;
-  const TVHome({Key? key, required this.pageName}) : super(key: key);
+  const TVHome({super.key, required this.pageName});
 
   @override
   State<TVHome> createState() => TVHomeState();
@@ -164,8 +164,8 @@ class TVHomeState extends State<TVHome> {
 
   Widget _clickToRedirect({required String pageName}) {
     switch (pageName) {
-      case "channel":
-        return const TVChannels();
+      // case "channel":
+      //   return const TVChannels();
       case "store":
         return const TVRentStore();
       case "search":
@@ -272,9 +272,9 @@ class TVHomeState extends State<TVHome> {
                             elevation: 8,
                           ),
                           menuItemStyleData: MenuItemStyleData(
-                            overlayColor: MaterialStateProperty.resolveWith(
+                            overlayColor: WidgetStateProperty.resolveWith(
                               (states) {
-                                if (states.contains(MaterialState.focused)) {
+                                if (states.contains(WidgetState.focused)) {
                                   return white.withOpacity(0.5);
                                 }
                                 return transparentColor;
@@ -284,12 +284,12 @@ class TVHomeState extends State<TVHome> {
                           buttonStyleData: ButtonStyleData(
                             decoration: Utils.setBGWithBorder(
                                 transparentColor, white, 20, 1),
-                            overlayColor: MaterialStateProperty.resolveWith(
+                            overlayColor: WidgetStateProperty.resolveWith(
                               (states) {
-                                if (states.contains(MaterialState.focused)) {
+                                if (states.contains(WidgetState.focused)) {
                                   return white.withOpacity(0.5);
                                 }
-                                if (states.contains(MaterialState.hovered)) {
+                                if (states.contains(WidgetState.hovered)) {
                                   return white.withOpacity(0.5);
                                 }
                                 return transparentColor;

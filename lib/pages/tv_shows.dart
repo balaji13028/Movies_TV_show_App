@@ -89,19 +89,24 @@ class _TvShowsState extends State<TvShows> {
                       return InkWell(
                         borderRadius: BorderRadius.circular(4),
                         onTap: () async {
-                          dynamic isContinue = await Utils.openPlayer(
-                            context: context,
-                            playType: "Video",
-                            // videoId: ,
-                            // typeId: vTypeID,
-                            otherId: 0,
-                            videoUrl: tvShowprovider.tvshows[position].source
-                                .toString(),
-                            // trailerUrl: vUrl,
-                            uploadType: 'youtube',
-                            // videoThumb: videoThumb,
-                            // vStopTime: stopTime,
-                          );
+                          try {
+                            await Utils.openPlayer(
+                              context: context,
+                              playType: "Video",
+                              // videoId: ,
+                              // typeId: vTypeID,
+                              otherId: 0,
+                              videoUrl: tvShowprovider.tvshows[position].source
+                                  .toString(),
+                              // trailerUrl: vUrl,
+                              uploadType: 'youtube',
+                              // videoThumb: videoThumb,
+                              // vStopTime: stopTime,
+                            );
+                          } catch (e) {
+                            Utils.showSnackbar(
+                                context, "", "In correct video format", true);
+                          }
                         },
                         child: Container(
                             clipBehavior: Clip.hardEdge,
@@ -114,9 +119,9 @@ class _TvShowsState extends State<TvShows> {
                               imageUrl: tvShowprovider
                                   .tvshows[position].thumbnail
                                   .toString(),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               imgHeight:
-                                  MediaQuery.of(context).size.height * 0.24,
+                                  MediaQuery.of(context).size.height * 0.18,
                               imgWidth: MediaQuery.of(context).size.width,
                             )),
                       );

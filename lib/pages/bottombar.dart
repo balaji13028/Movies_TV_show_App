@@ -33,7 +33,7 @@ class BottombarState extends State<Bottombar> {
     const Home(pageName: ""),
     const LiveTv(),
     const TvShows(),
-    const Find(),
+    // const Find(),
     const Setting(),
   ];
 
@@ -130,27 +130,27 @@ class BottombarState extends State<Bottombar> {
                     width: 27),
               ),
             ),
-            BottomNavigationBarItem(
-              backgroundColor: black,
-              label: bottomView4,
-              activeIcon: Padding(
-                padding: const EdgeInsets.only(bottom: 9),
-                child: _buildBottomNavIcon(
-                    iconName: 'ic_find', iconColor: primaryColor),
-              ),
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 9),
-                child:
-                    _buildBottomNavIcon(iconName: 'ic_find', iconColor: gray),
-              ),
-            ),
+            // BottomNavigationBarItem(
+            //   backgroundColor: black,
+            //   label: bottomView4,
+            //   activeIcon: Padding(
+            //     padding: const EdgeInsets.only(bottom: 9),
+            //     child: _buildBottomNavIcon(
+            //         iconName: 'ic_find', iconColor: primaryColor),
+            //   ),
+            //   icon: Padding(
+            //     padding: const EdgeInsets.only(bottom: 9),
+            //     child:
+            //         _buildBottomNavIcon(iconName: 'ic_find', iconColor: gray),
+            //   ),
+            // ),
             BottomNavigationBarItem(
               backgroundColor: black,
               label: bottomView5,
               activeIcon: Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: _buildBottomNavIcon(
-                    iconName: 'ic_stuff',
+                    iconName: 'ic_setting',
                     iconColor: primaryColor,
                     height: 24,
                     width: 24),
@@ -158,7 +158,7 @@ class BottombarState extends State<Bottombar> {
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: _buildBottomNavIcon(
-                    iconName: 'ic_stuff',
+                    iconName: 'ic_setting',
                     iconColor: gray,
                     height: 24,
                     width: 24),

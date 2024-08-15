@@ -1,4 +1,5 @@
 import 'package:dtlive/model/live_tv_model.dart';
+import 'package:dtlive/pages/livetv_player.dart';
 import 'package:dtlive/provider/livetv_provider.dart';
 import 'package:dtlive/shimmer/shimmerwidget.dart';
 import 'package:dtlive/utils/color.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 class LiveTv extends StatefulWidget {
   const LiveTv({super.key});
@@ -27,6 +30,7 @@ class _LiveTvState extends State<LiveTv> {
   void _getData() async {
     final livetvProvider = Provider.of<LivetvProvider>(context, listen: false);
     await livetvProvider.getTvShowsList();
+    // await VideoPlayerController.initialize();
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
       setState(() {});
@@ -65,7 +69,7 @@ class _LiveTvState extends State<LiveTv> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int position) {
                     return ShimmerWidget.roundrectborder(
-                      height: MediaQuery.of(context).size.height * 0.25,
+                      height: MediaQuery.of(context).size.height * 0.18,
                       width: MediaQuery.of(context).size.width,
                       shimmerBgColor: shimmerItemColor,
                       shapeBorder: const RoundedRectangleBorder(
@@ -88,7 +92,30 @@ class _LiveTvState extends State<LiveTv> {
                     itemBuilder: (BuildContext context, int position) {
                       return InkWell(
                         borderRadius: BorderRadius.circular(4),
-                        onTap: () {},
+                        onTap: () async {
+                          await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return LiveTVPlayer(
+                              urlLink: livetvProvider
+                                  .liveTvlist[position].liveSource
+                                  .toString(),
+                            );
+                          }));
+                          // dynamic isContinue = await Utils.openPlayer(
+                          //   context: context,
+                          //   playType: "",
+                          //   // videoId: ,
+                          //   // typeId: vTypeID,
+                          //   otherId: 0,
+                          //   videoUrl: livetvProvider
+                          //       .liveTvlist[position].liveSource
+                          //       .toString(),
+                          //   // trailerUrl: vUrl,
+                          //   uploadType: '',
+                          //   // videoThumb: videoThumb,
+                          //   // vStopTime: stopTime,
+                          // );
+                        },
                         child: Container(
                             clipBehavior: Clip.hardEdge,
                             decoration: BoxDecoration(
@@ -100,9 +127,9 @@ class _LiveTvState extends State<LiveTv> {
                               imageUrl: livetvProvider
                                   .liveTvlist[position].thumbnail
                                   .toString(),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               imgHeight:
-                                  MediaQuery.of(context).size.height * 0.24,
+                                  MediaQuery.of(context).size.height * 0.18,
                               imgWidth: MediaQuery.of(context).size.width,
                             )),
                       );

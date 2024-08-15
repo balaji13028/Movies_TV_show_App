@@ -9,13 +9,12 @@ class MyImage extends StatelessWidget {
   dynamic fit;
 
   MyImage(
-      {Key? key,
+      {super.key,
       this.width,
       this.height,
       required this.imagePath,
       this.color,
-      this.fit})
-      : super(key: key);
+      this.fit});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,8 @@ class MyImage extends StatelessWidget {
       errorBuilder: (context, url, error) {
         return Image.asset(
           "assets/images/no_image_port.png",
-          width: width,
-          height: height,
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.05,
           fit: BoxFit.cover,
         );
       },

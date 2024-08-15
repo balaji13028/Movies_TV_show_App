@@ -23,8 +23,7 @@ class PlayerVimeo extends StatefulWidget {
       this.stopTime,
       this.vUploadType,
       this.videoThumb,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   State<PlayerVimeo> createState() => PlayerVimeoState();

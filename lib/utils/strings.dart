@@ -3,7 +3,7 @@ const bottomView1 = "Home";
 const bottomView2 = "Live TV";
 const bottomView3 = "TV Show";
 const bottomView4 = "Find";
-const bottomView5 = "Profile";
+const bottomView5 = "Settings";
 const myProfile = "My Profile";
 //BottomNavigation END
 

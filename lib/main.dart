@@ -181,11 +181,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('state = $state');
-    if (state == AppLifecycleState.resumed &&
-            previewsSate == AppLifecycleState.detached ||
-        previewsSate == AppLifecycleState.inactive) {
-      return RestartWidget.restartApp(context);
-    }
+    // if (state == AppLifecycleState.resumed &&
+    //         previewsSate == AppLifecycleState.detached ||
+    //     previewsSate == AppLifecycleState.inactive) {
+    //   return RestartWidget.restartApp(context);
+    // }
     // if(app)
   }
 

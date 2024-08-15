@@ -9,6 +9,7 @@ import 'package:dtlive/model/sectionlistmodel.dart';
 import 'package:dtlive/model/sectiontypemodel.dart' as type;
 import 'package:dtlive/model/slides_model.dart';
 import 'package:dtlive/model/tvshowmodel.dart';
+import 'package:dtlive/pages/livetv_player.dart';
 import 'package:dtlive/pages/videosbyid.dart';
 import 'package:dtlive/provider/bottombar_provider.dart';
 import 'package:dtlive/provider/generalprovider.dart';
@@ -476,13 +477,23 @@ class HomeState extends State<Home> {
                               itemBuilder:
                                   (BuildContext context, int position) {
                                 return InkWell(
-                                  borderRadius: BorderRadius.circular(4),
-                                  onTap: () {},
+                                  borderRadius: BorderRadius.circular(8),
+                                  onTap: () async {
+                                    await Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return LiveTVPlayer(
+                                        urlLink: homeProvider
+                                            .livetVList[position].liveSource
+                                            .toString(),
+                                      );
+                                    }));
+                                  },
                                   child: Container(
+                                      width: MediaQuery.of(context).size.width,
                                       clipBehavior: Clip.hardEdge,
                                       decoration: BoxDecoration(
                                         color: primaryDarkColor,
-                                        borderRadius: BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       alignment: Alignment.center,
                                       child: MyNetworkImage(
@@ -492,7 +503,7 @@ class HomeState extends State<Home> {
                                         fit: BoxFit.fill,
                                         imgHeight:
                                             MediaQuery.of(context).size.height *
-                                                0.16,
+                                                0.12,
                                         imgWidth:
                                             MediaQuery.of(context).size.width,
                                       )),
@@ -550,7 +561,7 @@ class HomeState extends State<Home> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int position) {
                               return InkWell(
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(8),
                                 onTap: () async {
                                   dynamic isContinue = await Utils.openPlayer(
                                     context: context,
@@ -571,7 +582,7 @@ class HomeState extends State<Home> {
                                     clipBehavior: Clip.hardEdge,
                                     decoration: BoxDecoration(
                                       color: primaryDarkColor,
-                                      borderRadius: BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     alignment: Alignment.center,
                                     child: MyNetworkImage(
@@ -581,7 +592,7 @@ class HomeState extends State<Home> {
                                       fit: BoxFit.fill,
                                       imgHeight:
                                           MediaQuery.of(context).size.height *
-                                              0.16,
+                                              0.12,
                                       imgWidth:
                                           MediaQuery.of(context).size.width,
                                     )),

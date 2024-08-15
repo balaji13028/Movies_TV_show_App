@@ -241,7 +241,6 @@ class Utils {
     String? videoThumb,
     int? vStopTime,
   }) async {
-    dynamic isContinue;
     int? vID = (videoId ?? 0);
     int? vType = (videoType ?? 0);
     int? vTypeID = (typeId ?? 0);
@@ -270,7 +269,7 @@ class Utils {
       /* Pod Player & Youtube Player */
       if (!context.mounted) return;
       if (vUploadType == "youtube") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -293,33 +292,33 @@ class Utils {
           ),
         );
       } else {
-        isContinue = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlayerPod(
-                playType == "Trailer"
-                    ? "Trailer"
-                    : playType == "Download"
-                        ? "Download"
-                        : (videoType == 2 ? "Show" : "Video"),
-                vID,
-                vType,
-                vTypeID,
-                vOtherID,
-                vUrl ?? "",
-                stopTime,
-                vUploadType,
-                videoThumb,
-              );
-            },
-          ),
-        );
+        // await Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return PlayerPod(
+        //         playType == "Trailer"
+        //             ? "Trailer"
+        //             : playType == "Download"
+        //                 ? "Download"
+        //                 : (videoType == 2 ? "Show" : "Video"),
+        //         vID,
+        //         vType,
+        //         vTypeID,
+        //         vOtherID,
+        //         vUrl ?? "",
+        //         stopTime,
+        //         vUploadType,
+        //         videoThumb,
+        //       );
+        //     },
+        //   ),
+        // );
       }
     } else {
       /* Better, Youtube & Vimeo Players */
       if (vUploadType == "youtube") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -342,7 +341,7 @@ class Utils {
           ),
         );
       } else if (vUploadType == "vimeo") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -365,32 +364,30 @@ class Utils {
           ),
         );
       } else {
-        isContinue = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlayerBetter(
-                playType == "Trailer"
-                    ? "Trailer"
-                    : playType == "Download"
-                        ? "Download"
-                        : (videoType == 2 ? "Show" : "Video"),
-                vID,
-                vType,
-                vTypeID,
-                vOtherID,
-                vUrl ?? "",
-                stopTime,
-                vUploadType,
-                videoThumb,
-              );
-            },
-          ),
-        );
+        // await Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return PlayerBetter(
+        //         playType == "Trailer"
+        //             ? "Trailer"
+        //             : playType == "Download"
+        //                 ? "Download"
+        //                 : (videoType == 2 ? "Show" : "Video"),
+        //         vID,
+        //         vType,
+        //         vTypeID,
+        //         vOtherID,
+        //         vUrl ?? "",
+        //         stopTime,
+        //         vUploadType,
+        //         videoThumb,
+        //       );
+        //     },
+        //   ),
+        // );
       }
     }
-    log("isContinue ===> $isContinue");
-    return isContinue;
   }
   /* ========= Open Player ========= */
 
@@ -1053,7 +1050,7 @@ class Utils {
         mode: LaunchMode.platformDefault,
       );
     } else {
-      throw "Could not launch $url";
+      Utils.showToast("Could not launch $url");
     }
   }
 

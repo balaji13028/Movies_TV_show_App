@@ -30,7 +30,7 @@ class PlayerYoutube extends StatefulWidget {
 }
 
 class PlayerYoutubeState extends State<PlayerYoutube> {
-  YoutubePlayerController? controller;
+  late YoutubePlayerController controller;
   bool fullScreen = false;
   late PlayerProvider playerProvider;
   int? playerCPosition, videoDuration;
@@ -71,11 +71,11 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
       if (!mounted) return;
       setState(() {});
     });
-    if (widget.playType == "Video" || widget.playType != "Show") {
-      /* Add Video view */
-      await playerProvider.addVideoView(widget.videoId.toString(),
-          widget.videoType.toString(), widget.otherId.toString());
-    }
+    // if (widget.playType == "Video" || widget.playType != "Show") {
+    //   /* Add Video view */
+    //   await playerProvider.addVideoView(widget.videoId.toString(),
+    //       widget.videoType.toString(), widget.otherId.toString());
+    // }
   }
 
   @override
@@ -109,35 +109,35 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
   }
 
   Widget _buildPlayer() {
-    if (controller == null) {
-      return Utils.pageLoader();
-    } else {
-      return YoutubePlayerScaffold(
-        backgroundColor: appBgColor,
-        controller: controller!,
-        autoFullScreen: true,
-        defaultOrientations: const [
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ],
-        builder: (context, player) {
-          return Scaffold(
-            body: Center(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
+    return YoutubePlayerScaffold(
+      backgroundColor: appBgColor,
+      controller: controller,
+      autoFullScreen: true,
+      defaultOrientations: const [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+      builder: (context, player) {
+        return Scaffold(
+          body: Center(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (controller.value.playerState == PlayerState.playing) {
                   return player;
-                },
-              ),
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
   }
 
   @override
   void dispose() {
-    controller?.close();
+    controller.close();
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
@@ -155,23 +155,26 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
     log("onBackPressed playerCPosition :===> $playerCPosition");
     log("onBackPressed videoDuration :===> $videoDuration");
     log("onBackPressed playType :===> ${widget.playType}");
-    if (widget.playType == "Video" || widget.playType == "Show") {
-      if ((playerCPosition ?? 0) > 0) {
-        /* Add to Continue */
-        await playerProvider.addToContinue(
-            "${widget.videoId}", "${widget.videoType}", "$playerCPosition");
-        if (!mounted) return Future.value(false);
-        Navigator.pop(context, true);
-        return Future.value(true);
-      } else {
-        if (!mounted) return Future.value(false);
-        Navigator.pop(context, false);
-        return Future.value(true);
-      }
-    } else {
-      if (!mounted) return Future.value(false);
-      Navigator.pop(context, false);
-      return Future.value(true);
-    }
+    if (!mounted) return Future.value(false);
+    Navigator.pop(context, false);
+    return Future.value(true);
+    // if (widget.playType == "Video" || widget.playType == "Show") {
+    //   if ((playerCPosition ?? 0) > 0) {
+    //     /* Add to Continue */
+    //     // await playerProvider.addToContinue(
+    //     //     "${widget.videoId}", "${widget.videoType}", "$playerCPosition");
+    //     if (!mounted) return Future.value(false);
+    //     Navigator.pop(context, true);
+    //     return Future.value(true);
+    //   } else {
+    //     if (!mounted) return Future.value(false);
+    //     Navigator.pop(context, false);
+    //     return Future.value(true);
+    //   }
+    // } else {
+    //   if (!mounted) return Future.value(false);
+    //   Navigator.pop(context, false);
+    //   return Future.value(true);
+    // }
   }
 }

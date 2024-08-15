@@ -32,13 +32,19 @@ class MyNetworkImage extends StatelessWidget {
           ),
         ),
         placeholder: (context, url) {
-          return MyImage(
-            width: imgWidth,
-            height: imgHeight,
-            imagePath:
-                imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
-            fit: BoxFit.cover,
+          return Image.asset(
+            "assets/images/appicon.png",
+            width: MediaQuery.of(context).size.width * 0.08,
+            height: MediaQuery.of(context).size.height * 0.02,
+            fit: BoxFit.contain,
           );
+          // MyImage(
+          //   width: imgWidth,
+          //   height: imgHeight,
+          //   imagePath:
+          //       imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
+          //   fit: BoxFit.cover,
+          // );
         },
         errorWidget: (context, url, error) {
           return MyImage(

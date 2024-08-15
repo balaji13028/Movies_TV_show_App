@@ -121,15 +121,15 @@ class _CommonAppBarState extends State<CommonAppBar> {
 
   _clickToRedirect({required String pageName}) {
     switch (pageName) {
-      case "channel":
-        return Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return const Channels();
-            },
-          ),
-        );
+      // case "channel":
+      //   return Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) {
+      //         return const Channels();
+      //       },
+      //     ),
+      //   );
       case "store":
         return Navigator.push(
           context,
@@ -224,9 +224,9 @@ class _CommonAppBarState extends State<CommonAppBar> {
                             elevation: 8,
                           ),
                           menuItemStyleData: MenuItemStyleData(
-                            overlayColor: MaterialStateProperty.resolveWith(
+                            overlayColor: WidgetStateProperty.resolveWith(
                               (states) {
-                                if (states.contains(MaterialState.focused)) {
+                                if (states.contains(WidgetState.focused)) {
                                   return white.withOpacity(0.5);
                                 }
                                 return transparentColor;
@@ -236,12 +236,12 @@ class _CommonAppBarState extends State<CommonAppBar> {
                           buttonStyleData: ButtonStyleData(
                             decoration: Utils.setBGWithBorder(
                                 transparentColor, white, 20, 1),
-                            overlayColor: MaterialStateProperty.resolveWith(
+                            overlayColor: WidgetStateProperty.resolveWith(
                               (states) {
-                                if (states.contains(MaterialState.focused)) {
+                                if (states.contains(WidgetState.focused)) {
                                   return white.withOpacity(0.5);
                                 }
-                                if (states.contains(MaterialState.hovered)) {
+                                if (states.contains(WidgetState.hovered)) {
                                   return white.withOpacity(0.5);
                                 }
                                 return transparentColor;
