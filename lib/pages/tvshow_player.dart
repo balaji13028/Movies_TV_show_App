@@ -8,32 +8,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-class PlayerYoutube extends StatefulWidget {
-  final int? videoId, videoType, typeId, otherId, stopTime;
-  final String? playType, videoUrl, vUploadType, videoThumb;
-   PlayerYoutube(
-      this.playType,
-      this.videoId,
-      this.videoType,
-      this.typeId,
-      this.otherId,
-      this.videoUrl,
-      this.stopTime,
-      this.vUploadType,
-      this.videoThumb,
-      {super.key});
+class TvshowPlayer extends StatefulWidget {
+  final String adURl;
+  final String urlLink;
+  const TvshowPlayer({super.key, required this.urlLink, required this.adURl});
 
   @override
-  State<PlayerYoutube> createState() => PlayerYoutubeState();
+  State<TvshowPlayer> createState() => TvshowPlayerState();
 }
 
-class PlayerYoutubeState extends State<PlayerYoutube> {
+class TvshowPlayerState extends State<TvshowPlayer> {
   late YoutubePlayerController controller;
+  late VideoPlayerController _adController;
   bool fullScreen = false;
+  bool adCompleted = false;
   late PlayerProvider playerProvider;
-  int? playerCPosition, videoDuration;
 
   @override
   void initState() {
@@ -41,10 +33,8 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    _initPlayer();
-  }
-
-  _initPlayer() async {
+    _adController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.adURl.toString()));
     controller = YoutubePlayerController(
       params: const YoutubePlayerParams(
         showControls: true,
@@ -53,8 +43,32 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
         loop: false,
       ),
     );
-    debugPrint("videoUrl :===> ${widget.videoUrl}");
-    var videoId = YoutubePlayerController.convertUrlToId(widget.videoUrl ?? "");
+    _initPlayer();
+  }
+
+  _initPlayer() async {
+    await _adController.initialize().then((_) {
+      setState(() {});
+      _adController.play();
+    });
+
+    _adController.addListener(() {
+      if (_adController.value.position == _adController.value.duration) {
+        try {
+          setState(() {
+            adCompleted = true;
+          });
+          _initTvshowPlayer();
+        } catch (e) {
+          print(e);
+        }
+      }
+    });
+  }
+
+  _initTvshowPlayer() async {
+    debugPrint("videoUrl :===> ${widget.urlLink}");
+    var videoId = YoutubePlayerController.convertUrlToId(widget.urlLink);
     debugPrint("videoId :====> $videoId");
     controller = YoutubePlayerController.fromVideoId(
       videoId: videoId ?? '',
@@ -87,7 +101,15 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
         body: SafeArea(
           child: Stack(
             children: [
-              _buildPlayer(),
+              if (adCompleted == false) ...[
+                _adController.value.isInitialized
+                    ? AspectRatio(
+                        aspectRatio: _adController.value.aspectRatio,
+                        child: VideoPlayer(_adController))
+                    : const Center(
+                        child: CircularProgressIndicator(color: Colors.white))
+              ] else
+                _buildPlayer(),
               if (!kIsWeb)
                 Positioned(
                   top: 15,
@@ -137,6 +159,7 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
 
   @override
   void dispose() {
+    _adController.dispose();
     controller.close();
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -152,9 +175,6 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-    log("onBackPressed playerCPosition :===> $playerCPosition");
-    log("onBackPressed videoDuration :===> $videoDuration");
-    log("onBackPressed playType :===> ${widget.playType}");
     if (!mounted) return Future.value(false);
     Navigator.pop(context, false);
     return Future.value(true);

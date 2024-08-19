@@ -1,19 +1,22 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as log;
+import 'dart:io';
+import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dtlive/model/live_tv_model.dart';
-import 'package:dtlive/model/sectionbannermodel.dart' as banner;
+import 'package:dtlive/model/menulist_model.dart';
 import 'package:dtlive/model/sectionlistmodel.dart' as list;
 import 'package:dtlive/model/sectionlistmodel.dart';
-import 'package:dtlive/model/sectiontypemodel.dart' as type;
 import 'package:dtlive/model/slides_model.dart';
 import 'package:dtlive/model/tvshowmodel.dart';
 import 'package:dtlive/pages/livetv_player.dart';
+import 'package:dtlive/pages/tvshow_player.dart';
 import 'package:dtlive/pages/videosbyid.dart';
+import 'package:dtlive/provider/adventisements_provider.dart';
 import 'package:dtlive/provider/bottombar_provider.dart';
-import 'package:dtlive/provider/generalprovider.dart';
 import 'package:dtlive/provider/homeprovider.dart';
+import 'package:dtlive/provider/menulist_provider.dart';
 import 'package:dtlive/provider/sectiondataprovider.dart';
 import 'package:dtlive/provider/slides_provider.dart';
 import 'package:dtlive/shimmer/shimmerutils.dart';
@@ -27,13 +30,12 @@ import 'package:dtlive/webwidget/footerweb.dart';
 import 'package:dtlive/widget/myimage.dart';
 import 'package:dtlive/widget/mynetworkimg.dart';
 import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -47,12 +49,12 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  // late SectionDataProvider sectionDataProvider;
+  late SectionDataProvider sectionDataProvider;
   final FirebaseAuth auth = FirebaseAuth.instance;
   SharedPre sharedPref = SharedPre();
   CarouselController carouselController = CarouselController();
   final tabScrollController = ScrollController();
-  // late ListObserverController observerController;
+  late ListObserverController observerController;
   late HomeProvider homeProvider;
   late BottombarProvider bottomPRovider;
   int? videoId, videoType, typeId;
@@ -76,12 +78,12 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
-    // sectionDataProvider =
-    //     Provider.of<SectionDataProvider>(context, listen: false);
+    sectionDataProvider =
+        Provider.of<SectionDataProvider>(context, listen: false);
     bottomPRovider = Provider.of<BottombarProvider>(context, listen: false);
     homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    // observerController =
-    //     ListObserverController(controller: tabScrollController);
+    observerController =
+        ListObserverController(controller: tabScrollController);
     currentPage = widget.pageName ?? "";
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -119,10 +121,10 @@ class HomeState extends State<Home> {
           result.notification.additionalData?['video_type'].toString() ?? "";
       String? typeID =
           result.notification.additionalData?['type_id'].toString() ?? "";
-      log("videoID =======> $videoID");
-      log("upcomingType ==> $upcomingType");
-      log("videoType =====> $videoType");
-      log("typeID ========> $typeID");
+      log.log("videoID =======> $videoID");
+      log.log("upcomingType ==> $upcomingType");
+      log.log("videoType =====> $videoType");
+      log.log("typeID ========> $typeID");
 
       Utils.openDetails(
         context: context,
@@ -136,6 +138,10 @@ class HomeState extends State<Home> {
 
   _getData() async {
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
+    final adeventisementProvider =
+        Provider.of<AdventisementsProvider>(context, listen: false);
+    // await homeProvider.getMenuList();
+    await adeventisementProvider.getAdvenmtisementsList();
     await slidesProvider.getSlides();
     await homeProvider.gethomeScreenData();
     Future.delayed(Duration.zero).then((value) {
@@ -151,29 +157,26 @@ class HomeState extends State<Home> {
     debugPrint("setSelectedTab tabPos ====> $tabPos");
     if (!mounted) return;
     await homeProvider.setSelectedTab(tabPos);
+    // _scrollToCurrent();
     debugPrint(
         "setSelectedTab selectedIndex ====> ${homeProvider.selectedIndex}");
-    //   debugPrint(
-    //       "setSelectedTab lastTabPosition ====> ${sectionDataProvider.lastTabPosition}");
-    //   if (sectionDataProvider.lastTabPosition == tabPos) {
-    //     return;
-    //   } else {
-    //     sectionDataProvider.setTabPosition(tabPos);
-    //   }
+    debugPrint(
+        "setSelectedTab lastTabPosition ====> ${sectionDataProvider.lastTabPosition}");
+    if (sectionDataProvider.lastTabPosition == tabPos) {
+      return;
+    } else {
+      sectionDataProvider.setTabPosition(tabPos);
+    }
   }
 
-  // Future<void> getTabData(
-  //     int position, List<type.Result>? sectionTypeList) async {
-  //   debugPrint("getTabData position ====> $position");
-  //   await setSelectedTab(position);
-  //   await sectionDataProvider.setLoading(true);
-  //   await sectionDataProvider.getSectionBanner(
-  //       position == 0 ? "0" : (sectionTypeList?[position - 1].id),
-  //       position == 0 ? "1" : "2");
-  //   await sectionDataProvider.getSectionList(
-  //       position == 0 ? "0" : (sectionTypeList?[position - 1].id),
-  //       position == 0 ? "1" : "2");
-  // }
+  Future<void> getTabData(int position, List<MenulistModel>? menuList) async {
+    debugPrint("getTabData position ====> $position");
+    await setSelectedTab(position);
+    await sectionDataProvider.setLoading(true);
+    // await sectionDataProvider.getSectionList(
+    //     position == 0 ? "0" : (sectionTypeList?[position - 1].id),
+    //     position == 0 ? "1" : "2");
+  }
 
   // openDetailPage(String pageName, int videoId, int upcomingType, int videoType,
   //     int typeId) async {
@@ -200,14 +203,14 @@ class HomeState extends State<Home> {
     super.dispose();
   }
 
-  // _scrollToCurrent() {
-  //   log("selectedIndex ======> ${homeProvider.selectedIndex.toDouble()}");
-  //   observerController.animateTo(
-  //     index: homeProvider.selectedIndex,
-  //     curve: Curves.easeInOut,
-  //     duration: const Duration(milliseconds: 300),
-  //   );
-  // }
+  _scrollToCurrent() {
+    log.log("selectedIndex ======> ${homeProvider.selectedIndex.toDouble()}");
+    observerController.animateTo(
+      index: homeProvider.selectedIndex,
+      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,9 +237,6 @@ class HomeState extends State<Home> {
                       width: 120, height: 120, imagePath: "appicon.png"),
                 ),
               ), // This is the title in the app bar.
-              // pinned: false,
-              // expandedHeight: 0,
-              // forceElevated: innerBoxIsScrolled,
             ),
       body: SafeArea(
         child: (kIsWeb || Constant.isTV)
@@ -250,32 +250,36 @@ class HomeState extends State<Home> {
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            // SliverOverlapAbsorber(
-            //   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            //   sliver: SliverAppBar(
-            //     automaticallyImplyLeading: false,
-            //     backgroundColor: appBgColor,
-            //     toolbarHeight: 65,
-            //     title: Container(
-            //       width: MediaQuery.of(context).size.width,
-            //       height: MediaQuery.of(context).size.height,
-            //       alignment: Alignment.center,
-            //       child: InkWell(
-            //         borderRadius: BorderRadius.circular(8),
-            //         splashColor: transparentColor,
-            //         highlightColor: transparentColor,
-            //         onTap: () async {
-            //           // await getTabData(0, homeProvider.sectionTypeModel.result);
-            //         },
-            //         child: MyImage(
-            //             width: 120, height: 120, imagePath: "appicon.png"),
-            //       ),
-            //     ), // This is the title in the app bar.
-            //     pinned: false,
-            //     expandedHeight: 0,
-            //     forceElevated: innerBoxIsScrolled,
-            //   ),
-            // ),
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              // sliver: SliverAppBar(
+              //   automaticallyImplyLeading: false,
+              //   backgroundColor: appBgColor,
+              //   toolbarHeight: 65,
+              //   title: Container(
+              //     width: MediaQuery.of(context).size.width,
+              //     height: MediaQuery.of(context).size.height,
+              //     alignment: Alignment.center,
+              //     child: InkWell(
+              //       borderRadius: BorderRadius.circular(8),
+              //       splashColor: transparentColor,
+              //       highlightColor: transparentColor,
+              //       onTap: () async {
+              //         await getTabData(
+              //             0,
+              //             homeProvider.menulist
+              //                 .where((item) => item.home == 1)
+              //                 .toList());
+              //       },
+              //       child: MyImage(
+              //           width: 120, height: 120, imagePath: "appicon.png"),
+              //     ),
+              //   ), // This is the title in the app bar.
+              //   pinned: false,
+              //   expandedHeight: 0,
+              //   forceElevated: innerBoxIsScrolled,
+              // ),
+            ),
           ];
         },
         body: homeProvider.loading
@@ -283,13 +287,17 @@ class HomeState extends State<Home> {
             : Stack(
                 children: [
                   tabItem(),
-                  // Container(
-                  //   width: MediaQuery.of(context).size.width,
-                  //   height: Dimens.homeTabHeight,
-                  //   padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  //   color: black.withOpacity(0.8),
-                  //   child: tabTitle(homeProvider.sectionTypeModel.result),
-                  // ),
+                  // if (homeProvider.menulist.isNotEmpty) ...[
+                  //   Container(
+                  //     width: MediaQuery.of(context).size.width,
+                  //     height: Dimens.homeTabHeight,
+                  //     padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  //     color: black.withOpacity(0.8),
+                  //     child: tabTitle(homeProvider.menulist
+                  //         .where((item) => item.home == 1)
+                  //         .toList()),
+                  //   ),
+                  // ],
                 ],
               )
         // : const NoData(title: '', subTitle: '')
@@ -320,67 +328,70 @@ class HomeState extends State<Home> {
     }
   }
 
-  // Widget tabTitle(List<type.Result>? sectionTypeList) {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (tabScrollController.hasClients) {
-  //       _scrollToCurrent();
-  //     }
-  //   });
-  //   return ListViewObserver(
-  //     controller: observerController,
-  //     child: ListView.separated(
-  //       itemCount: (sectionTypeList?.length ?? 0) + 1,
-  //       shrinkWrap: true,
-  //       controller: tabScrollController,
-  //       scrollDirection: Axis.horizontal,
-  //       physics: const BouncingScrollPhysics(),
-  //       padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
-  //       separatorBuilder: (context, index) => const SizedBox(width: 5),
-  //       itemBuilder: (BuildContext context, int index) {
-  //         return Consumer<HomeProvider>(
-  //           builder: (context, homeProvider, child) {
-  //             return InkWell(
-  //               borderRadius: BorderRadius.circular(25),
-  //               onTap: () async {
-  //                 debugPrint("index ===========> $index");
-  //                 if (kIsWeb) _onItemTapped("");
-  //                 await getTabData(index, homeProvider.sectionTypeModel.result);
-  //               },
-  //               child: Container(
-  //                 constraints: const BoxConstraints(maxHeight: 32),
-  //                 decoration: Utils.setBackground(
-  //                   homeProvider.selectedIndex == index
-  //                       ? white
-  //                       : transparentColor,
-  //                   20,
-  //                 ),
-  //                 alignment: Alignment.center,
-  //                 padding: const EdgeInsets.fromLTRB(13, 0, 13, 0),
-  //                 child: MyText(
-  //                   color: homeProvider.selectedIndex == index ? black : white,
-  //                   multilanguage: false,
-  //                   text: index == 0
-  //                       ? "Home"
-  //                       : index > 0
-  //                           ? (sectionTypeList?[index - 1].name.toString() ??
-  //                               "")
-  //                           : "",
-  //                   fontsizeNormal: 12,
-  //                   fontweight: FontWeight.w700,
-  //                   fontsizeWeb: 14,
-  //                   maxline: 1,
-  //                   overflow: TextOverflow.ellipsis,
-  //                   textalign: TextAlign.center,
-  //                   fontstyle: FontStyle.normal,
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget tabTitle(List<MenulistModel>? menuList) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (tabScrollController.hasClients) {
+        _scrollToCurrent();
+      }
+    });
+    return ListViewObserver(
+      controller: observerController,
+      child: ListView.separated(
+        itemCount: (menuList?.length ?? 0) + 1,
+        shrinkWrap: true,
+        controller: tabScrollController,
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(13, 5, 13, 5),
+        separatorBuilder: (context, index) => const SizedBox(width: 5),
+        itemBuilder: (BuildContext context, int index) {
+          return Consumer<HomeProvider>(
+            builder: (context, homeProvider, child) {
+              return InkWell(
+                borderRadius: BorderRadius.circular(25),
+                onTap: () async {
+                  debugPrint("index ===========> $index");
+                  if (kIsWeb) _onItemTapped("");
+                  await getTabData(
+                      index,
+                      homeProvider.menulist
+                          .where((item) => item.home == 1)
+                          .toList());
+                },
+                child: Container(
+                  constraints: const BoxConstraints(maxHeight: 32),
+                  decoration: Utils.setBackground(
+                    homeProvider.selectedIndex == index
+                        ? white
+                        : transparentColor,
+                    20,
+                  ),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.fromLTRB(13, 0, 13, 0),
+                  child: MyText(
+                    color: homeProvider.selectedIndex == index ? black : white,
+                    multilanguage: false,
+                    text: index == 0
+                        ? "Home"
+                        : index > 0
+                            ? (menuList?[index - 1].name.toString() ?? "")
+                            : "",
+                    fontsizeNormal: 12,
+                    fontweight: FontWeight.w700,
+                    fontsizeWeb: 14,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textalign: TextAlign.center,
+                    fontstyle: FontStyle.normal,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 
   Widget tabItem() {
     return Container(
@@ -407,9 +418,9 @@ class HomeState extends State<Home> {
                       slidesProvider.slides.isNotEmpty) {
                     if ((kIsWeb || Constant.isTV) &&
                         MediaQuery.of(context).size.width > 720) {
-                      return const SizedBox();
-                      // _webHomeBanner(
-                      //     sectionDataProvider.sectionBannerModel.result);
+                      // return const SizedBox();
+                      return _webHomeBanner(
+                          slidesProvider.slides, slidesProvider);
                     } else {
                       return _mobileHomeBanner(
                           slidesProvider.slides, slidesProvider);
@@ -421,7 +432,7 @@ class HomeState extends State<Home> {
               },
             ),
 
-            /* Live tv Watching & show tv Sections */
+            /* Live tv & show tv Sections */
             Consumer<HomeProvider>(
               builder: (context, homeProvider, child) {
                 if (homeProvider.loading) {
@@ -431,6 +442,7 @@ class HomeState extends State<Home> {
                     return Column(children: [
                       if (homeProvider.livetVList.isNotEmpty) ...[
                         /* Live Tv list */
+
                         Column(
                           children: [
                             const SizedBox(height: 25),
@@ -465,51 +477,22 @@ class HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                            AlignedGridView.count(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              itemCount: (homeProvider.livetVList.length ?? 0),
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 10),
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder:
-                                  (BuildContext context, int position) {
-                                return InkWell(
-                                  borderRadius: BorderRadius.circular(8),
-                                  onTap: () async {
-                                    await Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return LiveTVPlayer(
-                                        urlLink: homeProvider
-                                            .livetVList[position].liveSource
-                                            .toString(),
-                                      );
-                                    }));
-                                  },
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        color: primaryDarkColor,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: MyNetworkImage(
-                                        imageUrl: homeProvider
-                                            .livetVList[position].thumbnail
-                                            .toString(),
-                                        fit: BoxFit.fill,
-                                        imgHeight:
-                                            MediaQuery.of(context).size.height *
-                                                0.12,
-                                        imgWidth:
-                                            MediaQuery.of(context).size.width,
-                                      )),
-                                );
-                              },
-                            ),
+                            if (kIsWeb) ...[
+                              liveTvWidget(homeProvider.livetVList
+                                  .where((item) => item.website == 1)
+                                  .toList()),
+                            ] else if (Constant.isTV) ...[
+                              liveTvWidget(homeProvider.livetVList
+                                  .where((item) => item.smartTv == 1)
+                                  .toList()),
+                            ] else if (Platform.isAndroid ||
+                                Platform.isIOS) ...[
+                              liveTvWidget(homeProvider.livetVList
+                                  .where((item) => item.mobile == 1)
+                                  .toList()),
+                            ] else ...[
+                              liveTvWidget(homeProvider.livetVList),
+                            ]
                           ],
                         )
                       ] else ...[
@@ -550,55 +533,21 @@ class HomeState extends State<Home> {
                               ),
                             ),
                           ),
-                          AlignedGridView.count(
-                            shrinkWrap: true,
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            itemCount: (homeProvider.tvshowsList.length ?? 0),
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 10),
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int position) {
-                              return InkWell(
-                                borderRadius: BorderRadius.circular(8),
-                                onTap: () async {
-                                  dynamic isContinue = await Utils.openPlayer(
-                                    context: context,
-                                    playType: "Video",
-                                    // videoId: ,
-                                    // typeId: vTypeID,
-                                    otherId: 0,
-                                    videoUrl: homeProvider
-                                        .tvshowsList[position].source
-                                        .toString(),
-                                    // trailerUrl: vUrl,
-                                    uploadType: 'youtube',
-                                    // videoThumb: videoThumb,
-                                    // vStopTime: stopTime,
-                                  );
-                                },
-                                child: Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                      color: primaryDarkColor,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: MyNetworkImage(
-                                      imageUrl: homeProvider
-                                          .tvshowsList[position].thumbnail
-                                          .toString(),
-                                      fit: BoxFit.fill,
-                                      imgHeight:
-                                          MediaQuery.of(context).size.height *
-                                              0.12,
-                                      imgWidth:
-                                          MediaQuery.of(context).size.width,
-                                    )),
-                              );
-                            },
-                          ),
+                          if (kIsWeb) ...[
+                            tvShowsWidget(homeProvider.tvshowsList
+                                .where((item) => item.website == true)
+                                .toList()),
+                          ] else if (Constant.isTV) ...[
+                            tvShowsWidget(homeProvider.tvshowsList
+                                .where((item) => item.smartTv == true)
+                                .toList()),
+                          ] else if (Platform.isAndroid || Platform.isIOS) ...[
+                            tvShowsWidget(homeProvider.tvshowsList
+                                .where((item) => item.mobile == true)
+                                .toList()),
+                          ] else ...[
+                            tvShowsWidget(homeProvider.tvshowsList),
+                          ],
                           const SizedBox(height: 20),
                         ]),
                       ] else ...[
@@ -626,6 +575,109 @@ class HomeState extends State<Home> {
           ],
         ),
       ),
+    );
+  }
+
+  AlignedGridView tvShowsWidget(List<TvShowModel> list) {
+    return AlignedGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      itemCount: (list.length),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int position) {
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () async {
+            final adProvider = context.read<AdventisementsProvider>();
+            final random = Random();
+            final adventisements = adProvider.filterPreviewsAd();
+            // log(adventisements.length);
+            final ad = adventisements[random.nextInt(adventisements.length)];
+            try {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TvshowPlayer(
+                        urlLink: list[position].source.toString(),
+                        adURl:
+                            'https://media9tv.com/public/storage/${ad.videoPath}');
+                  },
+                ),
+              );
+              adProvider.setPreviewsAd(ad);
+            } catch (e) {
+              Utils.showSnackbar(context, "", "In correct video format", true);
+            }
+          },
+          child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: primaryDarkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: MyNetworkImage(
+                imageUrl: list[position].thumbnail.toString(),
+                fit: BoxFit.fill,
+                imgHeight: MediaQuery.of(context).size.height * 0.12,
+                imgWidth: MediaQuery.of(context).size.width,
+              )),
+        );
+      },
+    );
+  }
+
+  AlignedGridView liveTvWidget(List<LiveTvModel> list) {
+    return AlignedGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      itemCount: (list.length),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int position) {
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () async {
+            final adProvider = context.read<AdventisementsProvider>();
+            final random = Random();
+            final adventisements = adProvider.filterPreviewsAd();
+            // log(adventisements.length);
+            final ad = adventisements[random.nextInt(adventisements.length)];
+            try {
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return LiveTVPlayer(
+                  urlLink: list[position].liveSource.toString(),
+                  adURl: 'https://media9tv.com/public/storage/${ad.videoPath}',
+                );
+              }));
+              adProvider.setPreviewsAd(ad);
+            } catch (e) {
+              Utils.showSnackbar(context, "", "In correct video format", true);
+            }
+          },
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: primaryDarkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: MyNetworkImage(
+                imageUrl: list[position].thumbnail.toString(),
+                fit: BoxFit.fill,
+                imgHeight: MediaQuery.of(context).size.height * 0.12,
+                imgWidth: MediaQuery.of(context).size.width,
+              )),
+        );
+      },
     );
   }
 
@@ -693,7 +745,7 @@ class HomeState extends State<Home> {
                   focusColor: white,
                   borderRadius: BorderRadius.circular(0),
                   onTap: () {
-                    log("Clicked on index ==> $index");
+                    log.log("Clicked on index ==> $index");
                     // openDetailPage(
                     //   (sectionBannerList?[index].videoType ?? 0) == 2
                     //       ? "showdetail"
@@ -767,171 +819,163 @@ class HomeState extends State<Home> {
     }
   }
 
-  // Widget _webHomeBanner(List<banner.Result>? sectionBannerList) {
-  //   if ((sectionBannerList?.length ?? 0) > 0) {
-  //     return SizedBox(
-  //       width: MediaQuery.of(context).size.width,
-  //       height: Dimens.homeWebBanner,
-  //       child: CarouselSlider.builder(
-  //         itemCount: (sectionBannerList?.length ?? 0),
-  //         carouselController: carouselController,
-  //         options: CarouselOptions(
-  //           initialPage: 0,
-  //           height: Dimens.homeWebBanner,
-  //           enlargeCenterPage: false,
-  //           autoPlay: true,
-  //           autoPlayCurve: Curves.easeInOutQuart,
-  //           enableInfiniteScroll: true,
-  //           autoPlayInterval: Duration(milliseconds: Constant.bannerDuration),
-  //           autoPlayAnimationDuration:
-  //               Duration(milliseconds: Constant.animationDuration),
-  //           viewportFraction: 0.95,
-  //           onPageChanged: (val, _) async {
-  //             await sectionDataProvider.setCurrentBanner(val);
-  //           },
-  //         ),
-  //         itemBuilder: (BuildContext context, int index, int pageViewIndex) {
-  //           return InkWell(
-  //             focusColor: white,
-  //             borderRadius: BorderRadius.circular(4),
-  //             onTap: () {
-  //               log("Clicked on index ==> $index");
-  //               openDetailPage(
-  //                 (sectionBannerList?[index].videoType ?? 0) == 2
-  //                     ? "showdetail"
-  //                     : "videodetail",
-  //                 sectionBannerList?[index].id ?? 0,
-  //                 sectionBannerList?[index].upcomingType ?? 0,
-  //                 sectionBannerList?[index].videoType ?? 0,
-  //                 sectionBannerList?[index].typeId ?? 0,
-  //               );
-  //             },
-  //             child: Container(
-  //               padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-  //               child: ClipRRect(
-  //                 borderRadius: BorderRadius.circular(4),
-  //                 clipBehavior: Clip.antiAliasWithSaveLayer,
-  //                 child: Stack(
-  //                   alignment: AlignmentDirectional.centerEnd,
-  //                   children: [
-  //                     SizedBox(
-  //                       width: MediaQuery.of(context).size.width *
-  //                           (Dimens.webBannerImgPr),
-  //                       height: Dimens.homeWebBanner,
-  //                       child: MyNetworkImage(
-  //                         imageUrl: sectionBannerList?[index].landscape ?? "",
-  //                         fit: BoxFit.fill,
-  //                       ),
-  //                     ),
-  //                     Container(
-  //                       padding: const EdgeInsets.all(0),
-  //                       width: MediaQuery.of(context).size.width,
-  //                       height: Dimens.homeWebBanner,
-  //                       alignment: Alignment.centerLeft,
-  //                       decoration: const BoxDecoration(
-  //                         gradient: LinearGradient(
-  //                           begin: Alignment.centerLeft,
-  //                           end: Alignment.centerRight,
-  //                           colors: [
-  //                             lightBlack,
-  //                             lightBlack,
-  //                             lightBlack,
-  //                             lightBlack,
-  //                             transparentColor,
-  //                             transparentColor,
-  //                             transparentColor,
-  //                             transparentColor,
-  //                             transparentColor,
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     Container(
-  //                       width: MediaQuery.of(context).size.width,
-  //                       height: Dimens.homeWebBanner,
-  //                       alignment: Alignment.centerLeft,
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         crossAxisAlignment: CrossAxisAlignment.center,
-  //                         children: [
-  //                           Container(
-  //                             width: MediaQuery.of(context).size.width *
-  //                                 (1.0 - Dimens.webBannerImgPr),
-  //                             constraints: const BoxConstraints(minHeight: 0),
-  //                             padding:
-  //                                 const EdgeInsets.fromLTRB(35, 50, 55, 35),
-  //                             alignment: Alignment.centerLeft,
-  //                             child: Column(
-  //                               mainAxisAlignment: MainAxisAlignment.start,
-  //                               crossAxisAlignment: CrossAxisAlignment.start,
-  //                               children: [
-  //                                 MyText(
-  //                                   color: white,
-  //                                   text: sectionBannerList?[index].name ?? "",
-  //                                   textalign: TextAlign.start,
-  //                                   fontsizeNormal: 14,
-  //                                   fontsizeWeb: 25,
-  //                                   fontweight: FontWeight.w700,
-  //                                   multilanguage: false,
-  //                                   maxline: 2,
-  //                                   overflow: TextOverflow.ellipsis,
-  //                                   fontstyle: FontStyle.normal,
-  //                                 ),
-  //                                 const SizedBox(height: 12),
-  //                                 MyText(
-  //                                   color: whiteLight,
-  //                                   text: sectionBannerList?[index]
-  //                                           .categoryName ??
-  //                                       "",
-  //                                   textalign: TextAlign.start,
-  //                                   fontsizeNormal: 14,
-  //                                   fontweight: FontWeight.w600,
-  //                                   fontsizeWeb: 15,
-  //                                   multilanguage: false,
-  //                                   maxline: 2,
-  //                                   overflow: TextOverflow.ellipsis,
-  //                                   fontstyle: FontStyle.normal,
-  //                                 ),
-  //                                 const SizedBox(height: 8),
-  //                                 Expanded(
-  //                                   child: MyText(
-  //                                     color: whiteLight,
-  //                                     text: sectionBannerList?[index]
-  //                                             .description ??
-  //                                         "",
-  //                                     textalign: TextAlign.start,
-  //                                     fontsizeNormal: 14,
-  //                                     fontweight: FontWeight.w600,
-  //                                     fontsizeWeb: 15,
-  //                                     multilanguage: false,
-  //                                     maxline:
-  //                                         (MediaQuery.of(context).size.width <
-  //                                                 1000)
-  //                                             ? 2
-  //                                             : 5,
-  //                                     overflow: TextOverflow.ellipsis,
-  //                                     fontstyle: FontStyle.normal,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                           const Expanded(child: SizedBox()),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     );
-  //   } else {
-  //     return const SizedBox.shrink();
-  //   }
-  // }
+  Widget _webHomeBanner(
+      List<SlidesModel>? slidesList, SlidesProvider provider) {
+    if ((slidesList?.length ?? 0) > 0) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: Dimens.homeWebBanner,
+        child: CarouselSlider.builder(
+          itemCount: (slidesList?.length ?? 0),
+          carouselController: carouselController,
+          options: CarouselOptions(
+            initialPage: 0,
+            height: Dimens.homeWebBanner,
+            enlargeCenterPage: false,
+            autoPlay: true,
+            autoPlayCurve: Curves.easeInOutQuart,
+            enableInfiniteScroll: true,
+            autoPlayInterval: Duration(milliseconds: Constant.bannerDuration),
+            autoPlayAnimationDuration:
+                Duration(milliseconds: Constant.animationDuration),
+            viewportFraction: 0.95,
+            onPageChanged: (val, _) async {
+              await provider.setCurrentBanner(val);
+            },
+          ),
+          itemBuilder: (BuildContext context, int index, int pageViewIndex) {
+            return InkWell(
+              focusColor: white,
+              borderRadius: BorderRadius.circular(4),
+              onTap: () {
+                log.log("Clicked on index ==> $index");
+              },
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Stack(
+                    alignment: AlignmentDirectional.centerEnd,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            (Dimens.webBannerImgPr),
+                        height: Dimens.homeWebBanner,
+                        child: MyNetworkImage(
+                          imageUrl: slidesList?[index].imagePath ?? "",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        width: MediaQuery.of(context).size.width,
+                        height: Dimens.homeWebBanner,
+                        alignment: Alignment.centerLeft,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              lightBlack,
+                              lightBlack,
+                              lightBlack,
+                              lightBlack,
+                              transparentColor,
+                              transparentColor,
+                              transparentColor,
+                              transparentColor,
+                              transparentColor,
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Container(
+                      //   width: MediaQuery.of(context).size.width,
+                      //   height: Dimens.homeWebBanner,
+                      //   alignment: Alignment.centerLeft,
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: [
+                      //       Container(
+                      //         width: MediaQuery.of(context).size.width *
+                      //             (1.0 - Dimens.webBannerImgPr),
+                      //         constraints: const BoxConstraints(minHeight: 0),
+                      //         padding:
+                      //             const EdgeInsets.fromLTRB(35, 50, 55, 35),
+                      //         alignment: Alignment.centerLeft,
+                      //         child: Column(
+                      //           mainAxisAlignment: MainAxisAlignment.start,
+                      //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //           children: [
+                      //             MyText(
+                      //               color: white,
+                      //               text: sectionBannerList?[index].name ?? "",
+                      //               textalign: TextAlign.start,
+                      //               fontsizeNormal: 14,
+                      //               fontsizeWeb: 25,
+                      //               fontweight: FontWeight.w700,
+                      //               multilanguage: false,
+                      //               maxline: 2,
+                      //               overflow: TextOverflow.ellipsis,
+                      //               fontstyle: FontStyle.normal,
+                      //             ),
+                      //             const SizedBox(height: 12),
+                      //             MyText(
+                      //               color: whiteLight,
+                      //               text: sectionBannerList?[index]
+                      //                       .categoryName ??
+                      //                   "",
+                      //               textalign: TextAlign.start,
+                      //               fontsizeNormal: 14,
+                      //               fontweight: FontWeight.w600,
+                      //               fontsizeWeb: 15,
+                      //               multilanguage: false,
+                      //               maxline: 2,
+                      //               overflow: TextOverflow.ellipsis,
+                      //               fontstyle: FontStyle.normal,
+                      //             ),
+                      //             const SizedBox(height: 8),
+                      //             Expanded(
+                      //               child: MyText(
+                      //                 color: whiteLight,
+                      //                 text: sectionBannerList?[index]
+                      //                         .description ??
+                      //                     "",
+                      //                 textalign: TextAlign.start,
+                      //                 fontsizeNormal: 14,
+                      //                 fontweight: FontWeight.w600,
+                      //                 fontsizeWeb: 15,
+                      //                 multilanguage: false,
+                      //                 maxline:
+                      //                     (MediaQuery.of(context).size.width <
+                      //                             1000)
+                      //                         ? 2
+                      //                         : 5,
+                      //                 overflow: TextOverflow.ellipsis,
+                      //                 fontstyle: FontStyle.normal,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //       const Expanded(child: SizedBox()),
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
 
   Widget continueWatchingLayout(bool isLiveTv) {
     List<dynamic> list =
@@ -1004,7 +1048,7 @@ class HomeState extends State<Home> {
                       focusColor: white,
                       borderRadius: BorderRadius.circular(4),
                       onTap: () {
-                        log("Clicked on index ==> $index");
+                        log.log("Clicked on index ==> $index");
                         // openDetailPage(
                         //   (continueWatchingList?[index].videoType ?? 0) == 2
                         //       ? "showdetail"
@@ -1256,7 +1300,7 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
+              log.log("Clicked on index ==> $index");
               // openDetailPage(
               //   (sectionDataList?[index].videoType ?? 0) == 2
               //       ? "showdetail"
@@ -1305,7 +1349,7 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
+              log.log("Clicked on index ==> $index");
               // openDetailPage(
               //   (sectionDataList?[index].videoType ?? 0) == 2
               //       ? "showdetail"
@@ -1354,7 +1398,7 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
+              log.log("Clicked on index ==> $index");
               // openDetailPage(
               //   (sectionDataList?[index].videoType ?? 0) == 2
               //       ? "showdetail"
@@ -1406,7 +1450,7 @@ class HomeState extends State<Home> {
                 focusColor: white,
                 borderRadius: BorderRadius.circular(4),
                 onTap: () {
-                  log("Clicked on index ==> $index");
+                  log.log("Clicked on index ==> $index");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1502,7 +1546,7 @@ class HomeState extends State<Home> {
                 focusColor: white,
                 borderRadius: BorderRadius.circular(4),
                 onTap: () {
-                  log("Clicked on index ==> $index");
+                  log.log("Clicked on index ==> $index");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

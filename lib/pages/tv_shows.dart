@@ -1,9 +1,17 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:dtlive/model/tvshowmodel.dart';
+import 'package:dtlive/pages/player_youtube.dart';
+import 'package:dtlive/pages/tvshow_player.dart';
+import 'package:dtlive/provider/adventisements_provider.dart';
 import 'package:dtlive/provider/tv_showprovider.dart';
 import 'package:dtlive/shimmer/shimmerwidget.dart';
 import 'package:dtlive/utils/color.dart';
 import 'package:dtlive/utils/constant.dart';
 import 'package:dtlive/utils/utils.dart';
 import 'package:dtlive/widget/mynetworkimg.dart';
+import 'package:dtlive/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -17,6 +25,7 @@ class TvShows extends StatefulWidget {
 }
 
 class _TvShowsState extends State<TvShows> {
+  late TvShowprovider tvshowsprovider;
   @override
   void initState() {
     super.initState();
@@ -24,9 +33,10 @@ class _TvShowsState extends State<TvShows> {
   }
 
   void _getData() async {
-    final rentStoreProvider =
-        Provider.of<TvShowprovider>(context, listen: false);
-    await rentStoreProvider.getTvShowsList();
+    tvshowsprovider = Provider.of<TvShowprovider>(context, listen: false);
+    if (tvshowsprovider.tvshows.isEmpty) {
+      await tvshowsprovider.getTvShowsList();
+    }
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
       setState(() {});
@@ -52,89 +62,122 @@ class _TvShowsState extends State<TvShows> {
       return Scaffold(
         backgroundColor: appBgColor,
         appBar: Utils.myAppBar(context, "Tv Show", false),
-        body: SafeArea(child: Consumer<TvShowprovider>(
-          builder: (context, tvShowprovider, child) {
-            if (tvShowprovider.loading) {
-              return AlignedGridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  itemCount: 10,
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int position) {
-                    return ShimmerWidget.roundrectborder(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      width: MediaQuery.of(context).size.width,
-                      shimmerBgColor: shimmerItemColor,
-                      shapeBorder: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                    );
-                  });
-            }
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  AlignedGridView.count(
+        body: SafeArea(
+            child: RefreshIndicator(
+          onRefresh: tvshowsprovider.onRefresh,
+          child: Consumer<TvShowprovider>(
+            builder: (context, provider, child) {
+              if (provider.loading) {
+                return AlignedGridView.count(
                     shrinkWrap: true,
                     crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    itemCount: (tvShowprovider.tvshows.length ?? 0),
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, top: 20),
-                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    itemCount: 25,
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
+                    // physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int position) {
-                      return InkWell(
-                        borderRadius: BorderRadius.circular(4),
-                        onTap: () async {
-                          try {
-                            await Utils.openPlayer(
-                              context: context,
-                              playType: "Video",
-                              // videoId: ,
-                              // typeId: vTypeID,
-                              otherId: 0,
-                              videoUrl: tvShowprovider.tvshows[position].source
-                                  .toString(),
-                              // trailerUrl: vUrl,
-                              uploadType: 'youtube',
-                              // videoThumb: videoThumb,
-                              // vStopTime: stopTime,
-                            );
-                          } catch (e) {
-                            Utils.showSnackbar(
-                                context, "", "In correct video format", true);
-                          }
-                        },
-                        child: Container(
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: primaryDarkColor,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            alignment: Alignment.center,
-                            child: MyNetworkImage(
-                              imageUrl: tvShowprovider
-                                  .tvshows[position].thumbnail
-                                  .toString(),
-                              fit: BoxFit.fill,
-                              imgHeight:
-                                  MediaQuery.of(context).size.height * 0.18,
-                              imgWidth: MediaQuery.of(context).size.width,
-                            )),
+                      return ShimmerWidget.roundrectborder(
+                        height: MediaQuery.of(context).size.height * 0.125,
+                        width: MediaQuery.of(context).size.width,
+                        shimmerBgColor: shimmerItemColor,
+                        shapeBorder: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
                       );
-                    },
-                  ),
+                    });
+              } else if (provider.tvshows.isEmpty) {
+                return const NoData(title: '', subTitle: '');
+              }
+              return Column(
+                children: [
+                  if (kIsWeb) ...[
+                    tvShowsWidget(provider.tvshows
+                        .where((item) => item.website == true)
+                        .toList()),
+                  ] else if (Constant.isTV) ...[
+                    tvShowsWidget(provider.tvshows
+                        .where((item) => item.smartTv == true)
+                        .toList()),
+                  ] else if (Platform.isAndroid || Platform.isIOS) ...[
+                    tvShowsWidget(provider.tvshows
+                        .where((item) => item.mobile == true)
+                        .toList()),
+                  ] else ...[
+                    tvShowsWidget(provider.tvshows),
+                  ],
                   /* Browse by END */
                   const SizedBox(height: 22),
                 ],
-              ),
-            );
-          },
+              );
+            },
+          ),
         )),
       );
     }
+  }
+
+  AlignedGridView tvShowsWidget(List<TvShowModel> list) {
+    return AlignedGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      itemCount: (list.length),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      // physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int position) {
+        return InkWell(
+          borderRadius: BorderRadius.circular(4),
+          onTap: () async {
+            final adProvider = context.read<AdventisementsProvider>();
+            final random = Random();
+            final adventisements = adProvider.filterPreviewsAd();
+            // log(adventisements.length);
+            final ad = adventisements[random.nextInt(adventisements.length)];
+            try {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TvshowPlayer(
+                        urlLink: list[position].source.toString(),
+                        adURl:
+                            'https://media9tv.com/public/storage/${ad.videoPath}');
+                  },
+                ),
+              );
+              adProvider.setPreviewsAd(ad);
+              // await Utils.openPlayer(
+              //   context: context,
+              //   playType: "Video",
+              //   // videoId: ,
+              //   // typeId: vTypeID,
+              //   otherId: 0,
+              //   videoUrl: list[position].source.toString(),
+              //   // trailerUrl: vUrl,
+              //   uploadType: 'youtube',
+              //   // videoThumb: videoThumb,
+              //   // vStopTime: stopTime,
+              // );
+            } catch (e) {
+              Utils.showSnackbar(context, "", "In correct video format", true);
+            }
+          },
+          child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: primaryDarkColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: MyNetworkImage(
+                imageUrl: list[position].thumbnail.toString(),
+                fit: BoxFit.fill,
+                imgHeight: MediaQuery.of(context).size.height * 0.125,
+                imgWidth: MediaQuery.of(context).size.width,
+              )),
+        );
+      },
+    );
   }
 }

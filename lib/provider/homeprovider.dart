@@ -1,9 +1,13 @@
 import 'package:dtlive/model/live_tv_model.dart';
+import 'package:dtlive/model/menulist_model.dart';
 import 'package:dtlive/model/sectiontypemodel.dart';
 import 'package:dtlive/model/tvshowmodel.dart';
+import 'package:dtlive/provider/adventisements_provider.dart';
+import 'package:dtlive/provider/slides_provider.dart';
 import 'package:dtlive/utils/constant.dart';
 import 'package:dtlive/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeProvider extends ChangeNotifier {
   SectionTypeModel sectionTypeModel = SectionTypeModel();
@@ -29,6 +33,39 @@ class HomeProvider extends ChangeNotifier {
     }
     debugPrint("livetv data :==> ${livetVList.length}");
     debugPrint("showtv data :==> ${tvshowsList.length}");
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> onRfresh(context) async {
+    loading = true;
+    listData?.clear();
+    livetVList = [];
+    tvshowsList = [];
+    notifyListeners();
+    final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
+    final adeventisementProvider =
+        Provider.of<AdventisementsProvider>(context, listen: false);
+    // await homeProvider.getMenuList();
+    if (adeventisementProvider.adventisements.isEmpty) {
+      await adeventisementProvider.getAdvenmtisementsList();
+    }
+    if (slidesProvider.slides.isEmpty) {
+      await slidesProvider.getSlides();
+    }
+    await gethomeScreenData();
+  }
+
+  List<MenulistModel> menulist = [];
+
+  Future<void> getMenuList() async {
+    debugPrint("getRentVideoList userID :==> ${Constant.userID}");
+    loading = true;
+    var data = await ApiService().getMenuList();
+    if (data != null) {
+      menulist = data;
+    }
+    debugPrint("menulist length :==> ${menulist.length}");
     loading = false;
     notifyListeners();
   }

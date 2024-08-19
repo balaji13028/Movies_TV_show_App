@@ -100,193 +100,193 @@ class SettingState extends State<Setting> {
             child: Column(
               children: [
                 /* Account Details */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileEdit(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'accountdetails',
-                    subTitle: 'manageprofile',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const ProfileEdit(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'accountdetails',
+                //     subTitle: 'manageprofile',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0),
 
                 /* Active TV */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ActiveTV(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'activetv',
-                    subTitle: 'activetv_desc',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const ActiveTV(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'activetv',
+                //     subTitle: 'activetv_desc',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0),
 
-                /* Watchlist */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const MyWatchlist(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'watchlist',
-                    subTitle: 'view_your_watchlist',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // /* Watchlist */
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const MyWatchlist(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'watchlist',
+                //     subTitle: 'view_your_watchlist',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0),
 
-                /* Purchases */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const MyPurchaselist(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'purchases',
-                    subTitle: 'view_your_purchases',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // /* Purchases */
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const MyPurchaselist(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'purchases',
+                //     subTitle: 'view_your_purchases',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0),
 
                 /* Downloads */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const MyDownloads(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'downloads',
-                    subTitle: 'view_your_downloads',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const MyDownloads(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'downloads',
+                //     subTitle: 'view_your_downloads',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0),
 
-                /* Subscription */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const Subscription(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'subsciption',
-                    subTitle: 'subsciptionnotes',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 8.0),
+                // /* Subscription */
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const Subscription(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'subsciption',
+                //     subTitle: 'subsciptionnotes',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 8.0),
 
                 /* Transactions */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    if (Constant.userID != null) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SubscriptionHistory(),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: 'transactions',
-                    subTitle: 'transactions_notes',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 8.0),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     if (Constant.userID != null) {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const SubscriptionHistory(),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: 'transactions',
+                //     subTitle: 'transactions_notes',
+                //     titleMultilang: true,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 8.0),
 
                 /* MaltiLanguage */
                 InkWell(
@@ -806,42 +806,42 @@ class SettingState extends State<Setting> {
                           const SizedBox(height: 20),
 
                           /* Portuguese (Brazil) */
-                          InkWell(
-                            borderRadius: BorderRadius.circular(5),
-                            onTap: () {
-                              state(() {});
-                              LocaleNotifier.of(context)?.change('pt');
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              constraints: BoxConstraints(
-                                minWidth: MediaQuery.of(context).size.width,
-                              ),
-                              height: 48,
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: primaryLight,
-                                  width: .5,
-                                ),
-                                color: primaryDarkColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: MyText(
-                                color: white,
-                                text: "Portuguese (Brazil)",
-                                textalign: TextAlign.center,
-                                fontsizeNormal: 16,
-                                multilanguage: false,
-                                maxline: 1,
-                                overflow: TextOverflow.ellipsis,
-                                fontweight: FontWeight.w500,
-                                fontstyle: FontStyle.normal,
-                              ),
-                            ),
-                          ),
+                          // InkWell(
+                          //   borderRadius: BorderRadius.circular(5),
+                          //   onTap: () {
+                          //     state(() {});
+                          //     LocaleNotifier.of(context)?.change('pt');
+                          //     Navigator.pop(context);
+                          //   },
+                          //   child: Container(
+                          //     constraints: BoxConstraints(
+                          //       minWidth: MediaQuery.of(context).size.width,
+                          //     ),
+                          //     height: 48,
+                          //     padding:
+                          //         const EdgeInsets.only(left: 10, right: 10),
+                          //     alignment: Alignment.center,
+                          //     decoration: BoxDecoration(
+                          //       border: Border.all(
+                          //         color: primaryLight,
+                          //         width: .5,
+                          //       ),
+                          //       color: primaryDarkColor,
+                          //       borderRadius: BorderRadius.circular(5),
+                          //     ),
+                          //     child: MyText(
+                          //       color: white,
+                          //       text: "Portuguese (Brazil)",
+                          //       textalign: TextAlign.center,
+                          //       fontsizeNormal: 16,
+                          //       multilanguage: false,
+                          //       maxline: 1,
+                          //       overflow: TextOverflow.ellipsis,
+                          //       fontweight: FontWeight.w500,
+                          //       fontstyle: FontStyle.normal,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

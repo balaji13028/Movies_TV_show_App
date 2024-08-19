@@ -1,25 +1,23 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dtlive/model/adventisement_model.dart';
 import 'package:dtlive/model/avatarmodel.dart';
 import 'package:dtlive/model/castdetailmodel.dart';
-import 'package:dtlive/model/couponmodel.dart';
-import 'package:dtlive/model/historymodel.dart';
-import 'package:dtlive/model/live_tv_model.dart';
-import 'package:dtlive/model/pagesmodel.dart';
-import 'package:dtlive/model/paymentoptionmodel.dart';
-import 'package:dtlive/model/paytmmodel.dart';
-import 'package:dtlive/model/slides_model.dart';
-import 'package:dtlive/model/sociallinkmodel.dart';
-import 'package:dtlive/model/subscriptionmodel.dart';
 import 'package:dtlive/model/channelsectionmodel.dart';
+import 'package:dtlive/model/couponmodel.dart';
 import 'package:dtlive/model/episodebyseasonmodel.dart';
 import 'package:dtlive/model/generalsettingmodel.dart';
 import 'package:dtlive/model/genresmodel.dart';
+import 'package:dtlive/model/historymodel.dart';
 import 'package:dtlive/model/langaugemodel.dart';
+import 'package:dtlive/model/live_tv_model.dart';
 import 'package:dtlive/model/loginregistermodel.dart';
+import 'package:dtlive/model/menulist_model.dart';
+import 'package:dtlive/model/pagesmodel.dart';
+import 'package:dtlive/model/paymentoptionmodel.dart';
+import 'package:dtlive/model/paytmmodel.dart';
 import 'package:dtlive/model/profilemodel.dart';
 import 'package:dtlive/model/rentmodel.dart';
 import 'package:dtlive/model/searchmodel.dart';
@@ -27,6 +25,9 @@ import 'package:dtlive/model/sectionbannermodel.dart';
 import 'package:dtlive/model/sectiondetailmodel.dart';
 import 'package:dtlive/model/sectionlistmodel.dart';
 import 'package:dtlive/model/sectiontypemodel.dart';
+import 'package:dtlive/model/slides_model.dart';
+import 'package:dtlive/model/sociallinkmodel.dart';
+import 'package:dtlive/model/subscriptionmodel.dart';
 import 'package:dtlive/model/successmodel.dart';
 import 'package:dtlive/model/tvshowmodel.dart';
 import 'package:dtlive/model/videobyidmodel.dart';
@@ -275,8 +276,7 @@ class ApiService {
       options: optHeaders,
     );
     // var response;
-    sectionTypeModel =
-        SectionTypeModel.fromJson(response != null ? response.data : {});
+    sectionTypeModel = SectionTypeModel.fromJson(response.data ?? {});
     return sectionTypeModel;
   }
 
@@ -818,6 +818,52 @@ class ApiService {
       if (response.statusCode == 200) {
         List<dynamic> list = response.data['data'];
         return list.map((item) => LiveTvModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Adventisements list
+  Future<List<AdventisementModel>?> getAdvenmtisementsList() async {
+    try {
+      String rentList = "advertisement";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => AdventisementModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Menu list
+  Future<List<MenulistModel>?> getMenuList() async {
+    try {
+      String rentList = "menu-management";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => MenulistModel.fromMap(item)).toList();
       }
       // rentModel = RentModel.fromJson(response.data);
       // return rentModel;

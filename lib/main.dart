@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dtlive/firebase_options.dart';
 import 'package:dtlive/pages/splash.dart';
 import 'package:dtlive/pagetransition.dart';
+import 'package:dtlive/provider/adventisements_provider.dart';
 import 'package:dtlive/provider/avatarprovider.dart';
 import 'package:dtlive/provider/bottombar_provider.dart';
 import 'package:dtlive/provider/castdetailsprovider.dart';
@@ -16,6 +17,7 @@ import 'package:dtlive/provider/findprovider.dart';
 import 'package:dtlive/provider/generalprovider.dart';
 import 'package:dtlive/provider/homeprovider.dart';
 import 'package:dtlive/provider/livetv_provider.dart';
+import 'package:dtlive/provider/menulist_provider.dart';
 import 'package:dtlive/provider/paymentprovider.dart';
 import 'package:dtlive/provider/playerprovider.dart';
 import 'package:dtlive/provider/profileprovider.dart';
@@ -145,6 +147,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => LivetvProvider()),
       ChangeNotifierProvider(create: (_) => SlidesProvider()),
       ChangeNotifierProvider(create: (_) => BottombarProvider()),
+      ChangeNotifierProvider(create: (_) => AdventisementsProvider()),
+      ChangeNotifierProvider(create: (_) => MenulistProvider()),
     ], child: const RestartWidget(child: MyApp())),
   );
 }
@@ -180,12 +184,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-    // if (state == AppLifecycleState.resumed &&
-    //         previewsSate == AppLifecycleState.detached ||
-    //     previewsSate == AppLifecycleState.inactive) {
-    //   return RestartWidget.restartApp(context);
-    // }
+    previewsSate = state;
+    // print(previewsSate);
+    // print('state = $state');
+    if (Platform.isAndroid) {
+      if (state == AppLifecycleState.resumed &&
+              previewsSate == AppLifecycleState.inactive ||
+          previewsSate == AppLifecycleState.hidden ||
+          previewsSate == AppLifecycleState.paused) {
+        return RestartWidget.restartApp(context);
+      }
+    }
     // if(app)
   }
 

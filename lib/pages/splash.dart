@@ -2,15 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:dtlive/pages/bottombar.dart';
 import 'package:dtlive/pages/intro.dart';
 import 'package:dtlive/pagetransition.dart';
 import 'package:dtlive/provider/homeprovider.dart';
 import 'package:dtlive/tvpages/tvhome.dart';
-import 'package:dtlive/utils/color.dart';
 import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/widget/myimage.dart';
 import 'package:dtlive/utils/sharedpre.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +25,6 @@ class Splash extends StatefulWidget {
 
 class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   late VideoPlayerController _controller;
-  bool _visible = false;
   String? seen;
   SharedPre sharedPre = SharedPre();
 
@@ -60,7 +56,6 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         Timer(const Duration(milliseconds: 100), () {
           setState(() {
             _controller.play();
-            _visible = true;
           });
           _controller.addListener(() async {
             // checkStatus();
@@ -75,7 +70,6 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         Timer(const Duration(milliseconds: 100), () {
           setState(() {
             _controller.play();
-            _visible = true;
           });
           _controller.addListener(() async {
             // checkStatus();

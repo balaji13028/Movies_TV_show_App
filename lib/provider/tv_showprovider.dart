@@ -12,7 +12,20 @@ class TvShowprovider extends ChangeNotifier {
     loading = true;
     var data = await ApiService().getTvvShowsList();
     if (data != null) {
-      tvshows = data;
+      tvshows = data.reversed.toList();
+    }
+    debugPrint("tvshows_list data :==> ${tvshows.length}");
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> onRefresh() async {
+    loading = true;
+    tvshows = [];
+    notifyListeners();
+    var data = await ApiService().getTvvShowsList();
+    if (data != null) {
+      tvshows = data.reversed.toList();
     }
     debugPrint("tvshows_list data :==> ${tvshows.length}");
     loading = false;

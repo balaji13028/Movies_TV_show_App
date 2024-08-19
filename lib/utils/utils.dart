@@ -4,8 +4,6 @@ import 'dart:math' as number;
 
 import 'package:dtlive/model/subtitlemodel.dart';
 import 'package:dtlive/pages/moviedetails.dart';
-import 'package:dtlive/pages/player_pod.dart';
-import 'package:dtlive/pages/player_better.dart';
 import 'package:dtlive/pages/player_vimeo.dart';
 import 'package:dtlive/pages/player_youtube.dart';
 import 'package:dtlive/pages/showdetails.dart';
@@ -16,27 +14,27 @@ import 'package:dtlive/tvpages/tvmoviedetails.dart';
 import 'package:dtlive/tvpages/tvshowdetails.dart';
 import 'package:dtlive/utils/color.dart';
 import 'package:dtlive/utils/constant.dart';
+import 'package:dtlive/utils/sharedpre.dart';
+import 'package:dtlive/utils/strings.dart';
 import 'package:dtlive/webwidget/loginsocialweb.dart';
 import 'package:dtlive/webwidget/otpverifyweb.dart';
 import 'package:dtlive/webwidget/profileeditweb.dart';
 import 'package:dtlive/widget/myimage.dart';
 import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path/path.dart' as path;
+import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:html/parser.dart' show parse;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:screen_protector/screen_protector.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static void enableScreenCapture() async {

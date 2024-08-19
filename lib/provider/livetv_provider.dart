@@ -12,7 +12,21 @@ class LivetvProvider extends ChangeNotifier {
     loading = true;
     var data = await ApiService().getLiveTvList();
     if (data != null) {
-      liveTvlist = data;
+      liveTvlist = data.reversed.toList();
+    }
+    debugPrint("livetv_list data :==> ${liveTvlist.length}");
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> onRefresh() async {
+    loading = true;
+    liveTvlist = [];
+    notifyListeners();
+
+    var data = await ApiService().getLiveTvList();
+    if (data != null) {
+      liveTvlist = data.reversed.toList();
     }
     debugPrint("livetv_list data :==> ${liveTvlist.length}");
     loading = false;
