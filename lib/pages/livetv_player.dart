@@ -1,17 +1,12 @@
-import 'dart:developer' as log;
-import 'dart:math';
-
 // import 'dart:math';
 
 import 'package:chewie/chewie.dart';
-import 'package:media9/provider/adventisements_provider.dart';
-import 'package:media9/utils/color.dart';
-import 'package:media9/utils/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class LiveTVPlayer extends StatefulWidget {

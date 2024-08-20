@@ -1,9 +1,7 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:media9/model/adventisement_model.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/webservice/apiservices.dart';
-import 'package:flutter/material.dart';
 
 class AdventisementsProvider extends ChangeNotifier {
   List<AdventisementModel> adventisements = [];

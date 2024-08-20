@@ -22,7 +22,6 @@ import 'package:media9/utils/utils.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {

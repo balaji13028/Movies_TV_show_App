@@ -3,6 +3,17 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_paypal/flutter_paypal.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:media9/provider/channelsectionprovider.dart';
 import 'package:media9/provider/paymentprovider.dart';
 import 'package:media9/provider/showdetailsprovider.dart';
@@ -16,19 +27,8 @@ import 'package:media9/utils/utils.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:media9/widget/nodata.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_paypal/flutter_paypal.dart';
-import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
-import 'package:http/http.dart' as http;
-import 'package:google_fonts/google_fonts.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
-import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:provider/provider.dart';
 // import 'package:razorpay_web/razorpay_web.dart';
 
@@ -44,7 +44,7 @@ class AllPayment extends StatefulWidget {
       productPackage,
       currency;
   const AllPayment({
-    Key? key,
+    super.key,
     required this.payType,
     required this.itemId,
     required this.price,
@@ -53,7 +53,7 @@ class AllPayment extends StatefulWidget {
     required this.videoType,
     required this.productPackage,
     required this.currency,
-  }) : super(key: key);
+  });
 
   @override
   State<AllPayment> createState() => AllPaymentState();

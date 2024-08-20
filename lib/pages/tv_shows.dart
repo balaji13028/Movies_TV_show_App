@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:media9/model/tvshowmodel.dart';
-import 'package:media9/pages/player_youtube.dart';
 import 'package:media9/pages/tvshow_player.dart';
 import 'package:media9/provider/adventisements_provider.dart';
 import 'package:media9/provider/tv_showprovider.dart';
@@ -12,9 +14,6 @@ import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
 import 'package:media9/widget/mynetworkimg.dart';
 import 'package:media9/widget/nodata.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class TvShows extends StatefulWidget {
