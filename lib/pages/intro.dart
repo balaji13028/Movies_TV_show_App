@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-// import 'package:dtlive/pages/bottombar.dart';
-import 'package:dtlive/pages/bottombar.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/utils/utils.dart';
+// import 'package:media9/pages/bottombar.dart';
+import 'package:media9/pages/bottombar.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -26,14 +26,14 @@ class IntroState extends State<Intro> {
     "intro1title",
     "intro2title",
     "intro3title",
-    "intro4title",
+    // "intro4title",
   ];
 
   List<String> introPager = <String>[
     "intro1.png",
     "intro2.png",
     "intro3.png",
-    "intro4.png",
+    // "intro4.png",
   ];
 
   @override

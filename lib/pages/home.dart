@@ -4,32 +4,32 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dtlive/model/live_tv_model.dart';
-import 'package:dtlive/model/menulist_model.dart';
-import 'package:dtlive/model/sectionlistmodel.dart' as list;
-import 'package:dtlive/model/sectionlistmodel.dart';
-import 'package:dtlive/model/slides_model.dart';
-import 'package:dtlive/model/tvshowmodel.dart';
-import 'package:dtlive/pages/livetv_player.dart';
-import 'package:dtlive/pages/tvshow_player.dart';
-import 'package:dtlive/pages/videosbyid.dart';
-import 'package:dtlive/provider/adventisements_provider.dart';
-import 'package:dtlive/provider/bottombar_provider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/menulist_provider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/provider/slides_provider.dart';
-import 'package:dtlive/shimmer/shimmerutils.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/webwidget/commonappbar.dart';
-import 'package:dtlive/webwidget/footerweb.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/model/live_tv_model.dart';
+import 'package:media9/model/menulist_model.dart';
+import 'package:media9/model/sectionlistmodel.dart' as list;
+import 'package:media9/model/sectionlistmodel.dart';
+import 'package:media9/model/slides_model.dart';
+import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/pages/livetv_player.dart';
+import 'package:media9/pages/tvshow_player.dart';
+import 'package:media9/pages/videosbyid.dart';
+import 'package:media9/provider/adventisements_provider.dart';
+import 'package:media9/provider/bottombar_provider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/menulist_provider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/provider/slides_provider.dart';
+import 'package:media9/shimmer/shimmerutils.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/webwidget/commonappbar.dart';
+import 'package:media9/webwidget/footerweb.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mynetworkimg.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -137,6 +137,7 @@ class HomeState extends State<Home> {
   }
 
   _getData() async {
+    OneSignal.Notifications.requestPermission(true);
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
     final adeventisementProvider =
         Provider.of<AdventisementsProvider>(context, listen: false);

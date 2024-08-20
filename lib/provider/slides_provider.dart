@@ -1,6 +1,6 @@
-import 'package:dtlive/model/slides_model.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/slides_model.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class SlidesProvider extends ChangeNotifier {

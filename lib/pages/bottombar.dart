@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:dtlive/pages/home.dart';
-import 'package:dtlive/pages/live_tv.dart';
-import 'package:dtlive/pages/setting.dart';
-import 'package:dtlive/pages/tv_shows.dart';
-import 'package:dtlive/provider/bottombar_provider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
+import 'package:media9/pages/home.dart';
+import 'package:media9/pages/live_tv.dart';
+import 'package:media9/pages/setting.dart';
+import 'package:media9/pages/tv_shows.dart';
+import 'package:media9/provider/bottombar_provider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';

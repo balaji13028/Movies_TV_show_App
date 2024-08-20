@@ -1,16 +1,16 @@
 import 'dart:developer';
 
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:dtlive/provider/searchprovider.dart';
-import 'package:dtlive/shimmer/shimmerutils.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
+import 'package:media9/provider/searchprovider.dart';
+import 'package:media9/shimmer/shimmerutils.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mynetworkimg.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

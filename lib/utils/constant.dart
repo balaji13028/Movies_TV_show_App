@@ -1,16 +1,16 @@
-import 'package:dtlive/model/subtitlemodel.dart';
+import 'package:media9/model/subtitlemodel.dart';
 
 class Constant {
   static const String baseurl = 'https://media9tv.com/api/';
 
   static String? appName = "Media9";
-  static String? appPackageName = "com.divinetechs.dtlive";
+  static String? appPackageName = "com.media9newsnetwork.media9";
   static String? appleAppId = "6449380090";
   static String? appVersion = "1";
   static String? appBuildNumber = "1.0";
 
   /* OneSignal App ID */
-  static const String oneSignalAppId = "";
+  static const String oneSignalAppId = "2a745c02-e74d-4292-bce9-7ec184fb9e9c";
 
   /* Constant for TV check */
   static bool isTV = false;

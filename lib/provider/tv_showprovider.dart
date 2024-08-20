@@ -1,6 +1,6 @@
-import 'package:dtlive/model/tvshowmodel.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class TvShowprovider extends ChangeNotifier {

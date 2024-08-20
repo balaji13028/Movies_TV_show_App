@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/subscriptionmodel.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/subscriptionmodel.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class SubscriptionProvider extends ChangeNotifier {

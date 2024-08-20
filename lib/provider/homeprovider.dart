@@ -1,11 +1,11 @@
-import 'package:dtlive/model/live_tv_model.dart';
-import 'package:dtlive/model/menulist_model.dart';
-import 'package:dtlive/model/sectiontypemodel.dart';
-import 'package:dtlive/model/tvshowmodel.dart';
-import 'package:dtlive/provider/adventisements_provider.dart';
-import 'package:dtlive/provider/slides_provider.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/live_tv_model.dart';
+import 'package:media9/model/menulist_model.dart';
+import 'package:media9/model/sectiontypemodel.dart';
+import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/provider/adventisements_provider.dart';
+import 'package:media9/provider/slides_provider.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

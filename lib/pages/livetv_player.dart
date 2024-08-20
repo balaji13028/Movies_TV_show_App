@@ -4,12 +4,13 @@ import 'dart:math';
 // import 'dart:math';
 
 import 'package:chewie/chewie.dart';
-import 'package:dtlive/provider/adventisements_provider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
+import 'package:media9/provider/adventisements_provider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -67,8 +68,8 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
         videoPlayerController: _liveTvController,
         autoPlay: true,
         looping: false,
-        aspectRatio: 16 / 9,
-        fullScreenByDefault: true,
+        // aspectRatio: 16 / 9,
+        fullScreenByDefault: false,
         materialProgressColors: ChewieProgressColors(
           bufferedColor: Colors.white54,
           playedColor: primaryColor,
@@ -91,6 +92,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
   }
 
   Future<bool> onBackPressed() async {
+    _chewieController.videoPlayerController.pause();
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
@@ -103,47 +105,45 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return WillPopScope(
       onWillPop: onBackPressed,
       child: Scaffold(
-        body: Stack(
-          children: [
-            Center(
-              child: adCompleted == false
-                  ? _adController.value.isInitialized
-                      ? AspectRatio(
-                          aspectRatio: _adController.value.aspectRatio,
-                          child: VideoPlayer(_adController),
-                        )
-                      : const CircularProgressIndicator(color: Colors.white)
-                  : _liveTvController.value.isInitialized
-                      ? AspectRatio(
-                          aspectRatio: _liveTvController.value.aspectRatio,
-                          child: Chewie(controller: _chewieController),
-                        )
-                      : const CircularProgressIndicator(color: Colors.white),
-            ),
-            //back button.
-            Positioned(
-              top: 35.0, // Adjust the position as needed
-              left: 16.0, // Adjust the position as needed
-              child: Visibility(
-                visible: adCompleted,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back,
-                      color: Colors.white, size: 30.0),
-                  onPressed: () {
-                    // Stop the video and dispose of the controllers before navigating back
-                    if (_chewieController
-                        .videoPlayerController.value.isPlaying) {
-                      _chewieController.pause();
-                    }
-                    onBackPressed();
-                  },
-                ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: adCompleted == false
+                    ? _adController.value.isInitialized
+                        ? AspectRatio(
+                            aspectRatio: _adController.value.aspectRatio,
+                            child: VideoPlayer(_adController),
+                          )
+                        : const CircularProgressIndicator(color: Colors.white)
+                    : _liveTvController.value.isInitialized
+                        ? AspectRatio(
+                            aspectRatio: _liveTvController.value.aspectRatio,
+                            child: Chewie(controller: _chewieController),
+                          )
+                        : const CircularProgressIndicator(color: Colors.white),
               ),
-            ),
-          ],
+
+              //back button.
+              if (!kIsWeb)
+                Positioned(
+                  top: 15,
+                  left: 15,
+                  child: SafeArea(
+                    child: InkWell(
+                      onTap: onBackPressed,
+                      focusColor: gray.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20),
+                      child: Utils.buildBackBtnDesign(context),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

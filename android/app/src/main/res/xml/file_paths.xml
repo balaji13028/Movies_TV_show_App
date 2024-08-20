@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <!--change only the package name if you have change the package name of app-->
-    <external-path name="my_images" path="Android/data/com.divinetechs.dtlive/files" />
+    <external-path name="my_images" path="Android/data/com.media9newsnetwork.media9/files" />
 
-    <external-path name="my_docs" path="Android/data/com.divinetechs.dtlive/files/Documents" />
+    <external-path name="my_docs" path="Android/data/com.media9newsnetwork.media9/files/Documents" />
 
     <external-path name="external_files" path="." />
 

@@ -1,8 +1,8 @@
-import 'package:dtlive/model/sectiondetailmodel.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
+import 'package:media9/model/sectiondetailmodel.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

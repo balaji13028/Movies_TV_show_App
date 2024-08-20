@@ -1,10 +1,10 @@
 // import 'dart:developer';
 // import 'dart:io';
 
-// import 'package:dtlive/provider/playerprovider.dart';
-// import 'package:dtlive/utils/color.dart';
-// import 'package:dtlive/utils/constant.dart';
-// import 'package:dtlive/utils/utils.dart';
+// import 'package:media9/provider/playerprovider.dart';
+// import 'package:media9/utils/color.dart';
+// import 'package:media9/utils/constant.dart';
+// import 'package:media9/utils/utils.dart';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';

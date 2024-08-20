@@ -1,33 +1,28 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dtlive/pages/aboutprivacyterms.dart';
-import 'package:dtlive/pages/activetv.dart';
-import 'package:dtlive/pages/loginsocial.dart';
-import 'package:dtlive/pages/mydownloads.dart';
-import 'package:dtlive/pages/mypurchaselist.dart';
-import 'package:dtlive/pages/mywatchlist.dart';
-import 'package:dtlive/pages/profileedit.dart';
-import 'package:dtlive/provider/generalprovider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/subscription/subscription.dart';
-import 'package:dtlive/subscription/subscriptionhistory.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:media9/pages/about_us.dart';
+import 'package:media9/pages/aboutprivacyterms.dart';
+import 'package:media9/pages/loginsocial.dart';
+import 'package:media9/pages/privacy_policies.dart';
+import 'package:media9/provider/generalprovider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
@@ -46,8 +41,6 @@ class SettingState extends State<Setting> {
 
   @override
   void initState() {
-    generalProvider = Provider.of<GeneralProvider>(context, listen: false);
-    getUserData();
     super.initState();
   }
 
@@ -124,7 +117,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0),
+                // _buildLine(16.0, 16.0,context),
 
                 /* Active TV */
                 // InkWell(
@@ -151,7 +144,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0),
+                // _buildLine(16.0, 16.0,context),
 
                 // /* Watchlist */
                 // InkWell(
@@ -178,7 +171,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0),
+                // _buildLine(16.0, 16.0,context),
 
                 // /* Purchases */
                 // InkWell(
@@ -205,7 +198,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0),
+                // _buildLine(16.0, 16.0,context),
 
                 /* Downloads */
                 // InkWell(
@@ -232,7 +225,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0),
+                // _buildLine(16.0, 16.0,context),
 
                 // /* Subscription */
                 // InkWell(
@@ -292,16 +285,16 @@ class SettingState extends State<Setting> {
                 InkWell(
                   borderRadius: BorderRadius.circular(2),
                   onTap: () {
-                    _languageChangeDialog();
+                    _languageChangeDialog(context);
                   },
                   child: _buildSettingButton(
-                    title: 'language_',
-                    subTitle: '',
-                    titleMultilang: true,
-                    subTitleMultilang: false,
-                  ),
+                      title: 'language_',
+                      subTitle: '',
+                      titleMultilang: true,
+                      subTitleMultilang: false,
+                      context: context),
                 ),
-                _buildLine(8.0, 8.0),
+                _buildLine(8.0, 8.0, context),
 
                 /* Push Notification enable/disable */
                 Container(
@@ -353,7 +346,7 @@ class SettingState extends State<Setting> {
                     ],
                   ),
                 ),
-                _buildLine(16.0, 16.0),
+                _buildLine(16.0, 16.0, context),
 
                 /* Clear Cache */
                 if (!Platform.isIOS)
@@ -414,35 +407,35 @@ class SettingState extends State<Setting> {
                       ),
                     ),
                   ),
-                if (!Platform.isIOS) _buildLine(16.0, 16.0),
+                if (!Platform.isIOS) _buildLine(16.0, 16.0, context),
 
                 /* SignIn / SignOut */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () async {
-                    if (Constant.userID != null) {
-                      logoutConfirmDialog();
-                    } else {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginSocial(),
-                        ),
-                      );
-                      setState(() {});
-                    }
-                  },
-                  child: _buildSettingButton(
-                    title: Constant.userID == null
-                        ? youAreNotSignIn
-                        : (userType == "3" && (userName ?? "").isEmpty)
-                            ? ("$signedInAs ${userMobileNo ?? ""}")
-                            : ("$signedInAs ${userName ?? ""}"),
-                    subTitle: Constant.userID == null ? "sign_in" : "sign_out",
-                    titleMultilang: false,
-                    subTitleMultilang: true,
-                  ),
-                ),
-                _buildLine(16.0, 16.0),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () async {
+                //     if (Constant.userID != null) {
+                //       logoutConfirmDialog();
+                //     } else {
+                //       await Navigator.of(context).push(
+                //         MaterialPageRoute(
+                //           builder: (context) => const LoginSocial(),
+                //         ),
+                //       );
+                //       setState(() {});
+                //     }
+                //   },
+                //   child: _buildSettingButton(
+                //     title: Constant.userID == null
+                //         ? youAreNotSignIn
+                //         : (userType == "3" && (userName ?? "").isEmpty)
+                //             ? ("$signedInAs ${userMobileNo ?? ""}")
+                //             : ("$signedInAs ${userName ?? ""}"),
+                //     subTitle: Constant.userID == null ? "sign_in" : "sign_out",
+                //     titleMultilang: false,
+                //     subTitleMultilang: true,
+                //   ),
+                // ),
+                // _buildLine(16.0, 16.0,context),
 
                 /* Rate App */
                 InkWell(
@@ -452,13 +445,13 @@ class SettingState extends State<Setting> {
                     await Utils.redirectToStore();
                   },
                   child: _buildSettingButton(
-                    title: 'rateus',
-                    subTitle: 'rateourapp',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
+                      title: 'rateus',
+                      subTitle: 'rateourapp',
+                      titleMultilang: true,
+                      subTitleMultilang: true,
+                      context: context),
                 ),
-                _buildLine(16.0, 16.0),
+                _buildLine(16.0, 16.0, context),
 
                 /* Share App */
                 InkWell(
@@ -469,13 +462,13 @@ class SettingState extends State<Setting> {
                         : Constant.androidAppShareUrlDesc);
                   },
                   child: _buildSettingButton(
-                    title: 'shareapp',
-                    subTitle: 'sharewithfriends',
-                    titleMultilang: true,
-                    subTitleMultilang: true,
-                  ),
+                      title: 'shareapp',
+                      subTitle: 'sharewithfriends',
+                      titleMultilang: true,
+                      subTitleMultilang: true,
+                      context: context),
                 ),
-                _buildLine(16.0, 16.0),
+                _buildLine(16.0, 16.0, context),
 
                 /* Delete Account */
                 if (Constant.userID != null)
@@ -483,7 +476,7 @@ class SettingState extends State<Setting> {
                     borderRadius: BorderRadius.circular(2),
                     onTap: () async {
                       if (Constant.userID != null) {
-                        deleteConfirmDialog();
+                        deleteConfirmDialog(context);
                       } else {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
@@ -494,16 +487,75 @@ class SettingState extends State<Setting> {
                       }
                     },
                     child: _buildSettingButton(
-                      title: 'delete_account',
-                      subTitle: '',
-                      titleMultilang: true,
-                      subTitleMultilang: false,
-                    ),
+                        title: 'delete_account',
+                        subTitle: '',
+                        titleMultilang: true,
+                        subTitleMultilang: false,
+                        context: context),
                   ),
-                if (Constant.userID != null) _buildLine(8.0, 8.0),
+                if (Constant.userID != null) _buildLine(8.0, 8.0, context),
+                InkWell(
+                  borderRadius: BorderRadius.circular(2),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AboutUs(),
+                      ),
+                    );
+                  },
+                  child: _buildSettingButton(
+                      title: 'About us',
+                      subTitle: '',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
+                ),
+                _buildLine(16.0, 16.0, context),
+                InkWell(
+                  borderRadius: BorderRadius.circular(2),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyPolicyScreen(
+                          title: 'Privacy Policy',
+                          url:
+                              'https://www.termsfeed.com/live/7cf2b76a-79bd-43f1-ab7b-e1b2e877e44e',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _buildSettingButton(
+                      title: 'Privacy Policy',
+                      subTitle: '',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
+                ),
+                _buildLine(16.0, 16.0, context),
+                InkWell(
+                  borderRadius: BorderRadius.circular(2),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyPolicyScreen(
+                          title: 'Terms & Conditions',
+                          url:
+                              'https://www.termsfeed.com/live/978c64e2-3de6-4584-91a2-4593f831b7b3',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _buildSettingButton(
+                      title: 'Terms & Conditions',
+                      subTitle: '',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
+                ),
+                // _buildLine(16.0, 16.0,context),
 
-                /* Pages */
-                _buildPages(),
+                // /* Pages */
+                // _buildPages(),
               ],
             ),
           ),
@@ -546,15 +598,15 @@ class SettingState extends State<Setting> {
                     );
                   },
                   child: _buildSettingButton(
-                    title:
-                        generalProvider.pagesModel.result?[position].pageName ??
-                            '',
-                    subTitle: '',
-                    titleMultilang: false,
-                    subTitleMultilang: false,
-                  ),
+                      title: generalProvider
+                              .pagesModel.result?[position].pageName ??
+                          '',
+                      subTitle: '',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
                 ),
-                _buildLine(8.0, 0.0),
+                _buildLine(8.0, 0.0, context),
               ],
             );
           },
@@ -570,6 +622,7 @@ class SettingState extends State<Setting> {
     required String subTitle,
     required bool titleMultilang,
     required bool subTitleMultilang,
+    required BuildContext context,
   }) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -613,7 +666,7 @@ class SettingState extends State<Setting> {
     );
   }
 
-  Widget _buildLine(double topMargin, double bottomMargin) {
+  Widget _buildLine(double topMargin, double bottomMargin, context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 0.5,
@@ -622,7 +675,7 @@ class SettingState extends State<Setting> {
     );
   }
 
-  _languageChangeDialog() {
+  _languageChangeDialog(context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -855,7 +908,7 @@ class SettingState extends State<Setting> {
     );
   }
 
-  logoutConfirmDialog() {
+  logoutConfirmDialog(context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: lightBlack,
@@ -1008,7 +1061,7 @@ class SettingState extends State<Setting> {
     );
   }
 
-  deleteConfirmDialog() {
+  deleteConfirmDialog(context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: lightBlack,

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:dtlive/provider/playerprovider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/utils.dart';
+import 'package:media9/provider/playerprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -103,9 +103,11 @@ class TvshowPlayerState extends State<TvshowPlayer> {
             children: [
               if (adCompleted == false) ...[
                 _adController.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: _adController.value.aspectRatio,
-                        child: VideoPlayer(_adController))
+                    ? Center(
+                        child: AspectRatio(
+                            aspectRatio: _adController.value.aspectRatio,
+                            child: VideoPlayer(_adController)),
+                      )
                     : const Center(
                         child: CircularProgressIndicator(color: Colors.white))
               ] else

@@ -1,4 +1,4 @@
-import 'package:dtlive/utils/color.dart';
+import 'package:media9/utils/color.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 

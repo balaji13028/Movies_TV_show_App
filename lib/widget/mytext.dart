@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:dtlive/utils/constant.dart';
+import 'package:media9/utils/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';

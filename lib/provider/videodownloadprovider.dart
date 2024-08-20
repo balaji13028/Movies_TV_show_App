@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:dtlive/utils/constant.dart';
+import 'package:media9/utils/constant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path/path.dart' as path;
 
-import 'package:dtlive/model/downloadvideomodel.dart';
-import 'package:dtlive/model/sectiondetailmodel.dart';
+import 'package:media9/model/downloadvideomodel.dart';
+import 'package:media9/model/sectiondetailmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path/path.dart';

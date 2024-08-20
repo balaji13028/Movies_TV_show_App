@@ -2,25 +2,25 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as number;
 
-import 'package:dtlive/model/subtitlemodel.dart';
-import 'package:dtlive/pages/moviedetails.dart';
-import 'package:dtlive/pages/player_vimeo.dart';
-import 'package:dtlive/pages/player_youtube.dart';
-import 'package:dtlive/pages/showdetails.dart';
-import 'package:dtlive/provider/showdetailsprovider.dart';
-import 'package:dtlive/provider/videodetailsprovider.dart';
-import 'package:dtlive/subscription/allpayment.dart';
-import 'package:dtlive/tvpages/tvmoviedetails.dart';
-import 'package:dtlive/tvpages/tvshowdetails.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/webwidget/loginsocialweb.dart';
-import 'package:dtlive/webwidget/otpverifyweb.dart';
-import 'package:dtlive/webwidget/profileeditweb.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/model/subtitlemodel.dart';
+import 'package:media9/pages/moviedetails.dart';
+import 'package:media9/pages/player_vimeo.dart';
+import 'package:media9/pages/player_youtube.dart';
+import 'package:media9/pages/showdetails.dart';
+import 'package:media9/provider/showdetailsprovider.dart';
+import 'package:media9/provider/videodetailsprovider.dart';
+import 'package:media9/subscription/allpayment.dart';
+import 'package:media9/tvpages/tvmoviedetails.dart';
+import 'package:media9/tvpages/tvshowdetails.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/webwidget/loginsocialweb.dart';
+import 'package:media9/webwidget/otpverifyweb.dart';
+import 'package:media9/webwidget/profileeditweb.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -1012,7 +1012,7 @@ class Utils {
         shareMessage = "$shareDesc\n${Constant.iosAppUrl}";
       }
       await FlutterShare.share(
-        title: Constant.appName ?? "DTLive",
+        title: Constant.appName ?? "media9",
         linkUrl: shareMessage,
       );
     } catch (e) {

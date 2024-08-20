@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:dtlive/provider/castdetailsprovider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/provider/castdetailsprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mynetworkimg.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
