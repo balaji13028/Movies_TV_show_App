@@ -4,6 +4,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screen_wake/flutter_screen_wake.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
@@ -26,6 +27,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
 
   @override
   void initState() {
+    FlutterScreenWake.keepOn(true);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
 
@@ -78,6 +80,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
     _adController.dispose();
     _liveTvController.dispose();
     _chewieController.dispose();
+    FlutterScreenWake.keepOn(false);
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
