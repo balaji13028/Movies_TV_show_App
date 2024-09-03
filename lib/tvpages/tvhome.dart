@@ -48,7 +48,6 @@ class TVHomeState extends State<TVHome> {
   SharedPre sharedPref = SharedPre();
   final TextEditingController searchController = TextEditingController();
   late HomeProvider homeProvider;
-  late SearchProvider searchProvider;
   CarouselController carouselController = CarouselController();
   int? videoId, videoType, typeId;
   bool isSearchEnable = false;
@@ -64,8 +63,6 @@ class TVHomeState extends State<TVHome> {
       isSearchEnable = false;
       mSearchText = "";
       searchController.clear();
-      searchProvider.clearProvider();
-      await searchProvider.notifyProvider();
     }
     setState(() {
       currentPage = page;
@@ -77,7 +74,7 @@ class TVHomeState extends State<TVHome> {
     currentPage = widget.pageName ?? "";
     sectionDataProvider =
         Provider.of<SectionDataProvider>(context, listen: false);
-    searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    // searchProvider = Provider.of<SearchProvider>(context, listen: false);
     homeProvider = Provider.of<HomeProvider>(context, listen: false);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -87,32 +84,32 @@ class TVHomeState extends State<TVHome> {
 
   _getData() async {
     Utils.getCurrencySymbol();
-    final generalProvider =
-        Provider.of<GeneralProvider>(context, listen: false);
+    // final generalProvider =
+    //     Provider.of<GeneralProvider>(context, listen: false);
 
     Constant.userID = await sharedPref.read("userid");
     debugPrint('userID ==> ${Constant.userID}');
-    await homeProvider.setLoading(true);
-    await homeProvider.getSectionType();
+    // await homeProvider.setLoading(true);
+    // await homeProvider.getSectionType();
 
-    if (!homeProvider.loading) {
-      if (homeProvider.sectionTypeModel.status == 200 &&
-          homeProvider.sectionTypeModel.result != null) {
-        if ((homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
-          if ((sectionDataProvider.sectionBannerModel.result?.length ?? 0) ==
-                  0 ||
-              (sectionDataProvider.sectionListModel.result?.length ?? 0) == 0) {
-            getTabData(0, homeProvider.sectionTypeModel.result);
-          }
-        }
-      }
-    }
+    // if (!homeProvider.loading) {
+    //   if (homeProvider.sectionTypeModel.status == 200 &&
+    //       homeProvider.sectionTypeModel.result != null) {
+    //     if ((homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
+    //       if ((sectionDataProvider.sectionBannerModel.result?.length ?? 0) ==
+    //               0 ||
+    //           (sectionDataProvider.sectionListModel.result?.length ?? 0) == 0) {
+    //         getTabData(0, homeProvider.sectionTypeModel.result);
+    //       }
+    //     }
+    //   }
+    // }
 
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
       setState(() {});
     });
-    generalProvider.getGeneralsetting();
+    // generalProvider.getGeneralsetting();
   }
 
   Future<void> setSelectedTab(int tabPos) async {
@@ -141,39 +138,39 @@ class TVHomeState extends State<TVHome> {
         position == 0 ? "1" : "2");
   }
 
-  openDetailPage(String pageName, int videoId, int upcomingType, int videoType,
-      int typeId) async {
-    debugPrint("pageName ==========> $pageName");
-    debugPrint("videoId ==========> $videoId");
-    debugPrint("videoType ==========> $videoType");
-    debugPrint("typeId ==========> $typeId");
-    if (!mounted) return;
-    Utils.openDetails(
-      context: context,
-      videoId: videoId,
-      upcomingType: upcomingType,
-      videoType: videoType,
-      typeId: typeId,
-    );
-  }
+  // openDetailPage(String pageName, int videoId, int upcomingType, int videoType,
+  //     int typeId) async {
+  //   debugPrint("pageName ==========> $pageName");
+  //   debugPrint("videoId ==========> $videoId");
+  //   debugPrint("videoType ==========> $videoType");
+  //   debugPrint("typeId ==========> $typeId");
+  //   if (!mounted) return;
+  //   Utils.openDetails(
+  //     context: context,
+  //     videoId: videoId,
+  //     upcomingType: upcomingType,
+  //     videoType: videoType,
+  //     typeId: typeId,
+  //   );
+  // }
 
   @override
   void dispose() {
     super.dispose();
   }
 
-  Widget _clickToRedirect({required String pageName}) {
-    switch (pageName) {
-      // case "channel":
-      //   return const TVChannels();
-      case "store":
-        return const TVRentStore();
-      case "search":
-        return SearchWeb(searchText: mSearchText);
-      default:
-        return tabItem(homeProvider.sectionTypeModel.result);
-    }
-  }
+  // Widget _clickToRedirect({required String pageName}) {
+  //   switch (pageName) {
+  //     // case "channel":
+  //     //   return const TVChannels();
+  //     case "store":
+  //       return const TVRentStore();
+  //     case "search":
+  //       return SearchWeb(searchText: mSearchText);
+  //     default:
+  //       return tabItem(homeProvider.sectionTypeModel.result);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -186,27 +183,27 @@ class TVHomeState extends State<TVHome> {
   }
 
   Widget _tvAppBarWithDetails() {
-    if (homeProvider.loading) {
-      return ShimmerUtils.buildHomeMobileShimmer(context);
-    } else {
-      if (homeProvider.sectionTypeModel.status == 200) {
-        if (homeProvider.sectionTypeModel.result != null ||
-            (homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
-          return Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: _clickToRedirect(pageName: currentPage ?? ""),
-              ),
-            ],
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      } else {
-        return const SizedBox.shrink();
-      }
-    }
+    // if (homeProvider.loading) {
+    //   return ShimmerUtils.buildHomeMobileShimmer(context);
+    // } else {
+    // if (homeProvider.sectionTypeModel.status == 200) {
+    //   if (homeProvider.sectionTypeModel.result != null ||
+    //       (homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
+    return Column(
+      children: [
+        _buildAppBar(),
+        // Expanded(
+        //   child: _clickToRedirect(pageName: currentPage ?? ""),
+        // ),
+      ],
+    );
+    // } else {
+    //   return const SizedBox.shrink();
+    // }
+    // } else {
+    //   return const SizedBox.shrink();
+    // }
+    // }
   }
 
   Widget _buildAppBar() {
@@ -219,89 +216,89 @@ class TVHomeState extends State<TVHome> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           /* Menu */
-          (MediaQuery.of(context).size.width < 800)
-              ? Container(
-                  constraints: const BoxConstraints(
-                    minWidth: 25,
-                  ),
-                  padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-                  child: Consumer<HomeProvider>(
-                    builder: (context, homeProvider, child) {
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isDense: true,
-                          isExpanded: true,
-                          customButton: MyImage(
-                            height: 40,
-                            imagePath: "ic_menu.png",
-                            fit: BoxFit.contain,
-                            color: white,
-                          ),
-                          items: _buildWebDropDownItems(),
-                          onChanged: (type.Result? value) async {
-                            if (kIsWeb) {
-                              _onItemTapped("");
-                            }
-                            debugPrint(
-                                'value id ===============> ${value?.id.toString()}');
-                            if (value?.id == 0) {
-                              await getTabData(
-                                  0, homeProvider.sectionTypeModel.result);
-                            } else {
-                              for (var i = 0;
-                                  i <
-                                      (homeProvider.sectionTypeModel.result
-                                              ?.length ??
-                                          0);
-                                  i++) {
-                                if (value?.id ==
-                                    homeProvider
-                                        .sectionTypeModel.result?[i].id) {
-                                  await getTabData(i + 1,
-                                      homeProvider.sectionTypeModel.result);
-                                  return;
-                                }
-                              }
-                            }
-                          },
-                          dropdownStyleData: DropdownStyleData(
-                            width: 180,
-                            useSafeArea: true,
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: Utils.setBackground(lightBlack, 5),
-                            elevation: 8,
-                          ),
-                          menuItemStyleData: MenuItemStyleData(
-                            overlayColor: WidgetStateProperty.resolveWith(
-                              (states) {
-                                if (states.contains(WidgetState.focused)) {
-                                  return white.withOpacity(0.5);
-                                }
-                                return transparentColor;
-                              },
-                            ),
-                          ),
-                          buttonStyleData: ButtonStyleData(
-                            decoration: Utils.setBGWithBorder(
-                                transparentColor, white, 20, 1),
-                            overlayColor: WidgetStateProperty.resolveWith(
-                              (states) {
-                                if (states.contains(WidgetState.focused)) {
-                                  return white.withOpacity(0.5);
-                                }
-                                if (states.contains(WidgetState.hovered)) {
-                                  return white.withOpacity(0.5);
-                                }
-                                return transparentColor;
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              : const SizedBox.shrink(),
+          // (MediaQuery.of(context).size.width < 800)
+          //     ? Container(
+          //         constraints: const BoxConstraints(
+          //           minWidth: 25,
+          //         ),
+          //         padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+          //         child: Consumer<HomeProvider>(
+          //           builder: (context, homeProvider, child) {
+          //             return DropdownButtonHideUnderline(
+          //               child: DropdownButton2(
+          //                 isDense: true,
+          //                 isExpanded: true,
+          //                 customButton: MyImage(
+          //                   height: 40,
+          //                   imagePath: "ic_menu.png",
+          //                   fit: BoxFit.contain,
+          //                   color: white,
+          //                 ),
+          //                 items: _buildWebDropDownItems(),
+          //                 onChanged: (type.Result? value) async {
+          //                   if (kIsWeb) {
+          //                     _onItemTapped("");
+          //                   }
+          //                   debugPrint(
+          //                       'value id ===============> ${value?.id.toString()}');
+          //                   if (value?.id == 0) {
+          //                     await getTabData(
+          //                         0, homeProvider.sectionTypeModel.result);
+          //                   } else {
+          //                     for (var i = 0;
+          //                         i <
+          //                             (homeProvider.sectionTypeModel.result
+          //                                     ?.length ??
+          //                                 0);
+          //                         i++) {
+          //                       if (value?.id ==
+          //                           homeProvider
+          //                               .sectionTypeModel.result?[i].id) {
+          //                         await getTabData(i + 1,
+          //                             homeProvider.sectionTypeModel.result);
+          //                         return;
+          //                       }
+          //                     }
+          //                   }
+          //                 },
+          //                 dropdownStyleData: DropdownStyleData(
+          //                   width: 180,
+          //                   useSafeArea: true,
+          //                   padding: const EdgeInsets.only(left: 10, right: 10),
+          //                   decoration: Utils.setBackground(lightBlack, 5),
+          //                   elevation: 8,
+          //                 ),
+          //                 menuItemStyleData: MenuItemStyleData(
+          //                   overlayColor: WidgetStateProperty.resolveWith(
+          //                     (states) {
+          //                       if (states.contains(WidgetState.focused)) {
+          //                         return white.withOpacity(0.5);
+          //                       }
+          //                       return transparentColor;
+          //                     },
+          //                   ),
+          //                 ),
+          //                 buttonStyleData: ButtonStyleData(
+          //                   decoration: Utils.setBGWithBorder(
+          //                       transparentColor, white, 20, 1),
+          //                   overlayColor: WidgetStateProperty.resolveWith(
+          //                     (states) {
+          //                       if (states.contains(WidgetState.focused)) {
+          //                         return white.withOpacity(0.5);
+          //                       }
+          //                       if (states.contains(WidgetState.hovered)) {
+          //                         return white.withOpacity(0.5);
+          //                       }
+          //                       return transparentColor;
+          //                     },
+          //                   ),
+          //                 ),
+          //               ),
+          //             );
+          //           },
+          //         ),
+          //       )
+          //     : const SizedBox.shrink(),
 
           /* App Icon */
           Material(
@@ -310,191 +307,195 @@ class TVHomeState extends State<TVHome> {
               focusColor: white.withOpacity(0.5),
               borderRadius: BorderRadius.circular(8),
               onTap: () async {
-                if (Constant.isTV) _onItemTapped("");
-                await getTabData(0, homeProvider.sectionTypeModel.result);
+                // if (Constant.isTV) _onItemTapped("");
+                // await getTabData(0, homeProvider.sectionTypeModel.result);
               },
               child: Container(
                 padding: const EdgeInsets.all(3.0),
-                child: MyImage(width: 68, height: 68, imagePath: "appicon.png"),
+                child: MyImage(
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                    imagePath: "appicon.png"),
               ),
             ),
           ),
 
           /* Types */
-          (MediaQuery.of(context).size.width >= 800)
-              ? Expanded(child: tabTitle(homeProvider.sectionTypeModel.result))
-              : const Expanded(child: SizedBox.shrink()),
-          const SizedBox(width: 10),
+          // (MediaQuery.of(context).size.width >= 800)
+          //     ? Expanded(child: tabTitle(homeProvider.sectionTypeModel.result))
+          //     : const Expanded(child: SizedBox.shrink()),
+          // const SizedBox(width: 10),
 
           /* Feature buttons */
           /* Search */
-          Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              focusColor: white.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(5),
-              onTap: () {
-                log("isSearchEnable ====> $isSearchEnable");
-                if (!isSearchEnable) {
-                  FocusScope.of(context).requestFocus();
-                } else {
-                  FocusScope.of(context).unfocus();
-                }
-                setState(() {
-                  isSearchEnable = !isSearchEnable;
-                });
-              },
-              child: Container(
-                height: 25,
-                constraints: const BoxConstraints(minWidth: 60, maxWidth: 130),
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                decoration: BoxDecoration(
-                  color: transparentColor,
-                  border: Border.all(
-                    color: primaryColor,
-                    width: 0.7,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        alignment: Alignment.center,
-                        child: TextField(
-                          enabled: isSearchEnable,
-                          onChanged: (value) async {
-                            log("value ====> $value");
-                            if (value.isNotEmpty) {
-                              mSearchText = value;
-                              debugPrint("mSearchText ====> $mSearchText");
-                              _onItemTapped("search");
-                              await searchProvider.setLoading(true);
-                              await searchProvider.getSearchVideo(mSearchText);
-                            }
-                          },
-                          textInputAction: TextInputAction.done,
-                          obscureText: false,
-                          controller: searchController,
-                          keyboardType: TextInputType.text,
-                          maxLines: 1,
-                          style: const TextStyle(
-                            color: white,
-                            fontSize: 14,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onSubmitted: (value) {
-                            if (isSearchEnable) {
-                              isSearchEnable = false;
-                              FocusScope.of(context).unfocus();
-                            }
-                          },
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            filled: true,
-                            isCollapsed: true,
-                            fillColor: transparentColor,
-                            hintStyle: TextStyle(
-                              color: otherColor,
-                              fontSize: 13,
-                              overflow: TextOverflow.ellipsis,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            hintText: searchHint2,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Consumer<SearchProvider>(
-                      builder: (context, searchProvider, child) {
-                        if (searchController.text.toString().isNotEmpty) {
-                          return Material(
-                            type: MaterialType.transparency,
-                            child: InkWell(
-                              focusColor: white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () async {
-                                debugPrint("Click on Clear!");
-                                _onItemTapped("");
-                                searchController.clear();
-                                if (isSearchEnable) {
-                                  isSearchEnable = false;
-                                  FocusScope.of(context).unfocus();
-                                }
-                                await searchProvider.clearProvider();
-                                await searchProvider.notifyProvider();
-                                setState(() {});
-                              },
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  minWidth: 25,
-                                  maxWidth: 25,
-                                ),
-                                padding: const EdgeInsets.all(5),
-                                alignment: Alignment.center,
-                                child: MyImage(
-                                  height: 23,
-                                  color: white,
-                                  fit: BoxFit.contain,
-                                  imagePath: "ic_close.png",
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Material(
-                            type: MaterialType.transparency,
-                            child: InkWell(
-                              focusColor: white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () async {
-                                debugPrint("Click on Search!");
-                                if (searchController.text
-                                    .toString()
-                                    .isNotEmpty) {
-                                  if (isSearchEnable) {
-                                    isSearchEnable = false;
-                                    FocusScope.of(context).unfocus();
-                                  }
-                                  mSearchText =
-                                      searchController.text.toString();
-                                  debugPrint("mSearchText ====> $mSearchText");
-                                  _onItemTapped("search");
-                                  await searchProvider.setLoading(true);
-                                  await searchProvider
-                                      .getSearchVideo(mSearchText);
-                                  setState(() {});
-                                }
-                              },
-                              child: Container(
-                                constraints: const BoxConstraints(
-                                  minWidth: 25,
-                                  maxWidth: 25,
-                                ),
-                                padding: const EdgeInsets.all(5),
-                                alignment: Alignment.center,
-                                child: MyImage(
-                                  height: 23,
-                                  color: white,
-                                  fit: BoxFit.contain,
-                                  imagePath: "ic_find.png",
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Material(
+          //   type: MaterialType.transparency,
+          //   child: InkWell(
+          //     focusColor: white.withOpacity(0.5),
+          //     borderRadius: BorderRadius.circular(5),
+          //     onTap: () {
+          //       log("isSearchEnable ====> $isSearchEnable");
+          //       if (!isSearchEnable) {
+          //         FocusScope.of(context).requestFocus();
+          //       } else {
+          //         FocusScope.of(context).unfocus();
+          //       }
+          //       setState(() {
+          //         isSearchEnable = !isSearchEnable;
+          //       });
+          //     },
+          //     child: Container(
+          //       height: 25,
+          //       constraints: const BoxConstraints(minWidth: 60, maxWidth: 130),
+          //       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          //       decoration: BoxDecoration(
+          //         color: transparentColor,
+          //         border: Border.all(
+          //           color: primaryColor,
+          //           width: 0.7,
+          //         ),
+          //         borderRadius: BorderRadius.circular(5),
+          //       ),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         crossAxisAlignment: CrossAxisAlignment.center,
+          //         children: [
+          //           Expanded(
+          //             child: Container(
+          //               width: MediaQuery.of(context).size.width,
+          //               height: MediaQuery.of(context).size.height,
+          //               alignment: Alignment.center,
+          //               child: TextField(
+          //                 enabled: isSearchEnable,
+          //                 onChanged: (value) async {
+          //                   log("value ====> $value");
+          //                   if (value.isNotEmpty) {
+          //                     mSearchText = value;
+          //                     debugPrint("mSearchText ====> $mSearchText");
+          //                     _onItemTapped("search");
+          //                     await searchProvider.setLoading(true);
+          //                     await searchProvider.getSearchVideo(mSearchText);
+          //                   }
+          //                 },
+          //                 textInputAction: TextInputAction.done,
+          //                 obscureText: false,
+          //                 controller: searchController,
+          //                 keyboardType: TextInputType.text,
+          //                 maxLines: 1,
+          //                 style: const TextStyle(
+          //                   color: white,
+          //                   fontSize: 14,
+          //                   overflow: TextOverflow.ellipsis,
+          //                   fontWeight: FontWeight.w600,
+          //                 ),
+          //                 onSubmitted: (value) {
+          //                   if (isSearchEnable) {
+          //                     isSearchEnable = false;
+          //                     FocusScope.of(context).unfocus();
+          //                   }
+          //                 },
+          //                 decoration: const InputDecoration(
+          //                   border: InputBorder.none,
+          //                   filled: true,
+          //                   isCollapsed: true,
+          //                   fillColor: transparentColor,
+          //                   hintStyle: TextStyle(
+          //                     color: otherColor,
+          //                     fontSize: 13,
+          //                     overflow: TextOverflow.ellipsis,
+          //                     fontWeight: FontWeight.w500,
+          //                   ),
+          //                   hintText: searchHint2,
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //           Consumer<SearchProvider>(
+          //             builder: (context, searchProvider, child) {
+          //               if (searchController.text.toString().isNotEmpty) {
+          //                 return Material(
+          //                   type: MaterialType.transparency,
+          //                   child: InkWell(
+          //                     focusColor: white.withOpacity(0.5),
+          //                     borderRadius: BorderRadius.circular(5),
+          //                     onTap: () async {
+          //                       debugPrint("Click on Clear!");
+          //                       _onItemTapped("");
+          //                       searchController.clear();
+          //                       if (isSearchEnable) {
+          //                         isSearchEnable = false;
+          //                         FocusScope.of(context).unfocus();
+          //                       }
+          //                       await searchProvider.clearProvider();
+          //                       await searchProvider.notifyProvider();
+          //                       setState(() {});
+          //                     },
+          //                     child: Container(
+          //                       constraints: const BoxConstraints(
+          //                         minWidth: 25,
+          //                         maxWidth: 25,
+          //                       ),
+          //                       padding: const EdgeInsets.all(5),
+          //                       alignment: Alignment.center,
+          //                       child: MyImage(
+          //                         height: 23,
+          //                         color: white,
+          //                         fit: BoxFit.contain,
+          //                         imagePath: "ic_close.png",
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               } else {
+          //                 return Material(
+          //                   type: MaterialType.transparency,
+          //                   child: InkWell(
+          //                     focusColor: white.withOpacity(0.5),
+          //                     borderRadius: BorderRadius.circular(5),
+          //                     onTap: () async {
+          //                       debugPrint("Click on Search!");
+          //                       if (searchController.text
+          //                           .toString()
+          //                           .isNotEmpty) {
+          //                         if (isSearchEnable) {
+          //                           isSearchEnable = false;
+          //                           FocusScope.of(context).unfocus();
+          //                         }
+          //                         mSearchText =
+          //                             searchController.text.toString();
+          //                         debugPrint("mSearchText ====> $mSearchText");
+          //                         _onItemTapped("search");
+          //                         await searchProvider.setLoading(true);
+          //                         await searchProvider
+          //                             .getSearchVideo(mSearchText);
+          //                         setState(() {});
+          //                       }
+          //                     },
+          //                     child: Container(
+          //                       constraints: const BoxConstraints(
+          //                         minWidth: 25,
+          //                         maxWidth: 25,
+          //                       ),
+          //                       padding: const EdgeInsets.all(5),
+          //                       alignment: Alignment.center,
+          //                       child: MyImage(
+          //                         height: 23,
+          //                         color: white,
+          //                         fit: BoxFit.contain,
+          //                         imagePath: "ic_find.png",
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 );
+          //               }
+          //             },
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           /* Channels */
           Material(
@@ -510,7 +511,7 @@ class TVHomeState extends State<TVHome> {
                 child: Consumer<HomeProvider>(
                   builder: (context, homeProvider, child) {
                     return MyText(
-                      color: homeProvider.currentPage == "channel"
+                      color: homeProvider.currentPage == "Live TV"
                           ? primaryColor
                           : white,
                       multilanguage: false,
@@ -543,7 +544,7 @@ class TVHomeState extends State<TVHome> {
                 child: Consumer<HomeProvider>(
                   builder: (context, homeProvider, child) {
                     return MyText(
-                      color: homeProvider.currentPage == "store"
+                      color: homeProvider.currentPage == "Tv Show"
                           ? primaryColor
                           : white,
                       multilanguage: false,
@@ -563,105 +564,105 @@ class TVHomeState extends State<TVHome> {
           ),
 
           /* Login / MyProfile */
-          Consumer<HomeProvider>(
-            builder: (context, homeProvider, child) {
-              if (Constant.userID != null) {
-                return Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    focusColor: white.withOpacity(0.5),
-                    onTap: () {
-                      Utils.buildWebAlertDialog(context, "profile", "");
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: MyText(
-                        color: (homeProvider.currentPage == "profile")
-                            ? primaryColor
-                            : white,
-                        multilanguage: false,
-                        text: myProfile,
-                        fontsizeNormal: 14,
-                        fontweight: FontWeight.w600,
-                        fontsizeWeb: 14,
-                        maxline: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textalign: TextAlign.center,
-                        fontstyle: FontStyle.normal,
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    focusColor: white.withOpacity(0.5),
-                    onTap: () async {
-                      Utils.buildWebAlertDialog(context, "login", "")
-                          .then((value) => _getData());
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: MyText(
-                        color: (homeProvider.currentPage == "login")
-                            ? primaryColor
-                            : white,
-                        multilanguage: true,
-                        text: "login",
-                        fontsizeNormal: 14,
-                        fontweight: FontWeight.w600,
-                        fontsizeWeb: 14,
-                        maxline: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textalign: TextAlign.center,
-                        fontstyle: FontStyle.normal,
-                      ),
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
+          // Consumer<HomeProvider>(
+          //   builder: (context, homeProvider, child) {
+          //     if (Constant.userID != null) {
+          //       return Material(
+          //         type: MaterialType.transparency,
+          //         child: InkWell(
+          //           focusColor: white.withOpacity(0.5),
+          //           onTap: () {
+          //             Utils.buildWebAlertDialog(context, "profile", "");
+          //           },
+          //           borderRadius: BorderRadius.circular(8),
+          //           child: Container(
+          //             padding: const EdgeInsets.all(8),
+          //             child: MyText(
+          //               color: (homeProvider.currentPage == "profile")
+          //                   ? primaryColor
+          //                   : white,
+          //               multilanguage: false,
+          //               text: myProfile,
+          //               fontsizeNormal: 14,
+          //               fontweight: FontWeight.w600,
+          //               fontsizeWeb: 14,
+          //               maxline: 1,
+          //               overflow: TextOverflow.ellipsis,
+          //               textalign: TextAlign.center,
+          //               fontstyle: FontStyle.normal,
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     } else {
+          //       return Material(
+          //         type: MaterialType.transparency,
+          //         child: InkWell(
+          //           focusColor: white.withOpacity(0.5),
+          //           onTap: () async {
+          //             Utils.buildWebAlertDialog(context, "login", "")
+          //                 .then((value) => _getData());
+          //           },
+          //           borderRadius: BorderRadius.circular(8),
+          //           child: Container(
+          //             padding: const EdgeInsets.all(8),
+          //             child: MyText(
+          //               color: (homeProvider.currentPage == "login")
+          //                   ? primaryColor
+          //                   : white,
+          //               multilanguage: true,
+          //               text: "login",
+          //               fontsizeNormal: 14,
+          //               fontweight: FontWeight.w600,
+          //               fontsizeWeb: 14,
+          //               maxline: 1,
+          //               overflow: TextOverflow.ellipsis,
+          //               textalign: TextAlign.center,
+          //               fontstyle: FontStyle.normal,
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     }
+          //   },
+          // ),
 
           /* Logout */
-          Consumer<HomeProvider>(
-            builder: (context, homeProvider, child) {
-              if (Constant.userID != null) {
-                return Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    focusColor: white.withOpacity(0.5),
-                    onTap: () async {
-                      if (Constant.userID != null) {
-                        _buildLogoutDialog();
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: MyText(
-                        color: white,
-                        multilanguage: true,
-                        text: "sign_out",
-                        fontsizeNormal: 14,
-                        fontweight: FontWeight.w600,
-                        fontsizeWeb: 14,
-                        maxline: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textalign: TextAlign.center,
-                        fontstyle: FontStyle.normal,
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
+          // Consumer<HomeProvider>(
+          //   builder: (context, homeProvider, child) {
+          //     if (Constant.userID != null) {
+          //       return Material(
+          //         type: MaterialType.transparency,
+          //         child: InkWell(
+          //           focusColor: white.withOpacity(0.5),
+          //           onTap: () async {
+          //             if (Constant.userID != null) {
+          //               _buildLogoutDialog();
+          //             }
+          //           },
+          //           borderRadius: BorderRadius.circular(8),
+          //           child: Container(
+          //             padding: const EdgeInsets.all(8),
+          //             child: MyText(
+          //               color: white,
+          //               multilanguage: true,
+          //               text: "sign_out",
+          //               fontsizeNormal: 14,
+          //               fontweight: FontWeight.w600,
+          //               fontsizeWeb: 14,
+          //               maxline: 1,
+          //               overflow: TextOverflow.ellipsis,
+          //               textalign: TextAlign.center,
+          //               fontstyle: FontStyle.normal,
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     } else {
+          //       return const SizedBox.shrink();
+          //     }
+          //   },
+          // ),
         ],
       ),
     );
@@ -926,15 +927,15 @@ class TVHomeState extends State<TVHome> {
               borderRadius: BorderRadius.circular(4),
               onTap: () {
                 log("Clicked on index ==> $index");
-                openDetailPage(
-                  (sectionBannerList?[index].videoType ?? 0) == 2
-                      ? "showdetail"
-                      : "videodetail",
-                  sectionBannerList?[index].id ?? 0,
-                  sectionBannerList?[index].upcomingType ?? 0,
-                  sectionBannerList?[index].videoType ?? 0,
-                  sectionBannerList?[index].typeId ?? 0,
-                );
+                // openDetailPage(
+                //   (sectionBannerList?[index].videoType ?? 0) == 2
+                //       ? "showdetail"
+                //       : "videodetail",
+                //   sectionBannerList?[index].id ?? 0,
+                //   sectionBannerList?[index].upcomingType ?? 0,
+                //   sectionBannerList?[index].videoType ?? 0,
+                //   sectionBannerList?[index].typeId ?? 0,
+                // );
               },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -1098,15 +1099,15 @@ class TVHomeState extends State<TVHome> {
                   borderRadius: BorderRadius.circular(0),
                   onTap: () {
                     log("Clicked on index ==> $index");
-                    openDetailPage(
-                      (sectionBannerList?[index].videoType ?? 0) == 2
-                          ? "showdetail"
-                          : "videodetail",
-                      sectionBannerList?[index].id ?? 0,
-                      sectionBannerList?[index].upcomingType ?? 0,
-                      sectionBannerList?[index].videoType ?? 0,
-                      sectionBannerList?[index].typeId ?? 0,
-                    );
+                    // openDetailPage(
+                    //   (sectionBannerList?[index].videoType ?? 0) == 2
+                    //       ? "showdetail"
+                    //       : "videodetail",
+                    //   sectionBannerList?[index].id ?? 0,
+                    //   sectionBannerList?[index].upcomingType ?? 0,
+                    //   sectionBannerList?[index].videoType ?? 0,
+                    //   sectionBannerList?[index].typeId ?? 0,
+                    // );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -1458,15 +1459,15 @@ class TVHomeState extends State<TVHome> {
             borderRadius: BorderRadius.circular(4),
             onTap: () {
               log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthLand,
@@ -1507,15 +1508,15 @@ class TVHomeState extends State<TVHome> {
             borderRadius: BorderRadius.circular(4),
             onTap: () {
               log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthPort,
@@ -1556,15 +1557,15 @@ class TVHomeState extends State<TVHome> {
             borderRadius: BorderRadius.circular(4),
             onTap: () {
               log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthSquare,

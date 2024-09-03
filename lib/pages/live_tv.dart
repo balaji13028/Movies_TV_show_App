@@ -8,7 +8,9 @@ import 'package:media9/provider/livetv_provider.dart';
 import 'package:media9/shimmer/shimmerwidget.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/dimens.dart';
 import 'package:media9/utils/utils.dart';
+import 'package:media9/webwidget/commonappbar.dart';
 import 'package:media9/widget/mynetworkimg.dart';
 import 'package:media9/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
@@ -49,76 +51,92 @@ class _LiveTvState extends State<LiveTv> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb || Constant.isTV) {
-      return const Scaffold(
-          backgroundColor: appBgColor,
-          body: SafeArea(
-            child: Column(
-              children: [],
-            ),
-          ));
-    } else {
-      return Scaffold(
-        backgroundColor: appBgColor,
-        appBar: Utils.myAppBar(context, "Live Tv", false),
-        body: SafeArea(
-            child: RefreshIndicator(
-          onRefresh: livetvprovider.onRefresh,
-          child: Consumer<LivetvProvider>(
-            builder: (context, provider, child) {
-              if (provider.loading) {
-                return AlignedGridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
-                    itemCount: 25,
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
-                    // physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int position) {
-                      return ShimmerWidget.roundrectborder(
-                        height: MediaQuery.of(context).size.height * 0.125,
-                        width: MediaQuery.of(context).size.width,
-                        shimmerBgColor: shimmerItemColor,
-                        shapeBorder: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
+    return Scaffold(
+      backgroundColor: appBgColor,
+      appBar: (kIsWeb || Constant.isTV)
+          ? null
+          : Utils.myAppBar(context, "Live Tv", false),
+      body: SafeArea(
+          child: RefreshIndicator(
+        onRefresh: livetvprovider.onRefresh,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Visibility(
+                  visible: (kIsWeb || Constant.isTV) ? true : false,
+                  child: SizedBox(height: Dimens.homeTabHeight),
+                ),
+                Consumer<LivetvProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.loading) {
+                      return Expanded(
+                        child: AlignedGridView.count(
+                            shrinkWrap: true,
+                            crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 15,
+                            itemCount: 25,
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 0),
+                            // physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int position) {
+                              return ShimmerWidget.roundrectborder(
+                                height: (kIsWeb || Constant.isTV)
+                                    ? MediaQuery.of(context).size.width * 0.14
+                                    : MediaQuery.of(context).size.height *
+                                        0.125,
+                                width: MediaQuery.of(context).size.width,
+                                shimmerBgColor: shimmerItemColor,
+                                shapeBorder: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5))),
+                              );
+                            }),
                       );
-                    });
-              } else if (provider.liveTvlist.isEmpty) {
-                return const NoData(title: '', subTitle: '');
-              }
-              return Column(
-                children: [
-                  if (kIsWeb) ...[
-                    liveTvWidget(provider.liveTvlist
-                        .where((item) => item.website == 1)
-                        .toList()),
-                  ] else if (Constant.isTV) ...[
-                    liveTvWidget(provider.liveTvlist
-                        .where((item) => item.smartTv == 1)
-                        .toList()),
-                  ] else if (Platform.isAndroid || Platform.isIOS) ...[
-                    liveTvWidget(provider.liveTvlist
-                        .where((item) => item.mobile == 1)
-                        .toList()),
-                  ] else ...[
-                    liveTvWidget(provider.liveTvlist),
-                  ],
-                  /* Browse by END */
-                  const SizedBox(height: 22),
-                ],
-              );
-            },
-          ),
-        )),
-      );
-    }
+                    } else if (provider.liveTvlist.isEmpty) {
+                      return const NoData(title: '', subTitle: '');
+                    }
+                    return Column(
+                      children: [
+                        if (kIsWeb) ...[
+                          liveTvWidget(provider.liveTvlist
+                              .where((item) => item.website == 1)
+                              .toList()),
+                        ] else if (Constant.isTV) ...[
+                          liveTvWidget(provider.liveTvlist
+                              .where((item) => item.smartTv == 1)
+                              .toList()),
+                        ] else if (Platform.isAndroid || Platform.isIOS) ...[
+                          liveTvWidget(provider.liveTvlist
+                              .where((item) => item.mobile == 1)
+                              .toList()),
+                        ] else ...[
+                          liveTvWidget(provider.liveTvlist),
+                        ],
+                        /* Browse by END */
+                        const SizedBox(height: 22),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+            Visibility(
+              visible: (kIsWeb || Constant.isTV) ? true : false,
+              child: const CommonAppBar(),
+            )
+          ],
+        ),
+      )),
+    );
+    // }
   }
 
   AlignedGridView liveTvWidget(List<LiveTvModel> list) {
     return AlignedGridView.count(
       shrinkWrap: true,
-      crossAxisCount: 2,
+      crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
       crossAxisSpacing: 12,
       mainAxisSpacing: 12,
       itemCount: (list.length),
@@ -157,7 +175,9 @@ class _LiveTvState extends State<LiveTv> {
               child: MyNetworkImage(
                 imageUrl: list[position].thumbnail.toString(),
                 fit: BoxFit.fill,
-                imgHeight: MediaQuery.of(context).size.height * 0.125,
+                imgHeight: (kIsWeb || Constant.isTV)
+                    ? MediaQuery.of(context).size.width * 0.14
+                    : MediaQuery.of(context).size.height * 0.125,
                 imgWidth: MediaQuery.of(context).size.width,
               )),
         );

@@ -22,7 +22,7 @@ class LiveTVPlayer extends StatefulWidget {
 class _LiveTVPlayerState extends State<LiveTVPlayer> {
   late VideoPlayerController _adController;
   late VideoPlayerController _liveTvController;
-  late ChewieController _chewieController;
+  ChewieController? _chewieController;
   bool adCompleted = false;
 
   @override
@@ -79,7 +79,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
   void dispose() {
     _adController.dispose();
     _liveTvController.dispose();
-    _chewieController.dispose();
+    _chewieController?.dispose();
     FlutterScreenWake.keepOn(false);
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -90,7 +90,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
   }
 
   Future<bool> onBackPressed() async {
-    _chewieController.videoPlayerController.pause();
+    _chewieController?.videoPlayerController.pause();
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
@@ -121,7 +121,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
                     : _liveTvController.value.isInitialized
                         ? AspectRatio(
                             aspectRatio: _liveTvController.value.aspectRatio,
-                            child: Chewie(controller: _chewieController),
+                            child: Chewie(controller: _chewieController!),
                           )
                         : const CircularProgressIndicator(color: Colors.white),
               ),

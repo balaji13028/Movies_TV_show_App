@@ -54,19 +54,10 @@ class TvShowModel {
           map['description'] != null ? map['description'] as String : null,
       source: map['source'] != null ? map['source'] as String : null,
       thumbnail: map['thumbnail'] != null ? map['thumbnail'] as String : null,
-      smartTv: map['smartTv'] != null ? map['smartTv'] as bool : null,
+      smartTv: map['smart_tv'] != null ? map['smart_tv'] as bool : null,
       mobile: map['mobile'] != null ? map['mobile'] as bool : null,
       website: map['website'] != null ? map['website'] as bool : null,
       sequence: map['sequence'] != null ? map['sequence'] as int : null,
-      menuRights: map['menuRights'] != null
-          ? List<String>.from((map['menuRights'] as List<String>))
-          : null,
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-          : null,
     );
   }
 }

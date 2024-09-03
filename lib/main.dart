@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:media9/firebase_options.dart';
+import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
 import 'package:media9/pagetransition.dart';
 import 'package:media9/provider/adventisements_provider.dart';
@@ -257,7 +258,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ),
             ),
             pageTransitionType: PageTransitionType.fade,
-            nextScreen: (kIsWeb) ? const TVHome(pageName: "") : const Splash(),
+            nextScreen: (kIsWeb) ? const Home(pageName: "") : const Splash(),
           ),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {

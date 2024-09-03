@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:media9/pages/bottombar.dart';
+import 'package:media9/pages/home.dart';
 import 'package:media9/pages/intro.dart';
 import 'package:media9/pagetransition.dart';
 import 'package:media9/provider/homeprovider.dart';
@@ -30,9 +31,6 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
     playVideo();
     // Future.delayed(const Duration(milliseconds: 4100)).then((value) async {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -48,6 +46,9 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   playVideo() {
     print('is tv');
     if (Constant.isTV) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+      ]);
       print('is tv');
       _controller =
           VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
@@ -63,6 +64,9 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         });
       });
     } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
       _controller =
           VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
       _controller.initialize().then((_) {
@@ -129,24 +133,15 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         Scaffold(
       body: AnimatedSplashScreen(
         curve: Curves.easeOutExpo,
-        splash:
-            // SizedBox(
-            //   width: size.width,
-            //   height: size.height,
-            //   child: Image.asset(
-            //     'assets/videos/gif_splash.gif',
-            //     fit: BoxFit.fill,
-            //   ),
-            // ),
-            SizedBox(
-                height: size.height,
-                width: size.width,
-                child: Center(
-                    child: _controller.value.isInitialized
-                        ? VideoPlayer(_controller)
-                        : const CircularProgressIndicator())),
+        splash: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Center(
+                child: _controller.value.isInitialized
+                    ? VideoPlayer(_controller)
+                    : const CircularProgressIndicator())),
         nextScreen: kIsWeb || Constant.isTV
-            ? const TVHome(pageName: '')
+            ? const Home(pageName: '')
             : seen == '1'
                 ? const Bottombar()
                 : const Intro(),
@@ -164,7 +159,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
   Future<void> isFirstCheck() async {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    await homeProvider.setLoading(true);
+    // await homeProvider.setLoading(true);
 
     seen = await sharedPre.read('seen') ?? "0";
     Constant.userID = await sharedPre.read('userid');
