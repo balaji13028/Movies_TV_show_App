@@ -91,7 +91,7 @@ class _TvShowsState extends State<TvShows> {
                             itemBuilder: (BuildContext context, int position) {
                               return ShimmerWidget.roundrectborder(
                                 height: (kIsWeb || Constant.isTV)
-                                    ? MediaQuery.of(context).size.width * 0.14
+                                    ? MediaQuery.of(context).size.width * 0.12
                                     : MediaQuery.of(context).size.height *
                                         0.125,
                                 width: MediaQuery.of(context).size.width,
@@ -145,13 +145,14 @@ class _TvShowsState extends State<TvShows> {
     return AlignedGridView.count(
       shrinkWrap: true,
       crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
-      crossAxisSpacing: 12,
+      crossAxisSpacing: 10,
       mainAxisSpacing: 12,
       itemCount: (list.length),
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       // physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int position) {
         return InkWell(
+          focusColor: Colors.white,
           borderRadius: BorderRadius.circular(4),
           onTap: () async {
             final adProvider = context.read<AdventisementsProvider>();
@@ -189,6 +190,7 @@ class _TvShowsState extends State<TvShows> {
             }
           },
           child: Container(
+              margin: const EdgeInsets.all(5),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: primaryDarkColor,
@@ -199,7 +201,7 @@ class _TvShowsState extends State<TvShows> {
                 imageUrl: list[position].thumbnail.toString(),
                 fit: BoxFit.fill,
                 imgHeight: (kIsWeb || Constant.isTV)
-                    ? MediaQuery.of(context).size.width * 0.14
+                    ? MediaQuery.of(context).size.width * 0.12
                     : MediaQuery.of(context).size.height * 0.125,
                 imgWidth: MediaQuery.of(context).size.width,
               )),

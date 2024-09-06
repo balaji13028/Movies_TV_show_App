@@ -40,13 +40,13 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
   }
 
   Future<void> _initializeVideoPlayers() async {
+    _liveTvController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.urlLink));
     await _adController.initialize().then((_) {
       setState(() {});
       _adController.play();
     });
 
-    _liveTvController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.urlLink));
     _liveTvController.initialize();
 
     // Listen for ad video completion

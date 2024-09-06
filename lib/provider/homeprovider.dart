@@ -5,6 +5,7 @@ import 'package:media9/model/tvshowmodel.dart';
 import 'package:media9/provider/adventisements_provider.dart';
 import 'package:media9/provider/slides_provider.dart';
 import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/strings.dart';
 import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class HomeProvider extends ChangeNotifier {
 
   bool loading = false;
   int selectedIndex = 0;
-  String currentPage = "";
+  String currentPage = bottomView1;
 
   Future<void> gethomeScreenData() async {
     debugPrint("getRentVideoList userID :==> ${Constant.userID}");

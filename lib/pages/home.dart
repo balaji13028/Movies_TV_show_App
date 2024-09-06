@@ -311,11 +311,11 @@ class HomeState extends State<Home> {
     if (homeProvider.loading) {
       return ShimmerUtils.buildHomeMobileShimmer(context);
     } else {
-      return Stack(
+      return Column(
         children: [
+          const CommonAppBar(),
           // _clickToRedirect(pageName: currentPage ?? ""),
           tabItem(),
-          const CommonAppBar(),
         ],
       );
       //   } else {
@@ -393,68 +393,129 @@ class HomeState extends State<Home> {
   }
 
   Widget tabItem() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      constraints: const BoxConstraints.expand(),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            Visibility(
-              visible: (kIsWeb || Constant.isTV) ? true : false,
-              child: SizedBox(height: Dimens.homeTabHeight),
-            ),
+    return Expanded(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        constraints: const BoxConstraints.expand(),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              // Visibility(
+              //   visible: (kIsWeb || Constant.isTV) ? true : false,
+              //   child: SizedBox(height: Dimens.homeTabHeight),
+              // ),
 
-            /* Slides */
-            Consumer<SlidesProvider>(
-              builder: (context, slidesProvider, child) {
-                if (slidesProvider.loading) {
-                  if ((kIsWeb || Constant.isTV) &&
-                      MediaQuery.of(context).size.width > 720) {
-                    return ShimmerUtils.bannerWeb(context);
-                  } else {
-                    return ShimmerUtils.bannerMobile(context);
-                  }
-                } else {
-                  if (slidesProvider.slides.isNotEmpty ||
-                      slidesProvider.slides.isNotEmpty) {
+              /* Slides */
+              Consumer<SlidesProvider>(
+                builder: (context, slidesProvider, child) {
+                  if (slidesProvider.loading) {
                     if ((kIsWeb || Constant.isTV) &&
                         MediaQuery.of(context).size.width > 720) {
-                      // return const SizedBox();
-                      return _webHomeBanner(
-                          slidesProvider.slides, slidesProvider);
+                      return ShimmerUtils.bannerWeb(context);
                     } else {
-                      return _mobileHomeBanner(
-                          slidesProvider.slides, slidesProvider);
+                      return ShimmerUtils.bannerMobile(context);
                     }
                   } else {
-                    return const SizedBox.shrink();
+                    if (slidesProvider.slides.isNotEmpty ||
+                        slidesProvider.slides.isNotEmpty) {
+                      if ((kIsWeb || Constant.isTV) &&
+                          MediaQuery.of(context).size.width > 720) {
+                        // return const SizedBox();
+                        return _webHomeBanner(
+                            slidesProvider.slides, slidesProvider);
+                      } else {
+                        return _mobileHomeBanner(
+                            slidesProvider.slides, slidesProvider);
+                      }
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   }
-                }
-              },
-            ),
+                },
+              ),
 
-            /* Live tv & show tv Sections */
-            Consumer<HomeProvider>(
-              builder: (context, homeProvider, child) {
-                if (homeProvider.loading) {
-                  return sectionShimmer();
-                } else {
-                  if (homeProvider.listData != null) {
-                    return Column(children: [
-                      if (homeProvider.livetVList.isNotEmpty) ...[
-                        /* Live Tv list */
-                        (kIsWeb || Constant.isTV)
-                            ? continueWatchingLayout(true)
-                            : Column(
-                                children: [
+              /* Live tv & show tv Sections */
+              Consumer<HomeProvider>(
+                builder: (context, homeProvider, child) {
+                  if (homeProvider.loading) {
+                    return sectionShimmer();
+                  } else {
+                    if (homeProvider.listData != null) {
+                      return Column(children: [
+                        if (homeProvider.livetVList.isNotEmpty) ...[
+                          /* Live Tv list */
+                          (kIsWeb || Constant.isTV)
+                              ? continueWatchingLayout(true)
+                              : Column(
+                                  children: [
+                                    const SizedBox(height: 25),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 0, 20, 0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          bottomPRovider.onItemTapped(1);
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            MyText(
+                                              color: white,
+                                              text: "Live Tv",
+                                              multilanguage: false,
+                                              textalign: TextAlign.center,
+                                              fontsizeNormal: 16,
+                                              fontsizeWeb: 16,
+                                              fontweight: FontWeight.w600,
+                                              maxline: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              fontstyle: FontStyle.normal,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 14,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    if (kIsWeb) ...[
+                                      liveTvWidget(homeProvider.livetVList
+                                          .where((item) => item.website == 1)
+                                          .toList()),
+                                    ] else if (Constant.isTV) ...[
+                                      liveTvWidget(homeProvider.livetVList
+                                          .where((item) => item.smartTv == 1)
+                                          .toList()),
+                                    ] else if (Platform.isAndroid ||
+                                        Platform.isIOS) ...[
+                                      liveTvWidget(homeProvider.livetVList
+                                          .where((item) => item.mobile == 1)
+                                          .toList()),
+                                    ] else ...[
+                                      liveTvWidget(homeProvider.livetVList),
+                                    ]
+                                  ],
+                                )
+                        ] else ...[
+                          const SizedBox.shrink(),
+                        ],
+                        if (homeProvider.tvshowsList.isNotEmpty) ...[
+                          (kIsWeb || Constant.isTV)
+                              ? continueWatchingLayout(false)
+                              : Column(children: [
+                                  /* tvShows  list */
                                   const SizedBox(height: 25),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                     child: InkWell(
                                       onTap: () {
-                                        bottomPRovider.onItemTapped(1);
+                                        bottomPRovider.onItemTapped(2);
                                       },
                                       child: Row(
                                         mainAxisAlignment:
@@ -462,7 +523,7 @@ class HomeState extends State<Home> {
                                         children: [
                                           MyText(
                                             color: white,
-                                            text: "Live Tv",
+                                            text: "Tv Shows",
                                             multilanguage: false,
                                             textalign: TextAlign.center,
                                             fontsizeNormal: 16,
@@ -483,107 +544,48 @@ class HomeState extends State<Home> {
                                     ),
                                   ),
                                   if (kIsWeb) ...[
-                                    liveTvWidget(homeProvider.livetVList
-                                        .where((item) => item.website == 1)
+                                    tvShowsWidget(homeProvider.tvshowsList
+                                        .where((item) => item.website == true)
                                         .toList()),
                                   ] else if (Constant.isTV) ...[
-                                    liveTvWidget(homeProvider.livetVList
-                                        .where((item) => item.smartTv == 1)
+                                    tvShowsWidget(homeProvider.tvshowsList
+                                        .where((item) => item.smartTv == true)
                                         .toList()),
                                   ] else if (Platform.isAndroid ||
                                       Platform.isIOS) ...[
-                                    liveTvWidget(homeProvider.livetVList
-                                        .where((item) => item.mobile == 1)
+                                    tvShowsWidget(homeProvider.tvshowsList
+                                        .where((item) => item.mobile == true)
                                         .toList()),
                                   ] else ...[
-                                    liveTvWidget(homeProvider.livetVList),
-                                  ]
-                                ],
-                              )
-                      ] else ...[
-                        const SizedBox.shrink(),
-                      ],
-                      if (homeProvider.tvshowsList.isNotEmpty) ...[
-                        (kIsWeb || Constant.isTV)
-                            ? continueWatchingLayout(false)
-                            : Column(children: [
-                                /* tvShows  list */
-                                const SizedBox(height: 25),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      bottomPRovider.onItemTapped(2);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        MyText(
-                                          color: white,
-                                          text: "Tv Shows",
-                                          multilanguage: false,
-                                          textalign: TextAlign.center,
-                                          fontsizeNormal: 16,
-                                          fontsizeWeb: 16,
-                                          fontweight: FontWeight.w600,
-                                          maxline: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          fontstyle: FontStyle.normal,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        const Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 14,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                if (kIsWeb) ...[
-                                  tvShowsWidget(homeProvider.tvshowsList
-                                      .where((item) => item.website == true)
-                                      .toList()),
-                                ] else if (Constant.isTV) ...[
-                                  tvShowsWidget(homeProvider.tvshowsList
-                                      .where((item) => item.smartTv == true)
-                                      .toList()),
-                                ] else if (Platform.isAndroid ||
-                                    Platform.isIOS) ...[
-                                  tvShowsWidget(homeProvider.tvshowsList
-                                      .where((item) => item.mobile == true)
-                                      .toList()),
-                                ] else ...[
-                                  tvShowsWidget(homeProvider.tvshowsList),
-                                ],
-                                const SizedBox(height: 20),
-                              ]),
-                      ] else ...[
-                        const SizedBox.shrink(),
-                      ],
-                      const SizedBox(height: 40),
-                    ]);
-                    // continueWatchingLayout(true),
+                                    tvShowsWidget(homeProvider.tvshowsList),
+                                  ],
+                                  const SizedBox(height: 20),
+                                ]),
+                        ] else ...[
+                          const SizedBox.shrink(),
+                        ],
+                        const SizedBox(height: 40),
+                      ]);
+                      // continueWatchingLayout(true),
 
-                    // // // /* Remaining Sections */
-                    // continueWatchingLayout(false)
-                  } else {
-                    return const SizedBox.shrink();
+                      // // // /* Remaining Sections */
+                      // continueWatchingLayout(false)
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   }
-                }
 
-                // continueWatchingLayout(true),
+                  // continueWatchingLayout(true),
 
-                // // // /* Remaining Sections */
-                // continueWatchingLayout(false)
-              },
-            ),
+                  // // // /* Remaining Sections */
+                  // continueWatchingLayout(false)
+                },
+              ),
 
-            /* Web Footer */
-            kIsWeb ? const FooterWeb() : const SizedBox.shrink(),
-          ],
+              /* Web Footer */
+              kIsWeb ? const FooterWeb() : const SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     );
@@ -992,6 +994,7 @@ class HomeState extends State<Home> {
   }
 
   Widget continueWatchingLayout(bool isLiveTv) {
+    int selectedIndex = 0;
     List<dynamic> list =
         isLiveTv ? homeProvider.livetVList : homeProvider.tvshowsList;
     if ((list.isNotEmpty)) {
@@ -1002,57 +1005,55 @@ class HomeState extends State<Home> {
           const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child:
-                // InkWell(
-                //   focusColor: Colors.white30,
-                //   borderRadius: BorderRadius.circular(4),
-                //   onTap: () {
-                //     if (isLiveTv) {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) {
-                //             return const LiveTv();
-                //           },
-                //         ),
-                //       );
-                //     } else {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) {
-                //             return const TvShows();
-                //           },
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   child:
-                Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MyText(
-                  color: white,
-                  text: isLiveTv ? "Live Tv" : 'Tv Shows',
-                  multilanguage: false,
-                  textalign: TextAlign.center,
-                  fontsizeNormal: 16,
-                  fontsizeWeb: 16,
-                  fontweight: FontWeight.w600,
-                  maxline: 1,
-                  overflow: TextOverflow.ellipsis,
-                  fontstyle: FontStyle.normal,
-                ),
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 14,
-                )
-              ],
+            child: InkWell(
+              focusColor: Colors.white30,
+              borderRadius: BorderRadius.circular(4),
+              onTap: () {
+                if (isLiveTv) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const LiveTv();
+                      },
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const TvShows();
+                      },
+                    ),
+                  );
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    color: white,
+                    text: isLiveTv ? "Live Tv" : 'Tv Shows',
+                    multilanguage: false,
+                    textalign: TextAlign.center,
+                    fontsizeNormal: 16,
+                    fontsizeWeb: 16,
+                    fontweight: FontWeight.w600,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                    fontstyle: FontStyle.normal,
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 14,
+                  )
+                ],
+              ),
             ),
           ),
-          // ),
           const SizedBox(height: 12),
           SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -1062,147 +1063,156 @@ class HomeState extends State<Home> {
               shrinkWrap: true,
               padding: const EdgeInsets.only(left: 20, right: 20),
               scrollDirection: Axis.horizontal,
-              physics: const PageScrollPhysics(parent: BouncingScrollPhysics()),
+              physics:
+                  const ClampingScrollPhysics(), //const PageScrollPhysics(parent: BouncingScrollPhysics()),
               separatorBuilder: (context, index) => const SizedBox(
-                width: 10,
+                width: 5,
               ),
               itemBuilder: (BuildContext context, int index) {
-                return Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    focusColor: Colors.white30,
-                    borderRadius: BorderRadius.circular(4),
-                    onTap: () async {
-                      final adProvider = context.read<AdventisementsProvider>();
-                      final random = Random();
-                      final adventisements = adProvider.filterPreviewsAd();
-                      // log(adventisements.length);
-                      final ad =
-                          adventisements[random.nextInt(adventisements.length)];
-                      if (isLiveTv) {
-                        try {
-                          await Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return LiveTVPlayer(
-                              urlLink: list[index]!.liveSource.toString(),
-                              adURl:
-                                  'https://media9tv.com/public/storage/${ad.videoPath}',
-                            );
-                          }));
-                          adProvider.setPreviewsAd(ad);
-                        } catch (e) {
-                          Utils.showSnackbar(
-                              context, "", "In correct video format", true);
-                        }
-                      } else {
-                        try {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return TvshowPlayer(
-                                    urlLink: list[index]!.source.toString(),
-                                    adURl:
-                                        'https://media9tv.com/public/storage/${ad.videoPath}');
-                              },
-                            ),
+                return InkWell(
+                  onFocusChange: (value) {
+                    print(index);
+                    print(value);
+                    // setState(() {
+                    //   hoverIndex = i;
+                    //   widget.selectedIndex = i;
+                    // });
+                  },
+                  focusColor: Colors.white70,
+                  borderRadius: BorderRadius.circular(4),
+                  // autofocus: selectedIndex == index ? true : false,
+                  onTap: () async {
+                    final adProvider = context.read<AdventisementsProvider>();
+                    final random = Random();
+                    final adventisements = adProvider.filterPreviewsAd();
+                    // log(adventisements.length);
+                    final ad =
+                        adventisements[random.nextInt(adventisements.length)];
+                    if (isLiveTv) {
+                      try {
+                        await Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return LiveTVPlayer(
+                            urlLink: list[index]!.liveSource.toString(),
+                            adURl:
+                                'https://media9tv.com/public/storage/${ad.videoPath}',
                           );
-                          adProvider.setPreviewsAd(ad);
-                        } catch (e) {
-                          Utils.showSnackbar(
-                              context, "", "In correct video format", true);
-                        }
+                        }));
+                        adProvider.setPreviewsAd(ad);
+                      } catch (e) {
+                        Utils.showSnackbar(
+                            context, "", "In correct video format", true);
                       }
-                    },
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomStart,
-                      children: [
-                        Container(
-                          width: Dimens.widthContiLand,
-                          height: Dimens.heightContiLand,
-                          alignment: Alignment.center,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: MyNetworkImage(
-                              imageUrl: list[index]?.thumbnail ?? "",
-                              fit: BoxFit.fill,
-                              imgHeight: MediaQuery.of(context).size.height,
-                              imgWidth: MediaQuery.of(context).size.width,
-                            ),
+                    } else {
+                      try {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return TvshowPlayer(
+                                  urlLink: list[index]!.source.toString(),
+                                  adURl:
+                                      'https://media9tv.com/public/storage/${ad.videoPath}');
+                            },
                           ),
-                        ),
-                        // Column(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   mainAxisAlignment: MainAxisAlignment.start,
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: <Widget>[
-                        //     Padding(
-                        //       padding: const EdgeInsets.only(left: 10, bottom: 8),
-                        //       child: InkWell(
-                        //         borderRadius: BorderRadius.circular(20),
-                        //         onTap: () async {
-                        //           // openPlayer(
-                        //           //     "ContinueWatch", index, liveTvList);
-                        //         },
-                        //         child: MyImage(
-                        //           width: 30,
-                        //           height: 30,
-                        //           imagePath: "play.png",
-                        //         ),
-                        //       ),
-                        //     ),
-                        // Container(
-                        //   width: Dimens.widthContiLand,
-                        //   constraints: const BoxConstraints(minWidth: 0),
-                        //   padding: const EdgeInsets.all(3),
-                        //   child: LinearPercentIndicator(
-                        //     padding: const EdgeInsets.all(0),
-                        //     barRadius: const Radius.circular(2),
-                        //     lineHeight: 4,
-                        //     percent: Utils.getPercentage(
-                        //         liveTvList?[index].videoDuration ?? 0,
-                        //         continueWatchingList?[index].stopTime ?? 0),
-                        //     backgroundColor: secProgressColor,
-                        //     progressColor: primaryColor,
-                        //   ),
-                        // ),
-                        // (continueWatchingList?[index].releaseTag != null &&
-                        //         (continueWatchingList?[index].releaseTag ?? "")
-                        //             .isNotEmpty)
-                        //     ? Container(
-                        //         decoration: const BoxDecoration(
-                        //           color: black,
-                        //           borderRadius: BorderRadius.only(
-                        //             bottomLeft: Radius.circular(4),
-                        //             bottomRight: Radius.circular(4),
-                        //           ),
-                        //           shape: BoxShape.rectangle,
-                        //         ),
-                        //         alignment: Alignment.center,
-                        //         width: Dimens.widthContiLand,
-                        //         height: 15,
-                        //         child: MyText(
-                        //           color: white,
-                        //           multilanguage: false,
-                        //           text:
-                        //               continueWatchingList?[index].releaseTag ??
-                        //                   "",
-                        //           textalign: TextAlign.center,
-                        //           fontsizeNormal: 6,
-                        //           fontweight: FontWeight.w700,
-                        //           fontsizeWeb: 10,
-                        //           maxline: 1,
-                        //           overflow: TextOverflow.ellipsis,
-                        //           fontstyle: FontStyle.normal,
-                        //         ),
-                        //       )
-                        // : const SizedBox.shrink(),
-                        //   ],
-                        // ),
-                      ],
+                        );
+                        adProvider.setPreviewsAd(ad);
+                      } catch (e) {
+                        Utils.showSnackbar(
+                            context, "", "In correct video format", true);
+                      }
+                    }
+                  },
+                  child:
+                      // Stack(
+                      //   alignment: AlignmentDirectional.bottomStart,
+                      //   children: [
+                      Container(
+                    width: Dimens.widthContiLand,
+                    height: Dimens.heightContiLand,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: MyNetworkImage(
+                        imageUrl: list[index]?.thumbnail ?? "",
+                        fit: BoxFit.fill,
+                        imgHeight: MediaQuery.of(context).size.height,
+                        imgWidth: MediaQuery.of(context).size.width,
+                      ),
                     ),
                   ),
+                  // Column(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: <Widget>[
+                  //     Padding(
+                  //       padding: const EdgeInsets.only(left: 10, bottom: 8),
+                  //       child: InkWell(
+                  //         borderRadius: BorderRadius.circular(20),
+                  //         onTap: () async {
+                  //           // openPlayer(
+                  //           //     "ContinueWatch", index, liveTvList);
+                  //         },
+                  //         child: MyImage(
+                  //           width: 30,
+                  //           height: 30,
+                  //           imagePath: "play.png",
+                  //         ),
+                  //       ),
+                  //     ),
+                  // Container(
+                  //   width: Dimens.widthContiLand,
+                  //   constraints: const BoxConstraints(minWidth: 0),
+                  //   padding: const EdgeInsets.all(3),
+                  //   child: LinearPercentIndicator(
+                  //     padding: const EdgeInsets.all(0),
+                  //     barRadius: const Radius.circular(2),
+                  //     lineHeight: 4,
+                  //     percent: Utils.getPercentage(
+                  //         liveTvList?[index].videoDuration ?? 0,
+                  //         continueWatchingList?[index].stopTime ?? 0),
+                  //     backgroundColor: secProgressColor,
+                  //     progressColor: primaryColor,
+                  //   ),
+                  // ),
+                  // (continueWatchingList?[index].releaseTag != null &&
+                  //         (continueWatchingList?[index].releaseTag ?? "")
+                  //             .isNotEmpty)
+                  //     ? Container(
+                  //         decoration: const BoxDecoration(
+                  //           color: black,
+                  //           borderRadius: BorderRadius.only(
+                  //             bottomLeft: Radius.circular(4),
+                  //             bottomRight: Radius.circular(4),
+                  //           ),
+                  //           shape: BoxShape.rectangle,
+                  //         ),
+                  //         alignment: Alignment.center,
+                  //         width: Dimens.widthContiLand,
+                  //         height: 15,
+                  //         child: MyText(
+                  //           color: white,
+                  //           multilanguage: false,
+                  //           text:
+                  //               continueWatchingList?[index].releaseTag ??
+                  //                   "",
+                  //           textalign: TextAlign.center,
+                  //           fontsizeNormal: 6,
+                  //           fontweight: FontWeight.w700,
+                  //           fontsizeWeb: 10,
+                  //           maxline: 1,
+                  //           overflow: TextOverflow.ellipsis,
+                  //           fontstyle: FontStyle.normal,
+                  //         ),
+                  //       )
+                  // : const SizedBox.shrink(),
+                  //   ],
+                  // ),
+                  // ],
+                  // ),
                 );
               },
             ),

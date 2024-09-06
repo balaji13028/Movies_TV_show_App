@@ -137,13 +137,14 @@ class _LiveTvState extends State<LiveTv> {
     return AlignedGridView.count(
       shrinkWrap: true,
       crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
-      crossAxisSpacing: 12,
+      crossAxisSpacing: 10,
       mainAxisSpacing: 12,
       itemCount: (list.length),
       padding: const EdgeInsets.only(left: 20, right: 20, top: 4),
       // physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int position) {
         return InkWell(
+          focusColor: Colors.white70,
           borderRadius: BorderRadius.circular(4),
           onTap: () async {
             final adProvider = context.read<AdventisementsProvider>();
@@ -166,6 +167,7 @@ class _LiveTvState extends State<LiveTv> {
             }
           },
           child: Container(
+              margin: const EdgeInsets.all(5),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: primaryDarkColor,
@@ -176,7 +178,7 @@ class _LiveTvState extends State<LiveTv> {
                 imageUrl: list[position].thumbnail.toString(),
                 fit: BoxFit.fill,
                 imgHeight: (kIsWeb || Constant.isTV)
-                    ? MediaQuery.of(context).size.width * 0.14
+                    ? MediaQuery.of(context).size.width * 0.12
                     : MediaQuery.of(context).size.height * 0.125,
                 imgWidth: MediaQuery.of(context).size.width,
               )),

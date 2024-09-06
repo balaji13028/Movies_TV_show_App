@@ -1,28 +1,20 @@
-import 'dart:developer';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:media9/pages/channels.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:media9/model/sectiontypemodel.dart' as type;
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/live_tv.dart';
-import 'package:media9/pages/rentstore.dart';
-import 'package:media9/pages/setting.dart';
 import 'package:media9/pages/tv_shows.dart';
 import 'package:media9/provider/homeprovider.dart';
-import 'package:media9/provider/searchprovider.dart';
-import 'package:media9/model/sectiontypemodel.dart' as type;
 import 'package:media9/provider/sectiondataprovider.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/dimens.dart';
 import 'package:media9/utils/strings.dart';
 import 'package:media9/utils/utils.dart';
-import 'package:media9/webwidget/searchweb.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class CommonAppBar extends StatefulWidget {
@@ -200,22 +192,23 @@ class _CommonAppBarState extends State<CommonAppBar> {
           //     : const SizedBox.shrink(),
 
           /* App Icon */
-          InkWell(
-            splashColor: transparentColor,
-            highlightColor: transparentColor,
-            focusColor: white,
-            borderRadius: BorderRadius.circular(8),
-            onTap: () async {
-              // if (kIsWeb || Constant.isTV) _onItemTapped("");
-              // await getTabData(0, homeProvider.sectionTypeModel.result);
-            },
-            child: MyImage(
-              width: 80,
-              height: 80,
-              imagePath: "appicon.png",
-              fit: BoxFit.cover,
-            ),
+          // InkWell(
+          //   splashColor: transparentColor,
+          //   highlightColor: transparentColor,
+          //   focusColor: white,
+          //   borderRadius: BorderRadius.circular(8),
+          //   onTap: () async {
+          //     // if (kIsWeb || Constant.isTV) _onItemTapped("");
+          //     // await getTabData(0, homeProvider.sectionTypeModel.result);
+          //   },
+          //   child:
+          MyImage(
+            width: 80,
+            height: 80,
+            imagePath: "appicon.png",
+            fit: BoxFit.cover,
           ),
+          // ),
           const SizedBox(width: 20),
           /* Types */
           // (MediaQuery.of(context).size.width >= 800)
