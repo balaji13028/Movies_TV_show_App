@@ -30,6 +30,7 @@ import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/dimens.dart';
 import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
 import 'package:media9/utils/utils.dart';
 import 'package:media9/webwidget/commonappbar.dart';
 import 'package:media9/webwidget/footerweb.dart';
@@ -315,7 +316,7 @@ class HomeState extends State<Home> {
         children: [
           const CommonAppBar(),
           // _clickToRedirect(pageName: currentPage ?? ""),
-          tabItem(),
+          Expanded(child: tabItem()),
         ],
       );
       //   } else {
@@ -393,129 +394,68 @@ class HomeState extends State<Home> {
   }
 
   Widget tabItem() {
-    return Expanded(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        constraints: const BoxConstraints.expand(),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              // Visibility(
-              //   visible: (kIsWeb || Constant.isTV) ? true : false,
-              //   child: SizedBox(height: Dimens.homeTabHeight),
-              // ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      constraints: const BoxConstraints.expand(),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            // Visibility(
+            //   visible: (kIsWeb || Constant.isTV) ? true : false,
+            //   child: SizedBox(height: Dimens.homeTabHeight),
+            // ),
 
-              /* Slides */
-              Consumer<SlidesProvider>(
-                builder: (context, slidesProvider, child) {
-                  if (slidesProvider.loading) {
+            /* Slides */
+            Consumer<SlidesProvider>(
+              builder: (context, slidesProvider, child) {
+                if (slidesProvider.loading) {
+                  if ((kIsWeb || Constant.isTV) &&
+                      MediaQuery.of(context).size.width > 720) {
+                    return ShimmerUtils.bannerWeb(context);
+                  } else {
+                    return ShimmerUtils.bannerMobile(context);
+                  }
+                } else {
+                  if (slidesProvider.slides.isNotEmpty ||
+                      slidesProvider.slides.isNotEmpty) {
                     if ((kIsWeb || Constant.isTV) &&
                         MediaQuery.of(context).size.width > 720) {
-                      return ShimmerUtils.bannerWeb(context);
+                      // return const SizedBox();
+                      return _webHomeBanner(
+                          slidesProvider.slides, slidesProvider);
                     } else {
-                      return ShimmerUtils.bannerMobile(context);
+                      return _mobileHomeBanner(
+                          slidesProvider.slides, slidesProvider);
                     }
                   } else {
-                    if (slidesProvider.slides.isNotEmpty ||
-                        slidesProvider.slides.isNotEmpty) {
-                      if ((kIsWeb || Constant.isTV) &&
-                          MediaQuery.of(context).size.width > 720) {
-                        // return const SizedBox();
-                        return _webHomeBanner(
-                            slidesProvider.slides, slidesProvider);
-                      } else {
-                        return _mobileHomeBanner(
-                            slidesProvider.slides, slidesProvider);
-                      }
-                    } else {
-                      return const SizedBox.shrink();
-                    }
+                    return const SizedBox.shrink();
                   }
-                },
-              ),
+                }
+              },
+            ),
 
-              /* Live tv & show tv Sections */
-              Consumer<HomeProvider>(
-                builder: (context, homeProvider, child) {
-                  if (homeProvider.loading) {
-                    return sectionShimmer();
-                  } else {
-                    if (homeProvider.listData != null) {
-                      return Column(children: [
-                        if (homeProvider.livetVList.isNotEmpty) ...[
-                          /* Live Tv list */
-                          (kIsWeb || Constant.isTV)
-                              ? continueWatchingLayout(true)
-                              : Column(
-                                  children: [
-                                    const SizedBox(height: 25),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 0, 20, 0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          bottomPRovider.onItemTapped(1);
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            MyText(
-                                              color: white,
-                                              text: "Live Tv",
-                                              multilanguage: false,
-                                              textalign: TextAlign.center,
-                                              fontsizeNormal: 16,
-                                              fontsizeWeb: 16,
-                                              fontweight: FontWeight.w600,
-                                              maxline: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              fontstyle: FontStyle.normal,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            const Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Colors.white,
-                                              size: 14,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    if (kIsWeb) ...[
-                                      liveTvWidget(homeProvider.livetVList
-                                          .where((item) => item.website == 1)
-                                          .toList()),
-                                    ] else if (Constant.isTV) ...[
-                                      liveTvWidget(homeProvider.livetVList
-                                          .where((item) => item.smartTv == 1)
-                                          .toList()),
-                                    ] else if (Platform.isAndroid ||
-                                        Platform.isIOS) ...[
-                                      liveTvWidget(homeProvider.livetVList
-                                          .where((item) => item.mobile == 1)
-                                          .toList()),
-                                    ] else ...[
-                                      liveTvWidget(homeProvider.livetVList),
-                                    ]
-                                  ],
-                                )
-                        ] else ...[
-                          const SizedBox.shrink(),
-                        ],
-                        if (homeProvider.tvshowsList.isNotEmpty) ...[
-                          (kIsWeb || Constant.isTV)
-                              ? continueWatchingLayout(false)
-                              : Column(children: [
-                                  /* tvShows  list */
+            /* Live tv & show tv Sections */
+            Consumer<HomeProvider>(
+              builder: (context, homeProvider, child) {
+                if (homeProvider.loading) {
+                  return sectionShimmer();
+                } else {
+                  if (homeProvider.listData != null) {
+                    return Column(children: [
+                      if (homeProvider.livetVList.isNotEmpty) ...[
+                        /* Live Tv list */
+                        (kIsWeb || Constant.isTV)
+                            ? continueWatchingLayout(true)
+                            : Column(
+                                children: [
                                   const SizedBox(height: 25),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                     child: InkWell(
                                       onTap: () {
-                                        bottomPRovider.onItemTapped(2);
+                                        bottomPRovider.onItemTapped(1);
                                       },
                                       child: Row(
                                         mainAxisAlignment:
@@ -523,7 +463,7 @@ class HomeState extends State<Home> {
                                         children: [
                                           MyText(
                                             color: white,
-                                            text: "Tv Shows",
+                                            text: "Live Tv",
                                             multilanguage: false,
                                             textalign: TextAlign.center,
                                             fontsizeNormal: 16,
@@ -544,48 +484,107 @@ class HomeState extends State<Home> {
                                     ),
                                   ),
                                   if (kIsWeb) ...[
-                                    tvShowsWidget(homeProvider.tvshowsList
-                                        .where((item) => item.website == true)
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.website == 1)
                                         .toList()),
                                   ] else if (Constant.isTV) ...[
-                                    tvShowsWidget(homeProvider.tvshowsList
-                                        .where((item) => item.smartTv == true)
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.smartTv == 1)
                                         .toList()),
                                   ] else if (Platform.isAndroid ||
                                       Platform.isIOS) ...[
-                                    tvShowsWidget(homeProvider.tvshowsList
-                                        .where((item) => item.mobile == true)
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.mobile == 1)
                                         .toList()),
                                   ] else ...[
-                                    tvShowsWidget(homeProvider.tvshowsList),
-                                  ],
-                                  const SizedBox(height: 20),
-                                ]),
-                        ] else ...[
-                          const SizedBox.shrink(),
-                        ],
-                        const SizedBox(height: 40),
-                      ]);
-                      // continueWatchingLayout(true),
+                                    liveTvWidget(homeProvider.livetVList),
+                                  ]
+                                ],
+                              )
+                      ] else ...[
+                        const SizedBox.shrink(),
+                      ],
+                      if (homeProvider.tvshowsList.isNotEmpty) ...[
+                        (kIsWeb || Constant.isTV)
+                            ? continueWatchingLayout(false)
+                            : Column(children: [
+                                /* tvShows  list */
+                                const SizedBox(height: 25),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      bottomPRovider.onItemTapped(2);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        MyText(
+                                          color: white,
+                                          text: "Tv Shows",
+                                          multilanguage: false,
+                                          textalign: TextAlign.center,
+                                          fontsizeNormal: 16,
+                                          fontsizeWeb: 16,
+                                          fontweight: FontWeight.w600,
+                                          maxline: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          fontstyle: FontStyle.normal,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                          size: 14,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (kIsWeb) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.website == true)
+                                      .toList()),
+                                ] else if (Constant.isTV) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.smartTv == true)
+                                      .toList()),
+                                ] else if (Platform.isAndroid ||
+                                    Platform.isIOS) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.mobile == true)
+                                      .toList()),
+                                ] else ...[
+                                  tvShowsWidget(homeProvider.tvshowsList),
+                                ],
+                                const SizedBox(height: 20),
+                              ]),
+                      ] else ...[
+                        const SizedBox.shrink(),
+                      ],
+                      const SizedBox(height: 40),
+                    ]);
+                    // continueWatchingLayout(true),
 
-                      // // // /* Remaining Sections */
-                      // continueWatchingLayout(false)
-                    } else {
-                      return const SizedBox.shrink();
-                    }
+                    // // // /* Remaining Sections */
+                    // continueWatchingLayout(false)
+                  } else {
+                    return const SizedBox.shrink();
                   }
+                }
 
-                  // continueWatchingLayout(true),
+                // continueWatchingLayout(true),
 
-                  // // // /* Remaining Sections */
-                  // continueWatchingLayout(false)
-                },
-              ),
+                // // // /* Remaining Sections */
+                // continueWatchingLayout(false)
+              },
+            ),
 
-              /* Web Footer */
-              kIsWeb ? const FooterWeb() : const SizedBox.shrink(),
-            ],
-          ),
+            /* Web Footer */
+            kIsWeb ? const FooterWeb() : const SizedBox.shrink(),
+          ],
         ),
       ),
     );
@@ -1010,6 +1009,8 @@ class HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(4),
               onTap: () {
                 if (isLiveTv) {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setCurrentPage(bottomView2);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1019,6 +1020,8 @@ class HomeState extends State<Home> {
                     ),
                   );
                 } else {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setCurrentPage(bottomView3);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
