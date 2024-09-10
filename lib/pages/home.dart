@@ -1062,7 +1062,7 @@ class HomeState extends State<Home> {
             width: MediaQuery.of(context).size.width,
             height: Dimens.heightContiLand,
             child: ListView.separated(
-              itemCount: (list.length ?? 0),
+              itemCount: (list.length),
               shrinkWrap: true,
               padding: const EdgeInsets.only(left: 20, right: 20),
               scrollDirection: Axis.horizontal,
@@ -1074,8 +1074,8 @@ class HomeState extends State<Home> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onFocusChange: (value) {
-                    print(index);
-                    print(value);
+                    // print(index);
+                    // print(value);
                     // setState(() {
                     //   hoverIndex = i;
                     //   widget.selectedIndex = i;
