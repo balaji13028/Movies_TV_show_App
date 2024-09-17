@@ -67,58 +67,70 @@ class _LiveTvState extends State<LiveTv> {
                   visible: (kIsWeb || Constant.isTV) ? true : false,
                   child: SizedBox(height: Dimens.homeTabHeight),
                 ),
-                Consumer<LivetvProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.loading) {
-                      return Expanded(
-                        child: AlignedGridView.count(
-                            shrinkWrap: true,
-                            crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 15,
-                            itemCount: 25,
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 0),
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int position) {
-                              return ShimmerWidget.roundrectborder(
-                                height: (kIsWeb || Constant.isTV)
-                                    ? MediaQuery.of(context).size.width * 0.14
-                                    : MediaQuery.of(context).size.height *
-                                        0.125,
-                                width: MediaQuery.of(context).size.width,
-                                shimmerBgColor: shimmerItemColor,
-                                shapeBorder: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                              );
-                            }),
-                      );
-                    } else if (provider.liveTvlist.isEmpty) {
-                      return const NoData(title: '', subTitle: '');
-                    }
-                    return Column(
-                      children: [
-                        if (kIsWeb) ...[
-                          liveTvWidget(provider.liveTvlist
-                              .where((item) => item.website == 1)
-                              .toList()),
-                        ] else if (Constant.isTV) ...[
-                          liveTvWidget(provider.liveTvlist
-                              .where((item) => item.smartTv == 1)
-                              .toList()),
-                        ] else if (Platform.isAndroid || Platform.isIOS) ...[
-                          liveTvWidget(provider.liveTvlist
-                              .where((item) => item.mobile == 1)
-                              .toList()),
-                        ] else ...[
-                          liveTvWidget(provider.liveTvlist),
-                        ],
-                        /* Browse by END */
-                        const SizedBox(height: 22),
-                      ],
-                    );
-                  },
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Consumer<LivetvProvider>(
+                      builder: (context, provider, child) {
+                        if (provider.loading) {
+                          return AlignedGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: ((kIsWeb || Constant.isTV) &&
+                                      MediaQuery.of(context).size.width > 700)
+                                  ? 5
+                                  : 2,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                              itemCount: 25,
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 0),
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder:
+                                  (BuildContext context, int position) {
+                                return ShimmerWidget.roundrectborder(
+                                  height: (kIsWeb || Constant.isTV) &&
+                                          MediaQuery.of(context).size.width >
+                                              700
+                                      ? MediaQuery.of(context).size.width * 0.11
+                                      : (kIsWeb || Constant.isTV)
+                                          ? MediaQuery.of(context).size.height *
+                                              0.15
+                                          : MediaQuery.of(context).size.height *
+                                              0.125,
+                                  width: MediaQuery.of(context).size.width,
+                                  shimmerBgColor: shimmerItemColor,
+                                  shapeBorder: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                );
+                              });
+                        } else if (provider.liveTvlist.isEmpty) {
+                          return const NoData(title: '', subTitle: '');
+                        }
+                        return Column(
+                          children: [
+                            if (kIsWeb) ...[
+                              liveTvWidget(provider.liveTvlist
+                                  .where((item) => item.website == 1)
+                                  .toList()),
+                            ] else if (Constant.isTV) ...[
+                              liveTvWidget(provider.liveTvlist
+                                  .where((item) => item.smartTv == 1)
+                                  .toList()),
+                            ] else if (Platform.isAndroid ||
+                                Platform.isIOS) ...[
+                              liveTvWidget(provider.liveTvlist
+                                  .where((item) => item.mobile == 1)
+                                  .toList()),
+                            ] else ...[
+                              liveTvWidget(provider.liveTvlist),
+                            ],
+                            /* Browse by END */
+                            const SizedBox(height: 22),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -136,12 +148,15 @@ class _LiveTvState extends State<LiveTv> {
   AlignedGridView liveTvWidget(List<LiveTvModel> list) {
     return AlignedGridView.count(
       shrinkWrap: true,
-      crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
+      crossAxisCount:
+          ((kIsWeb || Constant.isTV) && MediaQuery.of(context).size.width > 700)
+              ? 5
+              : 2,
       crossAxisSpacing: 10,
       mainAxisSpacing: 12,
       itemCount: (list.length),
       padding: const EdgeInsets.only(left: 20, right: 20, top: 4),
-      // physics: const NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int position) {
         return InkWell(
           focusColor: Colors.white70,
@@ -177,9 +192,12 @@ class _LiveTvState extends State<LiveTv> {
               child: MyNetworkImage(
                 imageUrl: list[position].thumbnail.toString(),
                 fit: BoxFit.fill,
-                imgHeight: (kIsWeb || Constant.isTV)
-                    ? MediaQuery.of(context).size.width * 0.12
-                    : MediaQuery.of(context).size.height * 0.125,
+                imgHeight: (kIsWeb || Constant.isTV) &&
+                        MediaQuery.of(context).size.width > 700
+                    ? MediaQuery.of(context).size.width * 0.11
+                    : (kIsWeb || Constant.isTV)
+                        ? MediaQuery.of(context).size.height * 0.15
+                        : MediaQuery.of(context).size.height * 0.125,
                 imgWidth: MediaQuery.of(context).size.width,
               )),
         );

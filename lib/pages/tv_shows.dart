@@ -75,58 +75,70 @@ class _TvShowsState extends State<TvShows> {
                 Visibility(
                     visible: (kIsWeb || Constant.isTV) ? true : false,
                     child: SizedBox(height: Dimens.homeTabHeight)),
-                Consumer<TvShowprovider>(
-                  builder: (context, provider, child) {
-                    if (provider.loading) {
-                      return Expanded(
-                        child: AlignedGridView.count(
-                            shrinkWrap: true,
-                            crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 15,
-                            itemCount: 25,
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 0),
-                            // physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int position) {
-                              return ShimmerWidget.roundrectborder(
-                                height: (kIsWeb || Constant.isTV)
-                                    ? MediaQuery.of(context).size.width * 0.12
-                                    : MediaQuery.of(context).size.height *
-                                        0.125,
-                                width: MediaQuery.of(context).size.width,
-                                shimmerBgColor: shimmerItemColor,
-                                shapeBorder: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                              );
-                            }),
-                      );
-                    } else if (provider.tvshows.isEmpty) {
-                      return const NoData(title: '', subTitle: '');
-                    }
-                    return Column(
-                      children: [
-                        if (kIsWeb) ...[
-                          tvShowsWidget(provider.tvshows
-                              .where((item) => item.website == true)
-                              .toList()),
-                        ] else if (Constant.isTV) ...[
-                          tvShowsWidget(provider.tvshows
-                              .where((item) => item.smartTv == true)
-                              .toList()),
-                        ] else if (Platform.isAndroid || Platform.isIOS) ...[
-                          tvShowsWidget(provider.tvshows
-                              .where((item) => item.mobile == true)
-                              .toList()),
-                        ] else ...[
-                          tvShowsWidget(provider.tvshows),
-                        ],
-                        /* Browse by END */
-                        const SizedBox(height: 22),
-                      ],
-                    );
-                  },
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Consumer<TvShowprovider>(
+                      builder: (context, provider, child) {
+                        if (provider.loading) {
+                          return AlignedGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: ((kIsWeb || Constant.isTV) &&
+                                      MediaQuery.of(context).size.width > 700)
+                                  ? 5
+                                  : 2,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                              itemCount: 25,
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 0),
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder:
+                                  (BuildContext context, int position) {
+                                return ShimmerWidget.roundrectborder(
+                                  height: (kIsWeb || Constant.isTV) &&
+                                          MediaQuery.of(context).size.width >
+                                              700
+                                      ? MediaQuery.of(context).size.width * 0.11
+                                      : (kIsWeb || Constant.isTV)
+                                          ? MediaQuery.of(context).size.height *
+                                              0.15
+                                          : MediaQuery.of(context).size.height *
+                                              0.125,
+                                  width: MediaQuery.of(context).size.width,
+                                  shimmerBgColor: shimmerItemColor,
+                                  shapeBorder: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                );
+                              });
+                        } else if (provider.tvshows.isEmpty) {
+                          return const NoData(title: '', subTitle: '');
+                        }
+                        return Column(
+                          children: [
+                            if (kIsWeb) ...[
+                              tvShowsWidget(provider.tvshows
+                                  .where((item) => item.website == true)
+                                  .toList()),
+                            ] else if (Constant.isTV) ...[
+                              tvShowsWidget(provider.tvshows
+                                  .where((item) => item.smartTv == true)
+                                  .toList()),
+                            ] else if (Platform.isAndroid ||
+                                Platform.isIOS) ...[
+                              tvShowsWidget(provider.tvshows
+                                  .where((item) => item.mobile == true)
+                                  .toList()),
+                            ] else ...[
+                              tvShowsWidget(provider.tvshows),
+                            ],
+                            /* Browse by END */
+                            const SizedBox(height: 22),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -141,15 +153,19 @@ class _TvShowsState extends State<TvShows> {
     // }
   }
 
-  AlignedGridView tvShowsWidget(List<TvShowModel> list) {
+  Widget tvShowsWidget(List<TvShowModel> list) {
+    // print(MediaQuery.of(context).size.width > 700);
     return AlignedGridView.count(
       shrinkWrap: true,
-      crossAxisCount: (kIsWeb || Constant.isTV) ? 5 : 2,
+      crossAxisCount:
+          ((kIsWeb || Constant.isTV) && MediaQuery.of(context).size.width > 700)
+              ? 5
+              : 2,
       crossAxisSpacing: 10,
       mainAxisSpacing: 12,
       itemCount: (list.length),
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-      // physics: const NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int position) {
         return InkWell(
           focusColor: Colors.white,
@@ -200,9 +216,12 @@ class _TvShowsState extends State<TvShows> {
               child: MyNetworkImage(
                 imageUrl: list[position].thumbnail.toString(),
                 fit: BoxFit.fill,
-                imgHeight: (kIsWeb || Constant.isTV)
-                    ? MediaQuery.of(context).size.width * 0.12
-                    : MediaQuery.of(context).size.height * 0.125,
+                imgHeight: (kIsWeb || Constant.isTV) &&
+                        MediaQuery.of(context).size.width > 700
+                    ? MediaQuery.of(context).size.width * 0.11
+                    : (kIsWeb || Constant.isTV)
+                        ? MediaQuery.of(context).size.height * 0.15
+                        : MediaQuery.of(context).size.height * 0.125,
                 imgWidth: MediaQuery.of(context).size.width,
               )),
         );

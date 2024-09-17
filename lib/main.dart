@@ -4,6 +4,12 @@ import 'dart:ui';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_locales/flutter_locales.dart';
 import 'package:media9/firebase_options.dart';
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
@@ -38,28 +44,20 @@ import 'package:media9/provider/videodetailsprovider.dart';
 import 'package:media9/provider/videodownloadprovider.dart';
 import 'package:media9/provider/watchlistprovider.dart';
 import 'package:media9/restartapp_wiget.dart';
-import 'package:media9/tvpages/tvhome.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_locales/flutter_locales.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Locales.init(['en', 'ar', 'hi', 'pt']);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   if (!kIsWeb) {
     await FlutterDownloader.initialize();
-  }
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Locales.init(['en', 'ar', 'hi', 'pt']);
-  if (!kIsWeb) {
     //Remove this method to stop OneSignal Debugging
     await OneSignal.Debug.setLogLevel(OSLogLevel.debug);
 
@@ -169,15 +167,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if (!kIsWeb) Utils.enableScreenCapture();
-    if (!kIsWeb) _getDeviceInfo();
-    WidgetsBinding.instance.addObserver(this);
+    if (!kIsWeb) {
+      Utils.enableScreenCapture();
+      _getDeviceInfo();
+      WidgetsBinding.instance.addObserver(this);
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    if (!kIsWeb) {
+      WidgetsBinding.instance.removeObserver(this);
+    }
     super.dispose();
   }
 
@@ -243,23 +245,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ],
             );
           },
-          home: AnimatedSplashScreen(
-            curve: Curves.easeOutExpo,
-            splashIconSize: double.infinity,
-            duration: 80, // Duration for splash screen transition
-            splashTransition:
-                SplashTransition.fadeTransition, // Transition type
-            backgroundColor: Colors.white,
-            splash: SizedBox(
-              height: size.height,
-              width: size.width,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            pageTransitionType: PageTransitionType.fade,
-            nextScreen: (kIsWeb) ? const Home(pageName: "") : const Splash(),
-          ),
+          home: (kIsWeb)
+              ? const Home(pageName: "")
+              : AnimatedSplashScreen(
+                  curve: Curves.easeOutExpo,
+                  splashIconSize: double.infinity,
+                  duration: 80, // Duration for splash screen transition
+                  splashTransition:
+                      SplashTransition.fadeTransition, // Transition type
+                  backgroundColor: Colors.white,
+                  splash: SizedBox(
+                    height: size.height,
+                    width: size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  pageTransitionType: PageTransitionType.fade,
+                  nextScreen: const Splash(),
+                ),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

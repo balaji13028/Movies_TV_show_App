@@ -45,7 +45,7 @@ class GeneralProvider extends ChangeNotifier {
 
   Future<void> getPages() async {
     loading = true;
-    pagesModel = await ApiService().getPages();
+    // pagesModel = await ApiService().getPages();
     debugPrint("getPages status :==> ${pagesModel.status}");
     debugPrint("getPages list :==> ${pagesModel.result}");
     loading = false;

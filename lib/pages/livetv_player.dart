@@ -27,7 +27,9 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
 
   @override
   void initState() {
-    FlutterScreenWake.keepOn(true);
+    if (!kIsWeb) {
+      FlutterScreenWake.keepOn(true);
+    }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
 
@@ -80,7 +82,9 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
     _adController.dispose();
     _liveTvController.dispose();
     _chewieController?.dispose();
-    FlutterScreenWake.keepOn(false);
+    if (!kIsWeb) {
+      FlutterScreenWake.keepOn(false);
+    }
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }

@@ -69,7 +69,7 @@ class SettingState extends State<Setting> {
     log('getUserData userType ==> $userType');
     log('getUserData userMobileNo ==> $userMobileNo');
 
-    await generalProvider.getPages();
+    // await generalProvider.getPages();
 
     isSwitched = await sharedPref.readBool("PUSH");
     log('getUserData isSwitched ==> $isSwitched');

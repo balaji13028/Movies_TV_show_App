@@ -139,7 +139,9 @@ class HomeState extends State<Home> {
   }
 
   _getData() async {
-    OneSignal.Notifications.requestPermission(true);
+    if (!kIsWeb) {
+      OneSignal.Notifications.requestPermission(true);
+    }
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
     final adeventisementProvider =
         Provider.of<AdventisementsProvider>(context, listen: false);
@@ -409,7 +411,7 @@ class HomeState extends State<Home> {
             /* Slides */
             Consumer<SlidesProvider>(
               builder: (context, slidesProvider, child) {
-                if (slidesProvider.loading) {
+                if (slidesProvider.loading || homeProvider.loading) {
                   if ((kIsWeb || Constant.isTV) &&
                       MediaQuery.of(context).size.width > 720) {
                     return ShimmerUtils.bannerWeb(context);
@@ -445,7 +447,8 @@ class HomeState extends State<Home> {
                     return Column(children: [
                       if (homeProvider.livetVList.isNotEmpty) ...[
                         /* Live Tv list */
-                        (kIsWeb || Constant.isTV)
+                        ((kIsWeb || Constant.isTV) &&
+                                MediaQuery.of(context).size.width > 720)
                             ? continueWatchingLayout(true)
                             : Column(
                                 children: [
@@ -505,7 +508,8 @@ class HomeState extends State<Home> {
                         const SizedBox.shrink(),
                       ],
                       if (homeProvider.tvshowsList.isNotEmpty) ...[
-                        (kIsWeb || Constant.isTV)
+                        ((kIsWeb || Constant.isTV) &&
+                                MediaQuery.of(context).size.width > 720)
                             ? continueWatchingLayout(false)
                             : Column(children: [
                                 /* tvShows  list */
@@ -838,13 +842,14 @@ class HomeState extends State<Home> {
         padding: const EdgeInsets.only(top: 0),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: Dimens.homeWebBanner,
+          height: kIsWeb ? Dimens.homeWebBanner + 120 : Dimens.homeWebBanner,
           child: CarouselSlider.builder(
             itemCount: (slidesList?.length ?? 0),
             carouselController: carouselController,
             options: CarouselOptions(
               initialPage: 0,
-              height: Dimens.homeWebBanner,
+              height:
+                  kIsWeb ? Dimens.homeWebBanner + 120 : Dimens.homeWebBanner,
               enlargeCenterPage: false,
               autoPlay: true,
               autoPlayCurve: Curves.easeInOutQuart,
@@ -868,15 +873,17 @@ class HomeState extends State<Home> {
                   padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    // clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: Stack(
-                      alignment: AlignmentDirectional.centerEnd,
+                      alignment: AlignmentDirectional.center,
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width,
                           //  *
                           // (Dimens.webBannerImgPr),
-                          height: Dimens.homeWebBanner,
+                          height: kIsWeb
+                              ? Dimens.homeWebBanner + 120
+                              : Dimens.homeWebBanner,
                           child: MyNetworkImage(
                             imageUrl: slidesList?[index].imagePath ?? "",
                             fit: BoxFit.fill,

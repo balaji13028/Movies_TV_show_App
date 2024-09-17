@@ -1,16 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:media9/provider/generalprovider.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/dimens.dart';
 import 'package:media9/utils/sharedpre.dart';
 import 'package:media9/web_js/js_helper.dart';
+import 'package:media9/webwidget/interactive_icon.dart';
 import 'package:media9/webwidget/interactive_networkicon.dart';
+import 'package:media9/webwidget/interactive_text.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
-import 'package:flutter/material.dart';
-import 'package:media9/webwidget/interactive_icon.dart';
-import 'package:media9/webwidget/interactive_text.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class FooterWeb extends StatefulWidget {
@@ -50,8 +50,8 @@ class _FooterWebState extends State<FooterWeb> {
     generalProvider = Provider.of<GeneralProvider>(context, listen: false);
     appDescription = await sharedPref.read("app_desripation") ?? "";
 
-    await generalProvider.getPages();
-    await generalProvider.getSocialLinks();
+    // await generalProvider.getPages();
+    // await generalProvider.getSocialLinks();
 
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
@@ -76,31 +76,32 @@ class _FooterWebState extends State<FooterWeb> {
       children: [
         /* App Icon & Desc. */
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 90,
-                height: 35,
-                alignment: Alignment.centerLeft,
+              SizedBox(
+                width: 120,
+                height: 90,
+                // alignment: Alignment.centerLeft,
                 child: MyImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   imagePath: "appicon.png",
                 ),
               ),
-              const SizedBox(height: 8),
+              // const SizedBox(height: 5),
               MyText(
                 color: lightGray,
                 multilanguage: false,
-                text: appDescription ?? "",
+                text:
+                    '      Media9 is the go-to platform for entertaining and informative Indian Live Television , Digital News Channels and Popular TV shows, short videos, documentaries, LIVE TV, and across the genres of News and Digital Media and sports, food, history, mythology, travel, and more.\n       The streaming service offers free  Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible om Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
                 fontweight: FontWeight.w500,
-                fontsizeWeb: 12,
+                fontsizeWeb: 10,
                 fontsizeNormal: 12,
                 textalign: TextAlign.start,
                 fontstyle: FontStyle.normal,
-                maxline: 5,
+                maxline: 8,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
@@ -178,22 +179,22 @@ class _FooterWebState extends State<FooterWeb> {
                     ),
                   ),
                   const SizedBox(width: 5),
-                  InkWell(
-                    onTap: () {
-                      _redirectToUrl(Constant.iosAppUrl);
-                    },
-                    borderRadius: BorderRadius.circular(3),
-                    child: InteractiveIcon(
-                      height: 25,
-                      width: 25,
-                      imagePath: "applestore.png",
-                      iconColor: white,
-                      withBG: true,
-                      bgRadius: 3,
-                      bgColor: transparentColor,
-                      bgHoverColor: primaryColor,
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     _redirectToUrl(Constant.iosAppUrl);
+                  //   },
+                  //   borderRadius: BorderRadius.circular(3),
+                  //   child: InteractiveIcon(
+                  //     height: 25,
+                  //     width: 25,
+                  //     imagePath: "applestore.png",
+                  //     iconColor: white,
+                  //     withBG: true,
+                  //     bgRadius: 3,
+                  //     bgColor: transparentColor,
+                  //     bgHoverColor: primaryColor,
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -203,39 +204,75 @@ class _FooterWebState extends State<FooterWeb> {
     );
   }
 
+  Widget _buildSettingButton({
+    required String title,
+    required String subTitle,
+    required bool titleMultilang,
+    required bool subTitleMultilang,
+    required BuildContext context,
+  }) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      constraints: BoxConstraints(
+        minHeight: Dimens.minHeightSettings,
+      ),
+      alignment: Alignment.centerLeft,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MyText(
+            color: white,
+            text: title,
+            fontsizeNormal: 14,
+            fontsizeWeb: 15,
+            maxline: 1,
+            multilanguage: titleMultilang,
+            overflow: TextOverflow.ellipsis,
+            fontweight: FontWeight.w600,
+            textalign: TextAlign.start,
+            fontstyle: FontStyle.normal,
+          ),
+          // SizedBox(height: subTitle.isEmpty ? 0 : 5),
+        ],
+      ),
+    );
+  }
+
   Widget _buildColumnFooter() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /* App Icon & Desc. */
-        Container(
-          width: 90,
-          height: 35,
-          alignment: Alignment.centerLeft,
+        SizedBox(
+          width: 120,
+          height: 90,
+          // alignment: Alignment.centerLeft,
           child: MyImage(
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
             imagePath: "appicon.png",
           ),
         ),
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
         MyText(
           color: lightGray,
           multilanguage: false,
-          text: appDescription ?? "",
+          text:
+              '   Media9 is the go-to platform for entertaining and informative Indian Live Television , Digital News Channels and Popular TV shows, short videos, documentaries, LIVE TV, and across the genres of News and Digital Media and sports, food, history, mythology, travel, and more.\n\n    The streaming service offers free  Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible om Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
           fontweight: FontWeight.w500,
           fontsizeWeb: 12,
           fontsizeNormal: 12,
           textalign: TextAlign.start,
           fontstyle: FontStyle.normal,
-          maxline: 5,
+          maxline: 8,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 30),
+        // const SizedBox(height: 5),
 
         /* Quick Links */
         _buildPages(),
-        const SizedBox(height: 30),
+        // const SizedBox(height: 10),
 
         /* Contact With us & Store Icons */
         (generalProvider.socialLinkModel.status == 200 &&
@@ -295,22 +332,22 @@ class _FooterWebState extends State<FooterWeb> {
               ),
             ),
             const SizedBox(width: 5),
-            InkWell(
-              onTap: () {
-                _redirectToUrl(Constant.iosAppUrl);
-              },
-              borderRadius: BorderRadius.circular(3),
-              child: InteractiveIcon(
-                height: 25,
-                width: 25,
-                imagePath: "applestore.png",
-                iconColor: white,
-                withBG: true,
-                bgRadius: 3,
-                bgColor: transparentColor,
-                bgHoverColor: primaryColor,
-              ),
-            ),
+            // InkWell(
+            //   onTap: () {
+            //     _redirectToUrl(Constant.iosAppUrl);
+            //   },
+            //   borderRadius: BorderRadius.circular(3),
+            //   child: InteractiveIcon(
+            //     height: 25,
+            //     width: 25,
+            //     imagePath: "applestore.png",
+            //     iconColor: white,
+            //     withBG: true,
+            //     bgRadius: 3,
+            //     bgColor: transparentColor,
+            //     bgHoverColor: primaryColor,
+            //   ),
+            // ),
           ],
         ),
       ],
@@ -318,34 +355,65 @@ class _FooterWebState extends State<FooterWeb> {
   }
 
   Widget _buildPages() {
-    if (generalProvider.loading) {
-      return const SizedBox.shrink();
-    } else {
-      if (generalProvider.pagesModel.status == 200 &&
-          generalProvider.pagesModel.result != null) {
-        return AlignedGridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 1,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          itemCount: (generalProvider.pagesModel.result?.length ?? 0),
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int position) {
-            return _buildPageItem(
-              pageName:
-                  generalProvider.pagesModel.result?[position].pageName ?? "",
-              onClick: () {
-                _redirectToUrl(
-                    generalProvider.pagesModel.result?[position].url ?? "");
-              },
-            );
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        InkWell(
+          borderRadius: BorderRadius.circular(2),
+          onTap: () {
+            _redirectToUrl(
+                'https://www.termsfeed.com/live/7cf2b76a-79bd-43f1-ab7b-e1b2e877e44e');
           },
-        );
-      } else {
-        return const SizedBox.shrink();
-      }
-    }
+          child: _buildSettingButton(
+              title: 'Privacy Policy',
+              subTitle: '',
+              titleMultilang: false,
+              subTitleMultilang: false,
+              context: context),
+        ),
+        InkWell(
+          borderRadius: BorderRadius.circular(2),
+          onTap: () {
+            _redirectToUrl(
+                'https://www.termsfeed.com/live/978c64e2-3de6-4584-91a2-4593f831b7b3');
+          },
+          child: _buildSettingButton(
+              title: 'Terms & Conditions',
+              subTitle: '',
+              titleMultilang: false,
+              subTitleMultilang: false,
+              context: context),
+        ),
+      ],
+    );
+    // if (generalProvider.loading) {
+    //   return const SizedBox.shrink();
+    // } else {
+    //   if (generalProvider.pagesModel.status == 200 &&
+    //       generalProvider.pagesModel.result != null) {
+    //     return AlignedGridView.count(
+    //       shrinkWrap: true,
+    //       crossAxisCount: 1,
+    //       crossAxisSpacing: 10,
+    //       mainAxisSpacing: 10,
+    //       itemCount: (generalProvider.pagesModel.result?.length ?? 0),
+    //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+    //       physics: const NeverScrollableScrollPhysics(),
+    //       itemBuilder: (BuildContext context, int position) {
+    //         return _buildPageItem(
+    //           pageName:
+    //               generalProvider.pagesModel.result?[position].pageName ?? "",
+    //           onClick: () {
+    //             _redirectToUrl(
+    //                 generalProvider.pagesModel.result?[position].url ?? "");
+    //           },
+    //         );
+    //       },
+    //     );
+    //   } else {
+    //     return const SizedBox.shrink();
+    //   }
+    // }
   }
 
   Widget _buildPageItem({
