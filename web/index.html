@@ -18,7 +18,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>Medi9</title>
+  <title>Media9</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
@@ -36,6 +36,7 @@
   <script src="script.js" type="application/javascript"></script>
   <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
     defer></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> -->
   <style>
     .container {
       height: 100vh;
@@ -66,6 +67,10 @@
   <div id="loading_indicator" class="container">
     <img class="indicator" src="./assets/loading.gif" />
   </div>
+  <!-- <script src="main.dart.js" type="application/javascript"></script>
+    <a id="triggerYouTubeVideoPlayer" class="afterglow" href="#videoPlayer"></a>
+    <video id="youTubeVideoPlayer" width="960" height="540" data-skin="dark">
+    </video> -->
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -106,6 +111,7 @@
   <script>
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
+      setTimeout(function() {
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
@@ -116,6 +122,7 @@
           });
         }
       });
+    },1300);
     });
   </script>
 

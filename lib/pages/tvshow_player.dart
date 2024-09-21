@@ -78,11 +78,13 @@ class TvshowPlayerState extends State<TvshowPlayer> {
         loop: false,
       ),
     );
-
+    // }
+    print(controller.value.playerState);
     Future.delayed(const Duration(microseconds: 200)).then((value) {
       if (!mounted) return;
       setState(() {});
     });
+    print(controller.value.playerState);
     // if (widget.playType == "Video" || widget.playType != "Show") {
     //   /* Add Video view */
     //   await playerProvider.addVideoView(widget.videoId.toString(),
@@ -131,36 +133,47 @@ class TvshowPlayerState extends State<TvshowPlayer> {
   }
 
   Widget _buildPlayer() {
-    return YoutubePlayerScaffold(
-      backgroundColor: appBgColor,
-      controller: controller,
-      autoFullScreen: true,
-      defaultOrientations: const [
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ],
-      builder: (context, player) {
-        return Scaffold(
-          body: Center(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (controller.value.playerState == PlayerState.playing) {
-                  return player;
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
+    if (kIsWeb) {
+      return YoutubePlayer(controller: controller);
+    } else {
+      return YoutubePlayerScaffold(
+        backgroundColor: appBgColor,
+        controller: controller,
+        autoFullScreen: true,
+        defaultOrientations: const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+        builder: (context, player) {
+          return Scaffold(
+            body: Center(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (controller.value.playerState == PlayerState.playing) {
+                    return player;
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 
   @override
   void dispose() {
-    _adController.dispose();
-    controller.close();
+    try {
+      controller.pauseVideo();
+      _adController.dispose();
+      if (!kIsWeb) {
+        controller.close();
+      }
+    } catch (e) {
+      print(e);
+    }
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
