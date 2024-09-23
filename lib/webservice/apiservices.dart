@@ -47,15 +47,15 @@ class ApiService {
 
   ApiService() {
     dio = Dio();
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        compact: false,
-      ),
-    );
+    // dio.interceptors.add(
+    // PrettyDioLogger(
+    //   requestHeader: true,
+    //   requestBody: true,
+    //   responseBody: true,
+    //   responseHeader: false,
+    //   compact: false,
+    // ),
+    // );
   }
 
   // general_setting API

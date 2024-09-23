@@ -26,9 +26,9 @@ class MyImage extends StatelessWidget {
       fit: fit,
       errorBuilder: (context, url, error) {
         return Image.asset(
-          "assets/images/no_image_port.png",
-          width: MediaQuery.of(context).size.width * 0.2,
-          height: MediaQuery.of(context).size.height * 0.05,
+          "assets/images/appicon.png",
+          width: MediaQuery.of(context).size.width * 0.14,
+          height: MediaQuery.of(context).size.height * 0.1,
           fit: BoxFit.cover,
         );
       },

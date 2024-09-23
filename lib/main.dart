@@ -49,13 +49,17 @@ import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pwa_install/pwa_install.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Locales.init(['en', 'ar', 'hi', 'pt']);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+// Add this
+  PWAInstall().setup(installCallback: () {
+    log('APP INSTALLED!');
+  });
   if (!kIsWeb) {
     await FlutterDownloader.initialize();
     //Remove this method to stop OneSignal Debugging

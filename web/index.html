@@ -9,7 +9,7 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="OTT Flutter App">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS meta tags & icons pwa -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="media9">
@@ -19,6 +19,7 @@
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>Media9</title>
+  <!-- Android pwa option-->
   <link rel="manifest" href="manifest.json">
 
   <script>
@@ -27,6 +28,8 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script src="install.js"></script>
+
 
   <!-- Google login -->
   <meta name="google-signin-client_id"
@@ -36,7 +39,7 @@
   <script src="script.js" type="application/javascript"></script>
   <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
     defer></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> -->
   <style>
     .container {
       height: 100vh;
@@ -67,6 +70,30 @@
   <div id="loading_indicator" class="container">
     <img class="indicator" src="./assets/loading.gif" />
   </div>
+  <!-- <h1>How to add Richer Install UI to your web app</h1>
+    <ol>
+      <li>
+        Install the app by clicking the button below. After the installation,
+        the button is disabled.
+        <p>
+          <button disabled type="button">Install</button>
+        </p>
+      </li>
+      <li>
+        When you click on install a dialog similar to the ones from app stores
+        will be displayed.
+      </li>
+      <li>
+        The dialog includes the `description` and `screenshots` set in the app
+        manifest.
+      </li>
+      <li>
+        Screenshots should be different depending if the app is being installed
+        on a mobile or desktop device, according to the `form_factor` value set
+        for the screenshots on the manifest
+      </li>
+    </ol> -->
+
   <!-- <script src="main.dart.js" type="application/javascript"></script>
     <a id="triggerYouTubeVideoPlayer" class="afterglow" href="#videoPlayer"></a>
     <video id="youTubeVideoPlayer" width="960" height="540" data-skin="dark">
@@ -78,7 +105,7 @@
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
-    
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBarzc3A0TQVUjN7lq62FnVoFfb2KCODmg",
@@ -93,37 +120,33 @@
     const app = initializeApp(firebaseConfig);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" type="application/javascript"></script>
-
-  <!-- <script>
-    window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
-      }).then(function (engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function (appRunner) {
-        return appRunner.runApp();
-      });
-    });
-  </script> -->
   <script>
-    window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      setTimeout(function() {
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function (engineInitializer) {
-          engineInitializer.initializeEngine().then(function (appRunner) {
-            appRunner.runApp();
-          });
-        }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function (ev) {
+        navigator.serviceWorker.register('/flutter_service_worker.js');
       });
-    },1300);
-    });
+    }
+  </script>
+
+  <script>
+    // if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function (ev) {
+        // navigator.serviceWorker.register('/flutter_service_worker.js');
+        // Download main.dart.js
+        setTimeout(function () {
+          _flutter.loader.loadEntrypoint({
+            serviceWorker: {
+              serviceWorkerVersion: serviceWorkerVersion,
+            },
+            onEntrypointLoaded: function (engineInitializer) {
+              engineInitializer.initializeEngine().then(function (appRunner) {
+                appRunner.runApp();
+              });
+            }
+          });
+        }, 1300);
+      });
+    // }
   </script>
 
   <script type="text/javascript">window.flutterWebRenderer = "html";</script>

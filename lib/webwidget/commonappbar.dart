@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,14 @@ import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/dimens.dart';
 import 'package:media9/utils/strings.dart';
 import 'package:media9/utils/utils.dart';
+import 'package:media9/web_js/js_helper_mobile.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:provider/provider.dart';
+import 'dart:html' as html;
+import 'dart:js' as js;
+
+import 'package:pwa_install/pwa_install.dart';
 
 class CommonAppBar extends StatefulWidget {
   const CommonAppBar({super.key});
@@ -25,9 +32,10 @@ class CommonAppBar extends StatefulWidget {
 }
 
 class _CommonAppBarState extends State<CommonAppBar> {
+  final JSHelper _jsHelper = JSHelper();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController searchController = TextEditingController();
-
+  bool _isPromptReady = false;
   int? videoId, videoType, typeId;
   String? langCatName, mSearchText;
 
@@ -38,12 +46,22 @@ class _CommonAppBarState extends State<CommonAppBar> {
 
   @override
   void initState() {
+    html.window.on['deferredPromptReady'].listen((event) {
+      setState(() {
+        _isPromptReady = true;
+      });
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _installApp() {
+    // _jsHelper.callOpenTab('promptInstall', '');
+    js.context.callMethod('promptInstall,["${Constant.androidAppUrl}"]');
   }
 
   _clickToRedirect({required String pageName}) {
@@ -364,7 +382,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                     overflow: TextOverflow.ellipsis,
                     fontsizeNormal: 14,
                     fontweight: FontWeight.w600,
-                    fontsizeWeb: 14,
+                    fontsizeWeb: 16,
                     textalign: TextAlign.center,
                     fontstyle: FontStyle.normal,
                   );
@@ -464,7 +482,36 @@ class _CommonAppBarState extends State<CommonAppBar> {
           //     ),
           //   ),
           // ),
-
+          const Spacer(),
+          Visibility(
+            visible: PWAInstall().installPromptEnabled,
+            child: InkWell(
+              focusColor: white,
+              onTap: () async {
+                try {
+                  PWAInstall().promptInstall_();
+                } catch (e) {
+                  log(e.toString());
+                }
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: MyText(
+                  color: white,
+                  multilanguage: false,
+                  text: "Install App",
+                  fontsizeNormal: 14,
+                  fontweight: FontWeight.w600,
+                  fontsizeWeb: 14,
+                  maxline: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textalign: TextAlign.center,
+                  fontstyle: FontStyle.normal,
+                ),
+              ),
+            ),
+          ),
           /* Logout */
           Consumer<HomeProvider>(
             builder: (context, homeProvider, child) {
