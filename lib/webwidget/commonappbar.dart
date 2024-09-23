@@ -19,8 +19,6 @@ import 'package:media9/web_js/js_helper_mobile.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:provider/provider.dart';
-import 'dart:html' as html;
-import 'dart:js' as js;
 
 import 'package:pwa_install/pwa_install.dart';
 
@@ -35,7 +33,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
   final JSHelper _jsHelper = JSHelper();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final TextEditingController searchController = TextEditingController();
-  bool _isPromptReady = false;
+  final bool _isPromptReady = false;
   int? videoId, videoType, typeId;
   String? langCatName, mSearchText;
 
@@ -46,11 +44,11 @@ class _CommonAppBarState extends State<CommonAppBar> {
 
   @override
   void initState() {
-    html.window.on['deferredPromptReady'].listen((event) {
-      setState(() {
-        _isPromptReady = true;
-      });
-    });
+    // html.window.on['deferredPromptReady'].listen((event) {
+    //   setState(() {
+    //     _isPromptReady = true;
+    //   });
+    // });
     super.initState();
   }
 
@@ -61,7 +59,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
 
   void _installApp() {
     // _jsHelper.callOpenTab('promptInstall', '');
-    js.context.callMethod('promptInstall,["${Constant.androidAppUrl}"]');
+    // js.context.callMethod('promptInstall,["${Constant.androidAppUrl}"]');
   }
 
   _clickToRedirect({required String pageName}) {
