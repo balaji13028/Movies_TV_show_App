@@ -62,7 +62,7 @@ class _FooterWebState extends State<FooterWeb> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(40, 40, 40, 40),
+      padding: const EdgeInsets.fromLTRB(20, 20, 40, 40),
       child: (MediaQuery.of(context).size.width < 800)
           ? _buildColumnFooter()
           : _buildRowFooter(),

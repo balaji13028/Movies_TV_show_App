@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:media9/model/sectiontypemodel.dart' as type;
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/live_tv.dart';
@@ -117,7 +116,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: Dimens.homeTabHeight,
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      padding: const EdgeInsets.only(left: 20),
+      // padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
       color: black.withOpacity(0.75),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -367,7 +367,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
             },
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer<HomeProvider>(
                 builder: (context, homeProvider, child) {
                   return MyText(
@@ -380,7 +380,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
                     overflow: TextOverflow.ellipsis,
                     fontsizeNormal: 14,
                     fontweight: FontWeight.w600,
-                    fontsizeWeb: 16,
+                    fontsizeWeb:
+                        MediaQuery.sizeOf(context).width > 700 ? 15 : 19,
                     textalign: TextAlign.center,
                     fontstyle: FontStyle.normal,
                   );
@@ -397,7 +398,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
             },
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer<HomeProvider>(
                 builder: (context, homeProvider, child) {
                   return MyText(
@@ -410,7 +411,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
                     overflow: TextOverflow.ellipsis,
                     fontsizeNormal: 14,
                     fontweight: FontWeight.w600,
-                    fontsizeWeb: 14,
+                    fontsizeWeb:
+                        MediaQuery.sizeOf(context).width > 700 ? 14 : 18,
                     textalign: TextAlign.center,
                     fontstyle: FontStyle.normal,
                   );
@@ -428,7 +430,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
             },
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Consumer<HomeProvider>(
                 builder: (context, homeProvider, child) {
                   return MyText(
@@ -441,7 +443,8 @@ class _CommonAppBarState extends State<CommonAppBar> {
                     overflow: TextOverflow.ellipsis,
                     fontsizeNormal: 14,
                     fontweight: FontWeight.w600,
-                    fontsizeWeb: 14,
+                    fontsizeWeb:
+                        MediaQuery.sizeOf(context).width > 700 ? 14 : 18,
                     textalign: TextAlign.center,
                     fontstyle: FontStyle.normal,
                   );
@@ -501,7 +504,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                   text: "Install App",
                   fontsizeNormal: 14,
                   fontweight: FontWeight.w600,
-                  fontsizeWeb: 14,
+                  fontsizeWeb: MediaQuery.sizeOf(context).width > 700 ? 14 : 18,
                   maxline: 1,
                   overflow: TextOverflow.ellipsis,
                   textalign: TextAlign.center,
@@ -766,7 +769,7 @@ class _CommonAppBarState extends State<CommonAppBar> {
                                   listen: false);
                           // Firebase Signout
                           await auth.signOut();
-                          await GoogleSignIn().signOut();
+                          // await GoogleSignIn().signOut();
                           await Utils.setUserId(null);
                           await sectionDataProvider.clearProvider();
                           sectionDataProvider.getSectionBanner("0", "1");

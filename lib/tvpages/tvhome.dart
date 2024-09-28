@@ -1,11 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:media9/provider/generalprovider.dart';
-import 'package:media9/tvpages/tvchannels.dart';
-import 'package:media9/tvpages/tvrentstore.dart';
-import 'package:media9/provider/searchprovider.dart';
 import 'package:media9/shimmer/shimmerutils.dart';
 import 'package:media9/utils/sharedpre.dart';
 import 'package:media9/utils/strings.dart';
@@ -21,7 +16,6 @@ import 'package:media9/provider/homeprovider.dart';
 import 'package:media9/provider/sectiondataprovider.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/webwidget/footerweb.dart';
-import 'package:media9/webwidget/searchweb.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:media9/utils/utils.dart';
@@ -29,7 +23,6 @@ import 'package:media9/widget/mynetworkimg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -1891,7 +1884,7 @@ class TVHomeState extends State<TVHome> {
                           onTap: () async {
                             // Firebase Signout
                             await auth.signOut();
-                            await GoogleSignIn().signOut();
+                            // await GoogleSignIn().signOut();
                             await Utils.setUserId(null);
                             await sectionDataProvider.clearProvider();
                             sectionDataProvider.getSectionBanner("0", "1");

@@ -2,18 +2,16 @@
 <html>
 
 <head>
-
   <base href="/">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="OTT Flutter App">
+  <meta name="description" content="MEDIA9 OTT Platform , A Digital News and TV Show">
 
   <!-- iOS meta tags & icons pwa -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="media9">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="Media9">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
@@ -28,12 +26,12 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
-  <script src="install.js"></script>
+  
 
 
   <!-- Google login -->
-  <meta name="google-signin-client_id"
-    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com">
+  <!-- <meta name="google-signin-client_id"
+    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com"> -->
 
   <!-- Open new Tab -->
   <script src="script.js" type="application/javascript"></script>
@@ -70,6 +68,8 @@
   <div id="loading_indicator" class="container">
     <img class="indicator" src="./assets/loading.gif" />
   </div>
+
+  <script src="install.js"></script>
   <!-- <h1>How to add Richer Install UI to your web app</h1>
     <ol>
       <li>
@@ -129,10 +129,7 @@
   </script>
 
   <script>
-    // if ('serviceWorker' in navigator) {
       window.addEventListener('load', function (ev) {
-        // navigator.serviceWorker.register('/flutter_service_worker.js');
-        // Download main.dart.js
         setTimeout(function () {
           _flutter.loader.loadEntrypoint({
             serviceWorker: {
@@ -146,7 +143,6 @@
           });
         }, 1300);
       });
-    // }
   </script>
 
   <script type="text/javascript">window.flutterWebRenderer = "html";</script>

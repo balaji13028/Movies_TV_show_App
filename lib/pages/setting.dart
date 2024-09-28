@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:media9/pages/about_us.dart';
 import 'package:media9/pages/aboutprivacyterms.dart';
 import 'package:media9/pages/loginsocial.dart';
@@ -1009,7 +1008,7 @@ class SettingState extends State<Setting> {
                             await sectionDataProvider.clearProvider();
                             // Firebase Signout
                             await _auth.signOut();
-                            await GoogleSignIn().signOut();
+                            // await GoogleSignIn().signOut();
                             await Utils.setUserId(null);
                             sectionDataProvider.getSectionBanner("0", "1");
                             sectionDataProvider.getSectionList("0", "1");
@@ -1162,7 +1161,7 @@ class SettingState extends State<Setting> {
                             await sectionDataProvider.clearProvider();
                             // Firebase Signout
                             await _auth.signOut();
-                            await GoogleSignIn().signOut();
+                            // await GoogleSignIn().signOut();
                             await Utils.setUserId(null);
                             sectionDataProvider.getSectionBanner("0", "1");
                             sectionDataProvider.getSectionList("0", "1");
