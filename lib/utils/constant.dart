@@ -6,7 +6,7 @@ class Constant {
   static String? appName = "Media9";
   static String? appPackageName = "com.media9newsnetwork.media9";
   static String? appleAppId = "6449380090";
-  static String? appVersion = "1";
+  static String? appVersion = "2";
   static String? appBuildNumber = "1.0";
 
   /* OneSignal App ID */
