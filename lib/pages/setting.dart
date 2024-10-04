@@ -455,9 +455,7 @@ class SettingState extends State<Setting> {
                 InkWell(
                   borderRadius: BorderRadius.circular(2),
                   onTap: () async {
-                    await Utils.shareApp(Platform.isIOS
-                        ? Constant.iosAppShareUrlDesc
-                        : Constant.androidAppShareUrlDesc);
+                    await Utils.shareApp(Constant.androidAppShareUrlDesc);
                   },
                   child: _buildSettingButton(
                       title: 'shareapp',

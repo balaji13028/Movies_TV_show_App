@@ -20,7 +20,7 @@ class Constant {
   static String currency = "";
 
   static String androidAppShareUrlDesc =
-      "Let me recommend you this application\n\n$androidAppUrl";
+      "Download Media9 OTT Platform From Google Play Store\n\n$androidAppUrl\n\nClick Below Link For Media9 OTT Website Version\n\nhttps://media9tv.com";
   static String iosAppShareUrlDesc =
       "Let me recommend you this application\n\n$iosAppUrl";
 

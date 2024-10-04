@@ -124,8 +124,11 @@ class _FooterWebState extends State<FooterWeb> {
         const SizedBox(width: 30),
 
         /* Quick Links */
-        Expanded(
-          child: _buildPages(),
+        Visibility(
+          visible: (MediaQuery.of(context).size.width > 950),
+          child: Expanded(
+            child: _buildPages(),
+          ),
         ),
         const SizedBox(width: 30),
 
@@ -135,26 +138,29 @@ class _FooterWebState extends State<FooterWeb> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if ((MediaQuery.of(context).size.width < 950) &&
+                  (MediaQuery.of(context).size.width > 700))
+                _buildPages(),
               /* Social Icons */
-              (generalProvider.socialLinkModel.status == 200 &&
-                      generalProvider.socialLinkModel.result != null)
-                  ? ((generalProvider.socialLinkModel.result?.length ?? 0) > 0)
-                      ? MyText(
-                          color: white,
-                          multilanguage: true,
-                          text: "connect_with_us",
-                          fontweight: FontWeight.w600,
-                          fontsizeWeb: 13,
-                          fontsizeNormal: 13,
-                          textalign: TextAlign.start,
-                          fontstyle: FontStyle.normal,
-                          maxline: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      : const SizedBox.shrink()
-                  : const SizedBox.shrink(),
+              // (generalProvider.socialLinkModel.status == 200 &&
+              //         generalProvider.socialLinkModel.result != null)
+              //     ? ((generalProvider.socialLinkModel.result?.length ?? 0) > 0)
+              //         ? MyText(
+              //             color: white,
+              //             multilanguage: true,
+              //             text: "connect_with_us",
+              //             fontweight: FontWeight.w600,
+              //             fontsizeWeb: 13,
+              //             fontsizeNormal: 13,
+              //             textalign: TextAlign.start,
+              //             fontstyle: FontStyle.normal,
+              //             maxline: 1,
+              //             overflow: TextOverflow.ellipsis,
+              //           )
+              //         : const SizedBox.shrink()
+              //     : const SizedBox.shrink(),
               /* Social Icons */
-              _buildSocialLink(),
+              // _buildSocialLink(),
               const SizedBox(height: 20),
 
               /* Available On */
@@ -268,18 +274,32 @@ class _FooterWebState extends State<FooterWeb> {
             imagePath: "appicon.png",
           ),
         ),
-        // const SizedBox(height: 8),
+        // const SizedBox(height: 5),
         MyText(
           color: lightGray,
           multilanguage: false,
           text:
-              '   Media9 is the go-to platform for entertaining and informative Indian Live Television , Digital News Channels and Popular TV shows, short videos, documentaries, LIVE TV, and across the genres of News and Digital Media and sports, food, history, mythology, travel, and more.\n\n    The streaming service offers free  Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible om Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
+              'Media9 is the go-to platform for entertaining and informative Indian Live Television , Digital News Channels and Popular TV shows, short videos, documentaries, LIVE TV, and across the genres of News and Digital Media and Sports, Food, History, Mythology, Travel, and more.',
           fontweight: FontWeight.w500,
-          fontsizeWeb: 12,
+          fontsizeWeb: 10,
           fontsizeNormal: 12,
           textalign: TextAlign.start,
           fontstyle: FontStyle.normal,
-          maxline: 8,
+          maxline: 10,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 5),
+        MyText(
+          color: lightGray,
+          multilanguage: false,
+          text:
+              'The streaming service offers free  Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible on Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
+          fontweight: FontWeight.w500,
+          fontsizeWeb: 10,
+          fontsizeNormal: 12,
+          textalign: TextAlign.start,
+          fontstyle: FontStyle.normal,
+          maxline: 10,
           overflow: TextOverflow.ellipsis,
         ),
         // const SizedBox(height: 5),
@@ -289,25 +309,25 @@ class _FooterWebState extends State<FooterWeb> {
         // const SizedBox(height: 10),
 
         /* Contact With us & Store Icons */
-        (generalProvider.socialLinkModel.status == 200 &&
-                generalProvider.socialLinkModel.result != null)
-            ? ((generalProvider.socialLinkModel.result?.length ?? 0) > 0)
-                ? MyText(
-                    color: white,
-                    multilanguage: true,
-                    text: "connect_with_us",
-                    fontweight: FontWeight.w600,
-                    fontsizeWeb: 13,
-                    fontsizeNormal: 13,
-                    textalign: TextAlign.start,
-                    fontstyle: FontStyle.normal,
-                    maxline: 1,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                : const SizedBox.shrink()
-            : const SizedBox.shrink(),
+        // (generalProvider.socialLinkModel.status == 200 &&
+        //         generalProvider.socialLinkModel.result != null)
+        //     ? ((generalProvider.socialLinkModel.result?.length ?? 0) > 0)
+        //         ? MyText(
+        //             color: white,
+        //             multilanguage: true,
+        //             text: "connect_with_us",
+        //             fontweight: FontWeight.w600,
+        //             fontsizeWeb: 13,
+        //             fontsizeNormal: 13,
+        //             textalign: TextAlign.start,
+        //             fontstyle: FontStyle.normal,
+        //             maxline: 1,
+        //             overflow: TextOverflow.ellipsis,
+        //           )
+        //         : const SizedBox.shrink()
+        //     : const SizedBox.shrink(),
         /* Social Icons */
-        _buildSocialLink(),
+        // _buildSocialLink(),
         const SizedBox(height: 20),
 
         /* Available On */
@@ -336,9 +356,9 @@ class _FooterWebState extends State<FooterWeb> {
               },
               borderRadius: BorderRadius.circular(3),
               child: InteractiveIcon(
-                imagePath: "playstore.png",
-                height: 25,
-                width: 25,
+                imagePath: "ic_playstore.png",
+                height: 45,
+                width: 115,
                 withBG: true,
                 bgRadius: 3,
                 bgColor: transparentColor,
