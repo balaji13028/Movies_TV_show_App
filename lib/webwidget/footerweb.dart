@@ -293,7 +293,7 @@ class _FooterWebState extends State<FooterWeb> {
           color: lightGray,
           multilanguage: false,
           text:
-              'The streaming service offers free  Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible on Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
+              'The streaming service offers free Live Television and TV Shows, exciting Video content, and popular Live Digital Media - easily accessible on Smart phones and other smart devices. Explore, discover, and be inspired by all things Indian on Media9.',
           fontweight: FontWeight.w500,
           fontsizeWeb: 10,
           fontsizeNormal: 12,

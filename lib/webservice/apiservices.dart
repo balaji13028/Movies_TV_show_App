@@ -817,7 +817,7 @@ class ApiService {
       );
       if (response.statusCode == 200) {
         List<dynamic> list = response.data['data'];
-        return list.map((item) => LiveTvModel.fromMap(item)).toList();
+                return list.map((item) => LiveTvModel.fromMap(item)).toList();
       }
       // rentModel = RentModel.fromJson(response.data);
       // return rentModel;
