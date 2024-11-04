@@ -280,19 +280,19 @@ class SettingState extends State<Setting> {
                 // _buildLine(16.0, 8.0),
 
                 /* MaltiLanguage */
-                InkWell(
-                  borderRadius: BorderRadius.circular(2),
-                  onTap: () {
-                    _languageChangeDialog(context);
-                  },
-                  child: _buildSettingButton(
-                      title: 'language_',
-                      subTitle: '',
-                      titleMultilang: true,
-                      subTitleMultilang: false,
-                      context: context),
-                ),
-                _buildLine(8.0, 8.0, context),
+                // InkWell(
+                //   borderRadius: BorderRadius.circular(2),
+                //   onTap: () {
+                //     _languageChangeDialog(context);
+                //   },
+                //   child: _buildSettingButton(
+                //       title: 'language_',
+                //       subTitle: '',
+                //       titleMultilang: true,
+                //       subTitleMultilang: false,
+                //       context: context),
+                // ),
+                // _buildLine(8.0, 8.0, context),
 
                 /* Push Notification enable/disable */
                 Container(

@@ -34,6 +34,8 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
     if (!kIsWeb) {
       FlutterScreenWake.keepOn(true);
     }
+    log(widget.adURl.toString());
+    log(widget.urlLink.toString());
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
@@ -49,7 +51,7 @@ class _LiveTVPlayerState extends State<LiveTVPlayer> {
   Future<void> _initializeVideoPlayers() async {
     _liveTvController =
         VideoPlayerController.networkUrl(Uri.parse(widget.urlLink));
-    await _adController.initialize().then((_) {
+    _adController.initialize().then((_) {
       setState(() {});
       _adController.play();
     });

@@ -139,7 +139,7 @@ class HomeState extends State<Home> {
   }
 
   _getData() async {
-    if (!kIsWeb) {
+    if (!kIsWeb || (Constant.isTV == false)) {
       OneSignal.Notifications.requestPermission(true);
     }
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
