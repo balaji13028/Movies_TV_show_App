@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,6 +70,17 @@ class TvshowPlayerState extends State<TvshowPlayer> {
     debugPrint("videoUrl :===> ${widget.urlLink}");
     var videoId = YoutubePlayerController.convertUrlToId(widget.urlLink);
     debugPrint("videoId :====> $videoId");
+    // if (Constant.isTV) {
+    //   controller = YoutubePlayerController(
+    //     params: const YoutubePlayerParams(
+    //       mute: false,
+    //       showControls: true,
+    //       showFullscreenButton: true,
+    //     ),
+    //   );
+
+    //   controller.loadVideoById(videoId: videoId.toString());
+    // } else {
     controller = YoutubePlayerController.fromVideoId(
       videoId: videoId ?? '',
       autoPlay: true,
@@ -76,11 +89,13 @@ class TvshowPlayerState extends State<TvshowPlayer> {
         mute: false,
         showFullscreenButton: true,
         loop: false,
+        // enableJavaScript: false,
+        // : true,
       ),
     );
     // }
     print(controller.value.playerState);
-    Future.delayed(const Duration(microseconds: 200)).then((value) {
+    Future.delayed(const Duration(microseconds: 200)).then((value) async {
       if (!mounted) return;
       setState(() {});
     });
@@ -133,8 +148,21 @@ class TvshowPlayerState extends State<TvshowPlayer> {
   }
 
   Widget _buildPlayer() {
-    if (kIsWeb) {
-      return YoutubePlayer(controller: controller);
+    if (kIsWeb || Constant.isTV) {
+      controller.toggleFullScreen();
+      return YoutubePlayerControllerProvider(
+        controller: controller,
+        child: Builder(
+          builder: (context) {
+            return YoutubePlayer(controller: controller);
+            // Access the controller as:
+            // `YoutubePlayerControllerProvider.of(context)`
+            // or `controller.ytController`.
+          },
+        ),
+      );
+      // return AspectRatio(
+      //     aspectRatio: 16 / 9, child: YoutubePlayer(controller: controller));
     } else {
       return YoutubePlayerScaffold(
         backgroundColor: appBgColor,
@@ -145,10 +173,12 @@ class TvshowPlayerState extends State<TvshowPlayer> {
           DeviceOrientation.landscapeRight,
         ],
         builder: (context, player) {
+          // print(player);
           return Scaffold(
             body: Center(
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  // print(controller.value.playerState);
                   if (controller.value.playerState == PlayerState.playing) {
                     return player;
                   } else {
@@ -168,7 +198,7 @@ class TvshowPlayerState extends State<TvshowPlayer> {
     try {
       controller.pauseVideo();
       _adController.dispose();
-      if (!kIsWeb) {
+      if (!kIsWeb || !Constant.isTV) {
         controller.close();
       }
     } catch (e) {

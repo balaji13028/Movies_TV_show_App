@@ -62,6 +62,13 @@
             </intent-filter>
         </receiver>
 
+        <!-- <intent>
+        <action android:name="com.google.android.youtube.api.service.START" />
+        </intent> -->
+
+        <!-- <meta-data android:name="io.flutter.embedding.android.WebView.EnableHybridComposition" android:value="true"/> -->
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
