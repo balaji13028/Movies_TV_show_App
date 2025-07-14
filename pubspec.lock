@@ -809,10 +809,10 @@ packages:
     dependency: "direct main"
     description:
       name: in_app_purchase_android
-      sha256: "3d84d1a001fa138bed09e0cd95e9dbce268dce8b6f63bda7cf69cbf9135fbfbb"
+      sha256: b5ec117e3483fbca0fc5c546e9ed420c126e97fc5952aa891d01f9cf87661d44
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.6"
+    version: "0.3.6+7"
   in_app_purchase_platform_interface:
     dependency: transitive
     description:
@@ -825,10 +825,10 @@ packages:
     dependency: "direct main"
     description:
       name: in_app_purchase_storekit
-      sha256: a4b523cdad26d9c81fe1f35636b9d46c459f6c07b84a93ae5cbdd93b21670eea
+      sha256: "6ce1361278cacc0481508989ba419b2c9f46a2b0dc54b3fe54f5ee63c2718fef"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.17+2"
+    version: "0.3.22+1"
   intl:
     dependency: "direct main"
     description:
@@ -1827,5 +1827,5 @@ packages:
     source: hosted
     version: "3.0.0"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.19.0"
+  dart: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"

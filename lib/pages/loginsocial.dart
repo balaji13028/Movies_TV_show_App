@@ -35,7 +35,7 @@ class LoginSocialState extends State<LoginSocial> {
   final numberController = TextEditingController();
   String? mobileNumber, email, userName, strType, strPrivacyAndTNC;
   File? mProfileImg;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {

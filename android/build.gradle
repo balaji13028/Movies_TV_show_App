@@ -14,6 +14,10 @@ buildscript {
         // END: FlutterFire Configuration
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+
+    ext {
+        billingClientVersion = "7.0.0" // ✅ Minimum required
+    }
 }
 
 allprojects {
