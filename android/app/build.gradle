@@ -33,6 +33,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'com.media9newsnetwork.media9'
     compileSdkVersion 35
     ndkVersion flutter.ndkVersion
 
@@ -52,7 +53,7 @@ android {
     defaultConfig {
         applicationId "com.media9newsnetwork.media9"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

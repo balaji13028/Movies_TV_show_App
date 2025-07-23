@@ -38,6 +38,7 @@ class LoginSocialState extends State<LoginSocial> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
+  
   void initState() {
     generalProvider = Provider.of<GeneralProvider>(context, listen: false);
     super.initState();
