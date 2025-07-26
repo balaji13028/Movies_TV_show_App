@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dtlive/widget/myimage.dart';
+import 'package:media9/widget/myimage.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -9,12 +9,11 @@ class MyNetworkImage extends StatelessWidget {
   dynamic fit;
 
   MyNetworkImage(
-      {Key? key,
+      {super.key,
       required this.imageUrl,
       required this.fit,
       this.imgHeight,
-      this.imgWidth})
-      : super(key: key);
+      this.imgWidth});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class MyNetworkImage extends StatelessWidget {
       height: imgHeight,
       width: imgWidth,
       child: CachedNetworkImage(
-        imageUrl: imageUrl,
+        imageUrl: 'https://media9tv.com/storage/$imageUrl',
         fit: fit,
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
@@ -33,23 +32,27 @@ class MyNetworkImage extends StatelessWidget {
           ),
         ),
         placeholder: (context, url) {
-          return MyImage(
-            width: imgWidth,
-            height: imgHeight,
-            imagePath: imageUrl.contains('land_')
-                ? "no_image_land.png"
-                : "no_image_port.png",
-            fit: BoxFit.cover,
+          return Image.asset(
+            "assets/images/appicon.png",
+            width: MediaQuery.of(context).size.width * 0.08,
+            height: MediaQuery.of(context).size.height * 0.02,
+            fit: BoxFit.contain,
           );
+          // MyImage(
+          //   width: imgWidth,
+          //   height: imgHeight,
+          //   imagePath:
+          //       imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
+          //   fit: BoxFit.cover,
+          // );
         },
         errorWidget: (context, url, error) {
           return MyImage(
             width: imgWidth,
             height: imgHeight,
-            imagePath: imageUrl.contains('land_')
-                ? "no_image_land.png"
-                : "no_image_port.png",
-            fit: BoxFit.cover,
+            imagePath:
+                imageUrl.contains('land_') ? "appicon.png" : "appicon.png",
+            fit: BoxFit.contain,
           );
         },
       ),

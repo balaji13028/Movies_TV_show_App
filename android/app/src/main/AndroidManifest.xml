@@ -1,35 +1,36 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.divinetechs.dtlive">
+    package="com.media9newsnetwork.media9">
 
-    <uses-feature
-        android:name="android.hardware.camera2.full"
+    <uses-feature android:name="android.hardware.camera2.full"
         android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature
-        android:name="android.hardware.camera.flash"
+    <uses-feature android:name="android.hardware.camera.autofocus" 
+        android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.flash"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- <uses-permission android:name="android.permission.FLASHLIGHT" /> -->
+    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO"/> -->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH"/> -->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> -->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/> -->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <!-- <uses-permission android:name="com.android.vending.BILLING" /> -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <uses-feature android:name="android.hardware.telephony"
         android:required="false" />
     <uses-feature android:name="android.hardware.wifi"
-        android:required="true" />
-    <uses-feature android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="false" />
+    <!-- <uses-feature android:glEsVersion="0x00020000"
+        android:required="true" /> -->
     <uses-feature android:name="android.software.leanback"
         android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen"
@@ -38,6 +39,9 @@
         android:required="false"/>
     <uses-feature android:name="android.hardware.camera"
         android:required="false"/>
+    <uses-feature android:name="android.hardware.screen.portrait"
+        android:required="false"/>
+
 
    <application
         android:label="Media9"
@@ -59,6 +63,13 @@
             </intent-filter>
         </receiver>
 
+        <!-- <intent>
+        <action android:name="com.google.android.youtube.api.service.START" />
+        </intent> -->
+
+        <!-- <meta-data android:name="io.flutter.embedding.android.WebView.EnableHybridComposition" android:value="true"/> -->
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -76,6 +87,7 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme" />
+            <!-- For Android TV -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
@@ -88,7 +100,7 @@
         </activity>
 
         <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
-        <activity
+        <!-- <activity
             android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
             android:exported="true">
             <intent-filter>
@@ -99,15 +111,15 @@
                 <data android:scheme="signinwithapple" />
                 <data android:path="callback" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
         <!-- Facebook Login START -->
-        <meta-data
+        <!-- <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/facebook_client_token" />
+            android:value="@string/facebook_client_token" /> -->
         <!-- Facebook Login END -->
 
         <!-- Don't delete the meta-data below.

@@ -1,20 +1,19 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dtlive/provider/generalprovider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/provider/generalprovider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 
@@ -250,7 +249,7 @@ class _LoginSocialWebState extends State<LoginSocialWeb> {
             InkWell(
               onTap: () {
                 debugPrint("Clicked on : ====> loginWith Google");
-                _gmailLogin();
+                // _gmailLogin();
               },
               focusColor: primaryColor,
               borderRadius: BorderRadius.circular(18),
@@ -301,53 +300,53 @@ class _LoginSocialWebState extends State<LoginSocialWeb> {
   }
 
   /* Google(Gmail) Login */
-  Future<void> _gmailLogin() async {
-    final googleUser = await GoogleSignIn().signIn().onError(
-        (error, stackTrace) async => await GoogleSignIn().signInSilently());
-    if (googleUser == null) return;
+  // Future<void> _gmailLogin() async {
+  //   final googleUser = await GoogleSignIn().signIn().onError(
+  //       (error, stackTrace) async => await GoogleSignIn().signInSilently());
+  //   if (googleUser == null) return;
 
-    GoogleSignInAccount user = googleUser;
+  //   GoogleSignInAccount user = googleUser;
 
-    debugPrint('GoogleSignIn ===> id : ${user.id}');
-    debugPrint('GoogleSignIn ===> email : ${user.email}');
-    debugPrint('GoogleSignIn ===> displayName : ${user.displayName}');
-    debugPrint('GoogleSignIn ===> photoUrl : ${user.photoUrl}');
+  //   debugPrint('GoogleSignIn ===> id : ${user.id}');
+  //   debugPrint('GoogleSignIn ===> email : ${user.email}');
+  //   debugPrint('GoogleSignIn ===> displayName : ${user.displayName}');
+  //   debugPrint('GoogleSignIn ===> photoUrl : ${user.photoUrl}');
 
-    UserCredential userCredential;
-    try {
-      GoogleSignInAuthentication googleSignInAuthentication =
-          await user.authentication;
-      AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
+  //   UserCredential userCredential;
+  //   try {
+  //     GoogleSignInAuthentication googleSignInAuthentication =
+  //         await user.authentication;
+  //     AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleSignInAuthentication.accessToken,
+  //       idToken: googleSignInAuthentication.idToken,
+  //     );
 
-      userCredential = await _auth.signInWithCredential(credential);
-      assert(await userCredential.user?.getIdToken() != null);
-      debugPrint("User Name: ${userCredential.user?.displayName}");
-      debugPrint("User Email ${userCredential.user?.email}");
-      debugPrint("User photoUrl ${userCredential.user?.photoURL}");
-      debugPrint("uid ===> ${userCredential.user?.uid}");
-      String firebasedid = userCredential.user?.uid ?? "";
-      debugPrint('firebasedid :===> $firebasedid');
+  //     userCredential = await _auth.signInWithCredential(credential);
+  //     assert(await userCredential.user?.getIdToken() != null);
+  //     debugPrint("User Name: ${userCredential.user?.displayName}");
+  //     debugPrint("User Email ${userCredential.user?.email}");
+  //     debugPrint("User photoUrl ${userCredential.user?.photoURL}");
+  //     debugPrint("uid ===> ${userCredential.user?.uid}");
+  //     String firebasedid = userCredential.user?.uid ?? "";
+  //     debugPrint('firebasedid :===> $firebasedid');
 
-      /* Save PhotoUrl in File */
-      mProfileImg =
-          await Utils.saveImageInStorage(userCredential.user?.photoURL ?? "");
-      debugPrint('mProfileImg :===> $mProfileImg');
+  //     /* Save PhotoUrl in File */
+  //     mProfileImg =
+  //         await Utils.saveImageInStorage(userCredential.user?.photoURL ?? "");
+  //     debugPrint('mProfileImg :===> $mProfileImg');
 
-      checkAndNavigate(user.email, user.displayName ?? "", "2");
-    } on FirebaseAuthException catch (e) {
-      debugPrint('===>Exp${e.code.toString()}');
-      debugPrint('===>Exp${e.message.toString()}');
-      if (e.code.toString() == "user-not-found") {
-        // registerFirebaseUser(user.email, user.displayName ?? "", "2");
-      } else if (e.code == 'wrong-password') {
-        debugPrint('Wrong password provided.');
-        Utils.showToast('Wrong password provided.');
-      } else {}
-    }
-  }
+  //     checkAndNavigate(user.email, user.displayName ?? "", "2");
+  //   } on FirebaseAuthException catch (e) {
+  //     debugPrint('===>Exp${e.code.toString()}');
+  //     debugPrint('===>Exp${e.message.toString()}');
+  //     if (e.code.toString() == "user-not-found") {
+  //       // registerFirebaseUser(user.email, user.displayName ?? "", "2");
+  //     } else if (e.code == 'wrong-password') {
+  //       debugPrint('Wrong password provided.');
+  //       Utils.showToast('Wrong password provided.');
+  //     } else {}
+  //   }
+  // }
 
   void checkAndNavigate(String mail, String displayName, String type) async {
     email = mail;

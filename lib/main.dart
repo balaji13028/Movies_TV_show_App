@@ -4,57 +4,66 @@ import 'dart:ui';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dtlive/firebase_options.dart';
-import 'package:dtlive/pages/splash.dart';
-import 'package:dtlive/pagetransition.dart';
-import 'package:dtlive/provider/avatarprovider.dart';
-import 'package:dtlive/provider/castdetailsprovider.dart';
-import 'package:dtlive/provider/channelsectionprovider.dart';
-import 'package:dtlive/provider/episodeprovider.dart';
-import 'package:dtlive/provider/findprovider.dart';
-import 'package:dtlive/provider/generalprovider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/paymentprovider.dart';
-import 'package:dtlive/provider/playerprovider.dart';
-import 'package:dtlive/provider/profileprovider.dart';
-import 'package:dtlive/provider/purchaselistprovider.dart';
-import 'package:dtlive/provider/rentstoreprovider.dart';
-import 'package:dtlive/provider/searchprovider.dart';
-import 'package:dtlive/provider/sectionbytypeprovider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/provider/showdetailsprovider.dart';
-import 'package:dtlive/provider/showdownloadprovider.dart';
-import 'package:dtlive/provider/subhistoryprovider.dart';
-import 'package:dtlive/provider/subscriptionprovider.dart';
-import 'package:dtlive/provider/videobyidprovider.dart';
-import 'package:dtlive/provider/videodetailsprovider.dart';
-import 'package:dtlive/provider/videodownloadprovider.dart';
-import 'package:dtlive/provider/watchlistprovider.dart';
-import 'package:dtlive/restartapp_wiget.dart';
-import 'package:dtlive/tvpages/tvhome.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_locales/flutter_locales.dart';
+import 'package:media9/firebase_options.dart';
+import 'package:media9/pages/home.dart';
+import 'package:media9/pages/splash.dart';
+import 'package:media9/pagetransition.dart';
+import 'package:media9/provider/adventisements_provider.dart';
+import 'package:media9/provider/avatarprovider.dart';
+import 'package:media9/provider/bottombar_provider.dart';
+import 'package:media9/provider/castdetailsprovider.dart';
+import 'package:media9/provider/channelsectionprovider.dart';
+import 'package:media9/provider/episodeprovider.dart';
+import 'package:media9/provider/findprovider.dart';
+import 'package:media9/provider/generalprovider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/livetv_provider.dart';
+import 'package:media9/provider/menulist_provider.dart';
+import 'package:media9/provider/paymentprovider.dart';
+import 'package:media9/provider/playerprovider.dart';
+import 'package:media9/provider/profileprovider.dart';
+import 'package:media9/provider/purchaselistprovider.dart';
+import 'package:media9/provider/rentstoreprovider.dart';
+import 'package:media9/provider/searchprovider.dart';
+import 'package:media9/provider/sectionbytypeprovider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/provider/showdetailsprovider.dart';
+import 'package:media9/provider/showdownloadprovider.dart';
+import 'package:media9/provider/slides_provider.dart';
+import 'package:media9/provider/subhistoryprovider.dart';
+import 'package:media9/provider/subscriptionprovider.dart';
+import 'package:media9/provider/tv_showprovider.dart';
+import 'package:media9/provider/videobyidprovider.dart';
+import 'package:media9/provider/videodetailsprovider.dart';
+import 'package:media9/provider/videodownloadprovider.dart';
+import 'package:media9/provider/watchlistprovider.dart';
+import 'package:media9/restartapp_wiget.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pwa_install/pwa_install.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Locales.init(['en', 'ar', 'hi', 'pt']);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+// Add this
+  PWAInstall().setup(installCallback: () {
+    log('APP INSTALLED!');
+  });
   if (!kIsWeb) {
     await FlutterDownloader.initialize();
-  }
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Locales.init(['en', 'ar', 'hi', 'pt']);
-  if (!kIsWeb) {
     //Remove this method to stop OneSignal Debugging
-    await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    await OneSignal.Debug.setLogLevel(OSLogLevel.debug);
 
     await OneSignal.Debug.setAlertLevel(OSLogLevel.none);
     OneSignal.initialize(Constant.oneSignalAppId);
@@ -137,6 +146,12 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => VideoDetailsProvider()),
       ChangeNotifierProvider(create: (_) => VideoDownloadProvider()),
       ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+      ChangeNotifierProvider(create: (_) => TvShowprovider()),
+      ChangeNotifierProvider(create: (_) => LivetvProvider()),
+      ChangeNotifierProvider(create: (_) => SlidesProvider()),
+      ChangeNotifierProvider(create: (_) => BottombarProvider()),
+      ChangeNotifierProvider(create: (_) => AdventisementsProvider()),
+      ChangeNotifierProvider(create: (_) => MenulistProvider()),
     ], child: const RestartWidget(child: MyApp())),
   );
 }
@@ -156,15 +171,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if (!kIsWeb) Utils.enableScreenCapture();
-    if (!kIsWeb) _getDeviceInfo();
-    WidgetsBinding.instance.addObserver(this);
+    if (!kIsWeb) {
+      Utils.enableScreenCapture();
+      _getDeviceInfo();
+      WidgetsBinding.instance.addObserver(this);
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    if (!kIsWeb) {
+      WidgetsBinding.instance.removeObserver(this);
+    }
     super.dispose();
   }
 
@@ -172,11 +191,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('state = $state');
-    if (state == AppLifecycleState.resumed &&
-            previewsSate == AppLifecycleState.detached ||
-        previewsSate == AppLifecycleState.inactive) {
-      return RestartWidget.restartApp(context);
+    previewsSate = state;
+    // print(previewsSate);
+    // print('state = $state');
+    if (Platform.isAndroid) {
+      if (state == AppLifecycleState.resumed &&
+              previewsSate == AppLifecycleState.inactive ||
+          previewsSate == AppLifecycleState.hidden ||
+          previewsSate == AppLifecycleState.paused) {
+        return RestartWidget.restartApp(context);
+      }
     }
     // if(app)
   }
@@ -225,23 +249,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ],
             );
           },
-          home: AnimatedSplashScreen(
-            curve: Curves.easeOutExpo,
-            splashIconSize: double.infinity,
-            duration: 80, // Duration for splash screen transition
-            splashTransition:
-                SplashTransition.fadeTransition, // Transition type
-            backgroundColor: Colors.white,
-            splash: SizedBox(
-              height: size.height,
-              width: size.width,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            pageTransitionType: PageTransitionType.fade,
-            nextScreen: (kIsWeb) ? const TVHome(pageName: "") : const Splash(),
-          ),
+          home: (kIsWeb)
+              ? const Home(pageName: "")
+              : AnimatedSplashScreen(
+                  curve: Curves.easeOutExpo,
+                  splashIconSize: double.infinity,
+                  duration: 80, // Duration for splash screen transition
+                  splashTransition:
+                      SplashTransition.fadeTransition, // Transition type
+                  backgroundColor: Colors.white,
+                  splash: SizedBox(
+                    height: size.height,
+                    width: size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  pageTransitionType: PageTransitionType.fade,
+                  nextScreen: const Splash(),
+                ),
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

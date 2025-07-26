@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/couponmodel.dart';
-import 'package:dtlive/model/paymentoptionmodel.dart';
-import 'package:dtlive/model/paytmmodel.dart';
-import 'package:dtlive/model/successmodel.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/couponmodel.dart';
+import 'package:media9/model/paymentoptionmodel.dart';
+import 'package:media9/model/paytmmodel.dart';
+import 'package:media9/model/successmodel.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class PaymentProvider extends ChangeNotifier {

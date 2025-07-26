@@ -1,15 +1,15 @@
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:flutter/material.dart';
 
 class NoData extends StatelessWidget {
   final String? title, subTitle;
   const NoData({
-    Key? key,
+    super.key,
     required this.title,
     required this.subTitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,9 @@ class NoData extends StatelessWidget {
                     color: white,
                     text: title ?? "",
                     fontsizeNormal: 16,
+                    fontsizeWeb: 16,
                     maxline: 2,
-                    multilanguage: true,
+                    multilanguage: false,
                     overflow: TextOverflow.ellipsis,
                     fontweight: FontWeight.w600,
                     textalign: TextAlign.center,
@@ -52,6 +53,7 @@ class NoData extends StatelessWidget {
                     color: otherColor,
                     text: subTitle ?? "",
                     fontsizeNormal: 14,
+                    fontsizeWeb: 14,
                     maxline: 5,
                     multilanguage: true,
                     overflow: TextOverflow.ellipsis,

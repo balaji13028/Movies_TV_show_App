@@ -2,32 +2,37 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dtlive/model/avatarmodel.dart';
-import 'package:dtlive/model/castdetailmodel.dart';
-import 'package:dtlive/model/couponmodel.dart';
-import 'package:dtlive/model/historymodel.dart';
-import 'package:dtlive/model/pagesmodel.dart';
-import 'package:dtlive/model/paymentoptionmodel.dart';
-import 'package:dtlive/model/paytmmodel.dart';
-import 'package:dtlive/model/sociallinkmodel.dart';
-import 'package:dtlive/model/subscriptionmodel.dart';
-import 'package:dtlive/model/channelsectionmodel.dart';
-import 'package:dtlive/model/episodebyseasonmodel.dart';
-import 'package:dtlive/model/generalsettingmodel.dart';
-import 'package:dtlive/model/genresmodel.dart';
-import 'package:dtlive/model/langaugemodel.dart';
-import 'package:dtlive/model/loginregistermodel.dart';
-import 'package:dtlive/model/profilemodel.dart';
-import 'package:dtlive/model/rentmodel.dart';
-import 'package:dtlive/model/searchmodel.dart';
-import 'package:dtlive/model/sectionbannermodel.dart';
-import 'package:dtlive/model/sectiondetailmodel.dart';
-import 'package:dtlive/model/sectionlistmodel.dart';
-import 'package:dtlive/model/sectiontypemodel.dart';
-import 'package:dtlive/model/successmodel.dart';
-import 'package:dtlive/model/videobyidmodel.dart';
-import 'package:dtlive/model/watchlistmodel.dart';
-import 'package:dtlive/utils/constant.dart';
+import 'package:media9/model/adventisement_model.dart';
+import 'package:media9/model/avatarmodel.dart';
+import 'package:media9/model/castdetailmodel.dart';
+import 'package:media9/model/channelsectionmodel.dart';
+import 'package:media9/model/couponmodel.dart';
+import 'package:media9/model/episodebyseasonmodel.dart';
+import 'package:media9/model/generalsettingmodel.dart';
+import 'package:media9/model/genresmodel.dart';
+import 'package:media9/model/historymodel.dart';
+import 'package:media9/model/langaugemodel.dart';
+import 'package:media9/model/live_tv_model.dart';
+import 'package:media9/model/loginregistermodel.dart';
+import 'package:media9/model/menulist_model.dart';
+import 'package:media9/model/pagesmodel.dart';
+import 'package:media9/model/paymentoptionmodel.dart';
+import 'package:media9/model/paytmmodel.dart';
+import 'package:media9/model/profilemodel.dart';
+import 'package:media9/model/rentmodel.dart';
+import 'package:media9/model/searchmodel.dart';
+import 'package:media9/model/sectionbannermodel.dart';
+import 'package:media9/model/sectiondetailmodel.dart';
+import 'package:media9/model/sectionlistmodel.dart';
+import 'package:media9/model/sectiontypemodel.dart';
+import 'package:media9/model/slides_model.dart';
+import 'package:media9/model/sociallinkmodel.dart';
+import 'package:media9/model/subscriptionmodel.dart';
+import 'package:media9/model/successmodel.dart';
+import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/model/videobyidmodel.dart';
+import 'package:media9/model/watchlistmodel.dart';
+import 'package:media9/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -42,15 +47,15 @@ class ApiService {
 
   ApiService() {
     dio = Dio();
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        compact: false,
-      ),
-    );
+    // dio.interceptors.add(
+    // PrettyDioLogger(
+    //   requestHeader: true,
+    //   requestBody: true,
+    //   responseBody: true,
+    //   responseHeader: false,
+    //   compact: false,
+    // ),
+    // );
   }
 
   // general_setting API
@@ -271,8 +276,7 @@ class ApiService {
       options: optHeaders,
     );
     // var response;
-    sectionTypeModel =
-        SectionTypeModel.fromJson(response != null ? response.data : {});
+    sectionTypeModel = SectionTypeModel.fromJson(response.data ?? {});
     return sectionTypeModel;
   }
 
@@ -775,5 +779,143 @@ class ApiService {
     );
     historyModel = HistoryModel.fromJson(response.data);
     return historyModel;
+  }
+
+  ///Tv shows list
+  Future<List<TvShowModel>?> getTvvShowsList() async {
+    try {
+      String rentList = "show-tv";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => TvShowModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///Live tv list
+  Future<List<LiveTvModel>?> getLiveTvList() async {
+    try {
+      String rentList = "live-tv";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+                return list.map((item) => LiveTvModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Adventisements list
+  Future<List<AdventisementModel>?> getAdvenmtisementsList() async {
+    try {
+      String rentList = "advertisement";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => AdventisementModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Menu list
+  Future<List<MenulistModel>?> getMenuList() async {
+    try {
+      String rentList = "menu-management";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => MenulistModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  ///homepage list of live tv and show tv list
+  Future getHomeScreenList() async {
+    try {
+      String home = "get-livetv-tvshow-homepage";
+      Response response = await dio.get(
+        '$baseUrl$home',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.data['data'];
+        //  list.map((item) => LiveTvModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Slides list
+  Future<List<SlidesModel>?> getSlidesList() async {
+    try {
+      String rentList = "slides";
+      Response response = await dio.get(
+        '$baseUrl$rentList',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        return list.map((item) => SlidesModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 }

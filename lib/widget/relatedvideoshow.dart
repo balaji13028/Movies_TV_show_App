@@ -1,16 +1,16 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/sectiondetailmodel.dart';
-import 'package:dtlive/pages/home.dart';
-import 'package:dtlive/pages/moviedetails.dart';
-import 'package:dtlive/pages/showdetails.dart';
-import 'package:dtlive/tvpages/tvmoviedetails.dart';
-import 'package:dtlive/tvpages/tvshowdetails.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
-import 'package:dtlive/widget/mytext.dart';
+import 'package:media9/model/sectiondetailmodel.dart';
+import 'package:media9/pages/home.dart';
+import 'package:media9/pages/moviedetails.dart';
+import 'package:media9/pages/showdetails.dart';
+import 'package:media9/tvpages/tvmoviedetails.dart';
+import 'package:media9/tvpages/tvshowdetails.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/widget/mynetworkimg.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

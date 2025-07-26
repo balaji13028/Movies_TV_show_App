@@ -1,5 +1,5 @@
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/mynetworkimg.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

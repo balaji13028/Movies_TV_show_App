@@ -2,41 +2,39 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as number;
 
-import 'package:dtlive/model/subtitlemodel.dart';
-import 'package:dtlive/pages/moviedetails.dart';
-import 'package:dtlive/pages/player_pod.dart';
-import 'package:dtlive/pages/player_better.dart';
-import 'package:dtlive/pages/player_vimeo.dart';
-import 'package:dtlive/pages/player_youtube.dart';
-import 'package:dtlive/pages/showdetails.dart';
-import 'package:dtlive/provider/showdetailsprovider.dart';
-import 'package:dtlive/provider/videodetailsprovider.dart';
-import 'package:dtlive/subscription/allpayment.dart';
-import 'package:dtlive/tvpages/tvmoviedetails.dart';
-import 'package:dtlive/tvpages/tvshowdetails.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/webwidget/loginsocialweb.dart';
-import 'package:dtlive/webwidget/otpverifyweb.dart';
-import 'package:dtlive/webwidget/profileeditweb.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
+import 'package:media9/model/subtitlemodel.dart';
+import 'package:media9/pages/moviedetails.dart';
+import 'package:media9/pages/player_vimeo.dart';
+import 'package:media9/pages/player_youtube.dart';
+import 'package:media9/pages/showdetails.dart';
+import 'package:media9/provider/showdetailsprovider.dart';
+import 'package:media9/provider/videodetailsprovider.dart';
+import 'package:media9/subscription/allpayment.dart';
+import 'package:media9/tvpages/tvmoviedetails.dart';
+import 'package:media9/tvpages/tvshowdetails.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/webwidget/loginsocialweb.dart';
+import 'package:media9/webwidget/otpverifyweb.dart';
+import 'package:media9/webwidget/profileeditweb.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path/path.dart' as path;
+import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:html/parser.dart' show parse;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:screen_protector/screen_protector.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static void enableScreenCapture() async {
@@ -231,17 +229,16 @@ class Utils {
   static Future<dynamic> openPlayer({
     required BuildContext context,
     required String? playType,
-    required int? videoId,
-    required int? videoType,
-    required int? typeId,
-    required int? otherId,
+    int? videoId,
+    int? videoType,
+    int? typeId,
+    int? otherId,
     required String? videoUrl,
-    required String? trailerUrl,
+    String? trailerUrl,
     required String? uploadType,
-    required String? videoThumb,
-    required int? vStopTime,
+    String? videoThumb,
+    int? vStopTime,
   }) async {
-    dynamic isContinue;
     int? vID = (videoId ?? 0);
     int? vType = (videoType ?? 0);
     int? vTypeID = (typeId ?? 0);
@@ -270,7 +267,7 @@ class Utils {
       /* Pod Player & Youtube Player */
       if (!context.mounted) return;
       if (vUploadType == "youtube") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -293,33 +290,33 @@ class Utils {
           ),
         );
       } else {
-        isContinue = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlayerPod(
-                playType == "Trailer"
-                    ? "Trailer"
-                    : playType == "Download"
-                        ? "Download"
-                        : (videoType == 2 ? "Show" : "Video"),
-                vID,
-                vType,
-                vTypeID,
-                vOtherID,
-                vUrl ?? "",
-                stopTime,
-                vUploadType,
-                videoThumb,
-              );
-            },
-          ),
-        );
+        // await Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return PlayerPod(
+        //         playType == "Trailer"
+        //             ? "Trailer"
+        //             : playType == "Download"
+        //                 ? "Download"
+        //                 : (videoType == 2 ? "Show" : "Video"),
+        //         vID,
+        //         vType,
+        //         vTypeID,
+        //         vOtherID,
+        //         vUrl ?? "",
+        //         stopTime,
+        //         vUploadType,
+        //         videoThumb,
+        //       );
+        //     },
+        //   ),
+        // );
       }
     } else {
       /* Better, Youtube & Vimeo Players */
       if (vUploadType == "youtube") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -342,7 +339,7 @@ class Utils {
           ),
         );
       } else if (vUploadType == "vimeo") {
-        isContinue = await Navigator.push(
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
@@ -365,32 +362,30 @@ class Utils {
           ),
         );
       } else {
-        isContinue = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlayerBetter(
-                playType == "Trailer"
-                    ? "Trailer"
-                    : playType == "Download"
-                        ? "Download"
-                        : (videoType == 2 ? "Show" : "Video"),
-                vID,
-                vType,
-                vTypeID,
-                vOtherID,
-                vUrl ?? "",
-                stopTime,
-                vUploadType,
-                videoThumb,
-              );
-            },
-          ),
-        );
+        // await Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) {
+        //       return PlayerBetter(
+        //         playType == "Trailer"
+        //             ? "Trailer"
+        //             : playType == "Download"
+        //                 ? "Download"
+        //                 : (videoType == 2 ? "Show" : "Video"),
+        //         vID,
+        //         vType,
+        //         vTypeID,
+        //         vOtherID,
+        //         vUrl ?? "",
+        //         stopTime,
+        //         vUploadType,
+        //         videoThumb,
+        //       );
+        //     },
+        //   ),
+        // );
       }
     }
-    log("isContinue ===> $isContinue");
-    return isContinue;
   }
   /* ========= Open Player ========= */
 
@@ -1017,7 +1012,7 @@ class Utils {
         shareMessage = "$shareDesc\n${Constant.iosAppUrl}";
       }
       await FlutterShare.share(
-        title: Constant.appName ?? "DTLive",
+        title: Constant.appName ?? "media9",
         linkUrl: shareMessage,
       );
     } catch (e) {
@@ -1053,7 +1048,7 @@ class Utils {
         mode: LaunchMode.platformDefault,
       );
     } else {
-      throw "Could not launch $url";
+      Utils.showToast("Could not launch $url");
     }
   }
 

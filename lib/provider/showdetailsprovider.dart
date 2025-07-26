@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/episodebyseasonmodel.dart';
-import 'package:dtlive/model/sectiondetailmodel.dart';
-import 'package:dtlive/model/successmodel.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/episodebyseasonmodel.dart';
+import 'package:media9/model/sectiondetailmodel.dart';
+import 'package:media9/model/successmodel.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class ShowDetailsProvider extends ChangeNotifier {

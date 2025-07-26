@@ -1,15 +1,15 @@
 import 'dart:developer';
 
-import 'package:dtlive/pages/bottombar.dart';
-import 'package:dtlive/provider/generalprovider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/utils/utils.dart';
+import 'package:media9/pages/bottombar.dart';
+import 'package:media9/provider/generalprovider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';

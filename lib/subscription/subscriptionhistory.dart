@@ -1,10 +1,10 @@
-import 'package:dtlive/provider/subhistoryprovider.dart';
-import 'package:dtlive/shimmer/shimmerutils.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
+import 'package:media9/provider/subhistoryprovider.dart';
+import 'package:media9/shimmer/shimmerutils.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/widget/nodata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -229,7 +229,8 @@ class _SubscriptionHistoryState extends State<SubscriptionHistory> {
                             .historyModel.result?[position].expiryDate ??
                         ""))
                     ? complimentryColor
-                    : */ primaryColor,
+                    : */
+                primaryColor,
                 white,
                 15,
                 0.5),
@@ -240,12 +241,14 @@ class _SubscriptionHistoryState extends State<SubscriptionHistory> {
                           .historyModel.result?[position].expiryDate ??
                       ""))
                   ? white
-                  :  */black,
+                  :  */
+                  black,
               text: /* DateTime.now().isBefore(DateTime.parse(subHistoryProvider
                           .historyModel.result?[position].expiryDate ??
                       ""))
                   ? "current"
-                  :  */"expired",
+                  :  */
+                  "expired",
               multilanguage: true,
               textalign: TextAlign.center,
               maxline: 1,

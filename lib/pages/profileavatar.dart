@@ -1,9 +1,9 @@
-import 'package:dtlive/provider/avatarprovider.dart';
-import 'package:dtlive/shimmer/shimmerutils.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myusernetworkimg.dart';
-import 'package:dtlive/widget/nodata.dart';
+import 'package:media9/provider/avatarprovider.dart';
+import 'package:media9/shimmer/shimmerutils.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myusernetworkimg.dart';
+import 'package:media9/widget/nodata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';

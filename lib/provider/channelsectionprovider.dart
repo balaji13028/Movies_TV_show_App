@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/channelsectionmodel.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/channelsectionmodel.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class ChannelSectionProvider extends ChangeNotifier {

@@ -3,34 +3,34 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dtlive/provider/channelsectionprovider.dart';
-import 'package:dtlive/provider/paymentprovider.dart';
-import 'package:dtlive/provider/showdetailsprovider.dart';
-import 'package:dtlive/provider/videodetailsprovider.dart';
-import 'package:dtlive/subscription/consumable_store.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/strings.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
-import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
+import 'package:media9/provider/channelsectionprovider.dart';
+import 'package:media9/provider/paymentprovider.dart';
+import 'package:media9/provider/showdetailsprovider.dart';
+import 'package:media9/provider/videodetailsprovider.dart';
+import 'package:media9/subscription/consumable_store.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mytext.dart';
+import 'package:media9/widget/nodata.dart';
+import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
-import 'package:razorpay_web/razorpay_web.dart';
+// import 'package:razorpay_web/razorpay_web.dart';
 
 final bool _kAutoConsume = Platform.isIOS || true;
 
@@ -44,7 +44,7 @@ class AllPayment extends StatefulWidget {
       productPackage,
       currency;
   const AllPayment({
-    Key? key,
+    super.key,
     required this.payType,
     required this.itemId,
     required this.price,
@@ -53,7 +53,7 @@ class AllPayment extends StatefulWidget {
     required this.videoType,
     required this.productPackage,
     required this.currency,
-  }) : super(key: key);
+  });
 
   @override
   State<AllPayment> createState() => AllPaymentState();
@@ -1163,75 +1163,75 @@ class AllPaymentState extends State<AllPayment> {
 
   /* ********* Razorpay START ********* */
   void _initializeRazorpay() {
-    if (paymentProvider.paymentOptionModel.result?.razorpay != null) {
-      Razorpay razorpay = Razorpay();
-      var options = {
-        'key':
-            paymentProvider.paymentOptionModel.result?.razorpay?.isLive == "1"
-                ? paymentProvider
-                        .paymentOptionModel.result?.razorpay?.liveKey1 ??
-                    ""
-                : paymentProvider
-                        .paymentOptionModel.result?.razorpay?.testKey1 ??
-                    "",
-        'currency': Constant.currency,
-        'amount': (double.parse(paymentProvider.finalAmount ?? "") * 100),
-        'name': widget.itemTitle ?? "",
-        'description': widget.itemTitle ?? "",
-        'retry': {'enabled': true, 'max_count': 1},
-        'send_sms_hash': true,
-        'prefill': {'contact': userMobileNo, 'email': userEmail},
-        'external': {
-          'wallets': ['paytm']
-        }
-      };
-      razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
-      razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
-      razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
+    // if (paymentProvider.paymentOptionModel.result?.razorpay != null) {
+    //   Razorpay razorpay = Razorpay();
+    //   var options = {
+    //     'key':
+    //         paymentProvider.paymentOptionModel.result?.razorpay?.isLive == "1"
+    //             ? paymentProvider
+    //                     .paymentOptionModel.result?.razorpay?.liveKey1 ??
+    //                 ""
+    //             : paymentProvider
+    //                     .paymentOptionModel.result?.razorpay?.testKey1 ??
+    //                 "",
+    //     'currency': Constant.currency,
+    //     'amount': (double.parse(paymentProvider.finalAmount ?? "") * 100),
+    //     'name': widget.itemTitle ?? "",
+    //     'description': widget.itemTitle ?? "",
+    //     'retry': {'enabled': true, 'max_count': 1},
+    //     'send_sms_hash': true,
+    //     'prefill': {'contact': userMobileNo, 'email': userEmail},
+    //     'external': {
+    //       'wallets': ['paytm']
+    //     }
+    //   };
+    //   razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
+    //   razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
+    //   razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
 
-      try {
-        razorpay.open(options);
-      } catch (e) {
-        debugPrint('Razorpay Error :=========> $e');
-      }
-    } else {
-      Utils.showSnackbar(context, "", "payment_not_processed", true);
-    }
+    //   try {
+    //     razorpay.open(options);
+    //   } catch (e) {
+    //     debugPrint('Razorpay Error :=========> $e');
+    //   }
+    // } else {
+    //   Utils.showSnackbar(context, "", "payment_not_processed", true);
+    // }
   }
 
-  void handlePaymentErrorResponse(PaymentFailureResponse response) async {
-    /*
-    * PaymentFailureResponse contains three values:
-    * 1. Error Code
-    * 2. Error Description
-    * 3. Metadata
-    * */
-    Utils.showSnackbar(context, "fail", "payment_fail", true);
-    await paymentProvider.setCurrentPayment("");
-  }
+  // void handlePaymentErrorResponse(PaymentFailureResponse response) async {
+  //   /*
+  //   * PaymentFailureResponse contains three values:
+  //   * 1. Error Code
+  //   * 2. Error Description
+  //   * 3. Metadata
+  //   * */
+  //   Utils.showSnackbar(context, "fail", "payment_fail", true);
+  //   await paymentProvider.setCurrentPayment("");
+  // }
 
-  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    /*
-    * Payment Success Response contains three values:
-    * 1. Order ID
-    * 2. Payment ID
-    * 3. Signature
-    * */
-    // paymentId = response.paymentId;
-    debugPrint("paymentId ========> $paymentId");
-    Utils.showSnackbar(context, "success", "payment_success", true);
-    if (widget.payType == "Package") {
-      addTransaction(widget.itemId, widget.itemTitle,
-          paymentProvider.finalAmount, paymentId, widget.currency);
-    } else if (widget.payType == "Rent") {
-      addRentTransaction(widget.itemId, paymentProvider.finalAmount,
-          widget.typeId, widget.videoType);
-    }
-  }
+  // void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+  //   /*
+  //   * Payment Success Response contains three values:
+  //   * 1. Order ID
+  //   * 2. Payment ID
+  //   * 3. Signature
+  //   * */
+  //   // paymentId = response.paymentId;
+  //   debugPrint("paymentId ========> $paymentId");
+  //   Utils.showSnackbar(context, "success", "payment_success", true);
+  //   if (widget.payType == "Package") {
+  //     addTransaction(widget.itemId, widget.itemTitle,
+  //         paymentProvider.finalAmount, paymentId, widget.currency);
+  //   } else if (widget.payType == "Rent") {
+  //     addRentTransaction(widget.itemId, paymentProvider.finalAmount,
+  //         widget.typeId, widget.videoType);
+  //   }
+  // }
 
-  void handleExternalWalletSelected(ExternalWalletResponse response) {
-    debugPrint("============ External Wallet Selected ============");
-  }
+  // void handleExternalWalletSelected(ExternalWalletResponse response) {
+  //   debugPrint("============ External Wallet Selected ============");
+  // }
   /* ********* Razorpay END ********* */
 
   /* ********* Paytm START ********* */

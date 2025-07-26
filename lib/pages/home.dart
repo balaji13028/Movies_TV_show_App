@@ -1,32 +1,43 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:developer' as log;
+import 'dart:io';
+import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dtlive/model/sectionbannermodel.dart' as banner;
-import 'package:dtlive/model/sectionlistmodel.dart' as list;
-import 'package:dtlive/model/sectionlistmodel.dart';
-import 'package:dtlive/model/sectiontypemodel.dart' as type;
-import 'package:dtlive/pages/videosbyid.dart';
-import 'package:dtlive/provider/generalprovider.dart';
-import 'package:dtlive/provider/homeprovider.dart';
-import 'package:dtlive/provider/sectiondataprovider.dart';
-import 'package:dtlive/shimmer/shimmerutils.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/dimens.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/utils/utils.dart';
-import 'package:dtlive/webwidget/commonappbar.dart';
-import 'package:dtlive/webwidget/footerweb.dart';
-import 'package:dtlive/widget/myimage.dart';
-import 'package:dtlive/widget/mynetworkimg.dart';
-import 'package:dtlive/widget/mytext.dart';
-import 'package:dtlive/widget/nodata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:media9/model/live_tv_model.dart';
+import 'package:media9/model/menulist_model.dart';
+import 'package:media9/model/sectionlistmodel.dart' as list;
+import 'package:media9/model/sectionlistmodel.dart';
+import 'package:media9/model/slides_model.dart';
+import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/pages/live_tv.dart';
+import 'package:media9/pages/livetv_player.dart';
+import 'package:media9/pages/tv_shows.dart';
+import 'package:media9/pages/tvshow_player.dart';
+import 'package:media9/pages/videosbyid.dart';
+import 'package:media9/provider/adventisements_provider.dart';
+import 'package:media9/provider/bottombar_provider.dart';
+import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/sectiondataprovider.dart';
+import 'package:media9/provider/slides_provider.dart';
+import 'package:media9/shimmer/shimmerutils.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/dimens.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/utils/strings.dart';
+import 'package:media9/utils/utils.dart';
+import 'package:media9/webwidget/commonappbar.dart';
+import 'package:media9/webwidget/footerweb.dart';
+import 'package:media9/widget/myimage.dart';
+import 'package:media9/widget/mynetworkimg.dart';
+import 'package:media9/widget/mytext.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -47,6 +58,7 @@ class HomeState extends State<Home> {
   final tabScrollController = ScrollController();
   late ListObserverController observerController;
   late HomeProvider homeProvider;
+  late BottombarProvider bottomPRovider;
   int? videoId, videoType, typeId;
   String? currentPage,
       langCatName,
@@ -70,6 +82,7 @@ class HomeState extends State<Home> {
   void initState() {
     sectionDataProvider =
         Provider.of<SectionDataProvider>(context, listen: false);
+    bottomPRovider = Provider.of<BottombarProvider>(context, listen: false);
     homeProvider = Provider.of<HomeProvider>(context, listen: false);
     observerController =
         ListObserverController(controller: tabScrollController);
@@ -110,10 +123,10 @@ class HomeState extends State<Home> {
           result.notification.additionalData?['video_type'].toString() ?? "";
       String? typeID =
           result.notification.additionalData?['type_id'].toString() ?? "";
-      log("videoID =======> $videoID");
-      log("upcomingType ==> $upcomingType");
-      log("videoType =====> $videoType");
-      log("typeID ========> $typeID");
+      log.log("videoID =======> $videoID");
+      log.log("upcomingType ==> $upcomingType");
+      log.log("videoType =====> $videoType");
+      log.log("typeID ========> $typeID");
 
       Utils.openDetails(
         context: context,
@@ -126,29 +139,22 @@ class HomeState extends State<Home> {
   }
 
   _getData() async {
-    final generalsetting = Provider.of<GeneralProvider>(context, listen: false);
-
-    await homeProvider.setLoading(true);
-    await homeProvider.getSectionType();
-
-    if (!homeProvider.loading) {
-      if (homeProvider.sectionTypeModel.status == 200 &&
-          homeProvider.sectionTypeModel.result != null) {
-        if ((homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
-          if ((sectionDataProvider.sectionBannerModel.result?.length ?? 0) ==
-                  0 ||
-              (sectionDataProvider.sectionListModel.result?.length ?? 0) == 0) {
-            getTabData(0, homeProvider.sectionTypeModel.result);
-          }
-        }
-      }
+    if (!kIsWeb || (Constant.isTV == false)) {
+      OneSignal.Notifications.requestPermission(true);
     }
+    final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
+    final adeventisementProvider =
+        Provider.of<AdventisementsProvider>(context, listen: false);
+    // await homeProvider.getMenuList();
+    await adeventisementProvider.getAdvenmtisementsList();
+    await slidesProvider.getSlides();
+    await homeProvider.gethomeScreenData();
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
       setState(() {});
     });
-    generalsetting.getGeneralsetting();
-    generalsetting.getPages();
+    // generalsetting.getGeneralsetting();
+    // generalsetting.getPages();
     Utils.getCurrencySymbol();
   }
 
@@ -156,6 +162,7 @@ class HomeState extends State<Home> {
     debugPrint("setSelectedTab tabPos ====> $tabPos");
     if (!mounted) return;
     await homeProvider.setSelectedTab(tabPos);
+    // _scrollToCurrent();
     debugPrint(
         "setSelectedTab selectedIndex ====> ${homeProvider.selectedIndex}");
     debugPrint(
@@ -167,38 +174,34 @@ class HomeState extends State<Home> {
     }
   }
 
-  Future<void> getTabData(
-      int position, List<type.Result>? sectionTypeList) async {
+  Future<void> getTabData(int position, List<MenulistModel>? menuList) async {
     debugPrint("getTabData position ====> $position");
     await setSelectedTab(position);
     await sectionDataProvider.setLoading(true);
-    await sectionDataProvider.getSectionBanner(
-        position == 0 ? "0" : (sectionTypeList?[position - 1].id),
-        position == 0 ? "1" : "2");
-    await sectionDataProvider.getSectionList(
-        position == 0 ? "0" : (sectionTypeList?[position - 1].id),
-        position == 0 ? "1" : "2");
+    // await sectionDataProvider.getSectionList(
+    //     position == 0 ? "0" : (sectionTypeList?[position - 1].id),
+    //     position == 0 ? "1" : "2");
   }
 
-  openDetailPage(String pageName, int videoId, int upcomingType, int videoType,
-      int typeId) async {
-    debugPrint("pageName =======> $pageName");
-    debugPrint("videoId ========> $videoId");
-    debugPrint("upcomingType ===> $upcomingType");
-    debugPrint("videoType ======> $videoType");
-    debugPrint("typeId =========> $typeId");
-    if (pageName != "" && (kIsWeb || Constant.isTV)) {
-      await setSelectedTab(-1);
-    }
-    if (!mounted) return;
-    Utils.openDetails(
-      context: context,
-      videoId: videoId,
-      upcomingType: upcomingType,
-      videoType: videoType,
-      typeId: typeId,
-    );
-  }
+  // openDetailPage(String pageName, int videoId, int upcomingType, int videoType,
+  //     int typeId) async {
+  //   debugPrint("pageName =======> $pageName");
+  //   debugPrint("videoId ========> $videoId");
+  //   debugPrint("upcomingType ===> $upcomingType");
+  //   debugPrint("videoType ======> $videoType");
+  //   debugPrint("typeId =========> $typeId");
+  //   if (pageName != "" && (kIsWeb || Constant.isTV)) {
+  //     await setSelectedTab(-1);
+  //   }
+  //   if (!mounted) return;
+  //   Utils.openDetails(
+  //     context: context,
+  //     videoId: videoId,
+  //     upcomingType: upcomingType,
+  //     videoType: videoType,
+  //     typeId: typeId,
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -206,7 +209,7 @@ class HomeState extends State<Home> {
   }
 
   _scrollToCurrent() {
-    log("selectedIndex ======> ${homeProvider.selectedIndex.toDouble()}");
+    log.log("selectedIndex ======> ${homeProvider.selectedIndex.toDouble()}");
     observerController.animateTo(
       index: homeProvider.selectedIndex,
       curve: Curves.easeInOut,
@@ -218,21 +221,9 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBgColor,
-      body: SafeArea(
-        child: (kIsWeb || Constant.isTV)
-            ? _webAppBarWithDetails()
-            : _mobileAppBarWithDetails(),
-      ),
-    );
-  }
-
-  Widget _mobileAppBarWithDetails() {
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverOverlapAbsorber(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            sliver: SliverAppBar(
+      appBar: (kIsWeb || Constant.isTV)
+          ? null
+          : AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: appBgColor,
               toolbarHeight: 65,
@@ -245,66 +236,102 @@ class HomeState extends State<Home> {
                   splashColor: transparentColor,
                   highlightColor: transparentColor,
                   onTap: () async {
-                    await getTabData(0, homeProvider.sectionTypeModel.result);
+                    // await getTabData(0, homeProvider.sectionTypeModel.result);
                   },
                   child: MyImage(
                       width: 120, height: 120, imagePath: "appicon.png"),
                 ),
               ), // This is the title in the app bar.
-              pinned: false,
-              expandedHeight: 0,
-              forceElevated: innerBoxIsScrolled,
             ),
-          ),
-        ];
-      },
-      body: homeProvider.loading
-          ? ShimmerUtils.buildHomeMobileShimmer(context)
-          : (homeProvider.sectionTypeModel.status == 200)
-              ? (homeProvider.sectionTypeModel.result != null ||
-                      (homeProvider.sectionTypeModel.result?.length ?? 0) > 0)
-                  ? Stack(
-                      children: [
-                        tabItem(homeProvider.sectionTypeModel.result),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: Dimens.homeTabHeight,
-                          padding: const EdgeInsets.only(top: 8, bottom: 8),
-                          color: black.withOpacity(0.8),
-                          child: tabTitle(homeProvider.sectionTypeModel.result),
-                        ),
-                      ],
-                    )
-                  : const NoData(title: '', subTitle: '')
-              : const NoData(title: '', subTitle: ''),
+      body: SafeArea(
+        child: (kIsWeb || Constant.isTV)
+            ? _webAppBarWithDetails()
+            : _mobileAppBarWithDetails(),
+      ),
     );
+  }
+
+  Widget _mobileAppBarWithDetails() {
+    return NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              // sliver: SliverAppBar(
+              //   automaticallyImplyLeading: false,
+              //   backgroundColor: appBgColor,
+              //   toolbarHeight: 65,
+              //   title: Container(
+              //     width: MediaQuery.of(context).size.width,
+              //     height: MediaQuery.of(context).size.height,
+              //     alignment: Alignment.center,
+              //     child: InkWell(
+              //       borderRadius: BorderRadius.circular(8),
+              //       splashColor: transparentColor,
+              //       highlightColor: transparentColor,
+              //       onTap: () async {
+              //         await getTabData(
+              //             0,
+              //             homeProvider.menulist
+              //                 .where((item) => item.home == 1)
+              //                 .toList());
+              //       },
+              //       child: MyImage(
+              //           width: 120, height: 120, imagePath: "appicon.png"),
+              //     ),
+              //   ), // This is the title in the app bar.
+              //   pinned: false,
+              //   expandedHeight: 0,
+              //   forceElevated: innerBoxIsScrolled,
+              // ),
+            ),
+          ];
+        },
+        body: homeProvider.loading
+            ? ShimmerUtils.buildHomeMobileShimmer(context)
+            : Stack(
+                children: [
+                  tabItem(),
+                  // if (homeProvider.menulist.isNotEmpty) ...[
+                  //   Container(
+                  //     width: MediaQuery.of(context).size.width,
+                  //     height: Dimens.homeTabHeight,
+                  //     padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  //     color: black.withOpacity(0.8),
+                  //     child: tabTitle(homeProvider.menulist
+                  //         .where((item) => item.home == 1)
+                  //         .toList()),
+                  //   ),
+                  // ],
+                ],
+              )
+        // : const NoData(title: '', subTitle: '')
+        // : const NoData(title: '', subTitle: ''),
+        );
   }
 
   Widget _webAppBarWithDetails() {
     if (homeProvider.loading) {
       return ShimmerUtils.buildHomeMobileShimmer(context);
     } else {
-      if (homeProvider.sectionTypeModel.status == 200) {
-        if (homeProvider.sectionTypeModel.result != null ||
-            (homeProvider.sectionTypeModel.result?.length ?? 0) > 0) {
-          return Stack(
-            children: [
-              // _clickToRedirect(pageName: currentPage ?? ""),
-              tabItem(homeProvider.sectionTypeModel.result),
-              const CommonAppBar(),
-            ],
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      } else {
-        return const SizedBox.shrink();
-      }
+      return Column(
+        children: [
+          const CommonAppBar(),
+          // _clickToRedirect(pageName: currentPage ?? ""),
+          Expanded(child: tabItem()),
+        ],
+      );
+      //   } else {
+      //     return const SizedBox.shrink();
+      //   }
+      // } else {
+      //   return const SizedBox.shrink();
+      // }
     }
   }
 
-  Widget tabTitle(List<type.Result>? sectionTypeList) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  Widget tabTitle(List<MenulistModel>? menuList) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       if (tabScrollController.hasClients) {
         _scrollToCurrent();
       }
@@ -312,7 +339,7 @@ class HomeState extends State<Home> {
     return ListViewObserver(
       controller: observerController,
       child: ListView.separated(
-        itemCount: (sectionTypeList?.length ?? 0) + 1,
+        itemCount: (menuList?.length ?? 0) + 1,
         shrinkWrap: true,
         controller: tabScrollController,
         scrollDirection: Axis.horizontal,
@@ -327,7 +354,11 @@ class HomeState extends State<Home> {
                 onTap: () async {
                   debugPrint("index ===========> $index");
                   if (kIsWeb) _onItemTapped("");
-                  await getTabData(index, homeProvider.sectionTypeModel.result);
+                  await getTabData(
+                      index,
+                      homeProvider.menulist
+                          .where((item) => item.home == 1)
+                          .toList());
                 },
                 child: Container(
                   constraints: const BoxConstraints(maxHeight: 32),
@@ -345,8 +376,7 @@ class HomeState extends State<Home> {
                     text: index == 0
                         ? "Home"
                         : index > 0
-                            ? (sectionTypeList?[index - 1].name.toString() ??
-                                "")
+                            ? (menuList?[index - 1].name.toString() ?? "")
                             : "",
                     fontsizeNormal: 12,
                     fontweight: FontWeight.w700,
@@ -365,7 +395,7 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget tabItem(List<type.Result>? sectionTypeList) {
+  Widget tabItem() {
     return Container(
       width: MediaQuery.of(context).size.width,
       constraints: const BoxConstraints.expand(),
@@ -373,12 +403,15 @@ class HomeState extends State<Home> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            SizedBox(height: Dimens.homeTabHeight),
+            // Visibility(
+            //   visible: (kIsWeb || Constant.isTV) ? true : false,
+            //   child: SizedBox(height: Dimens.homeTabHeight),
+            // ),
 
-            /* Banner */
-            Consumer<SectionDataProvider>(
-              builder: (context, sectionDataProvider, child) {
-                if (sectionDataProvider.loadingBanner) {
+            /* Slides */
+            Consumer<SlidesProvider>(
+              builder: (context, slidesProvider, child) {
+                if (slidesProvider.loading || homeProvider.loading) {
                   if ((kIsWeb || Constant.isTV) &&
                       MediaQuery.of(context).size.width > 720) {
                     return ShimmerUtils.bannerWeb(context);
@@ -386,15 +419,16 @@ class HomeState extends State<Home> {
                     return ShimmerUtils.bannerMobile(context);
                   }
                 } else {
-                  if (sectionDataProvider.sectionBannerModel.status == 200 &&
-                      sectionDataProvider.sectionBannerModel.result != null) {
+                  if (slidesProvider.slides.isNotEmpty ||
+                      slidesProvider.slides.isNotEmpty) {
                     if ((kIsWeb || Constant.isTV) &&
                         MediaQuery.of(context).size.width > 720) {
+                      // return const SizedBox();
                       return _webHomeBanner(
-                          sectionDataProvider.sectionBannerModel.result);
+                          slidesProvider.slides, slidesProvider);
                     } else {
                       return _mobileHomeBanner(
-                          sectionDataProvider.sectionBannerModel.result);
+                          slidesProvider.slides, slidesProvider);
                     }
                   } else {
                     return const SizedBox.shrink();
@@ -403,43 +437,263 @@ class HomeState extends State<Home> {
               },
             ),
 
-            /* Continue Watching & Remaining Sections */
-            Consumer<SectionDataProvider>(
-              builder: (context, sectionDataProvider, child) {
-                if (sectionDataProvider.loadingSection) {
+            /* Live tv & show tv Sections */
+            Consumer<HomeProvider>(
+              builder: (context, homeProvider, child) {
+                if (homeProvider.loading) {
                   return sectionShimmer();
                 } else {
-                  if (sectionDataProvider.sectionListModel.status == 200) {
-                    return Column(
-                      children: [
-                        /* Continue Watching */
-                        (sectionDataProvider
-                                    .sectionListModel.continueWatching !=
-                                null)
-                            ? continueWatchingLayout(sectionDataProvider
-                                .sectionListModel.continueWatching)
-                            : const SizedBox.shrink(),
-
-                        /* Remaining Sections */
-                        (sectionDataProvider.sectionListModel.result != null)
-                            ? setSectionByType(
-                                sectionDataProvider.sectionListModel.result)
-                            : const SizedBox.shrink(),
+                  if (homeProvider.listData != null) {
+                    return Column(children: [
+                      if (homeProvider.livetVList.isNotEmpty) ...[
+                        /* Live Tv list */
+                        ((kIsWeb || Constant.isTV) &&
+                                MediaQuery.of(context).size.width > 720)
+                            ? continueWatchingLayout(true)
+                            : Column(
+                                children: [
+                                  const SizedBox(height: 25),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        bottomPRovider.onItemTapped(1);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          MyText(
+                                            color: white,
+                                            text: "Live Tv",
+                                            multilanguage: false,
+                                            textalign: TextAlign.center,
+                                            fontsizeNormal: 16,
+                                            fontsizeWeb: 16,
+                                            fontweight: FontWeight.w600,
+                                            maxline: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            fontstyle: FontStyle.normal,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.white,
+                                            size: 14,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  if (kIsWeb) ...[
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.website == 1)
+                                        .toList()),
+                                  ] else if (Constant.isTV) ...[
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.smartTv == 1)
+                                        .toList()),
+                                  ] else if (Platform.isAndroid ||
+                                      Platform.isIOS) ...[
+                                    liveTvWidget(homeProvider.livetVList
+                                        .where((item) => item.mobile == 1)
+                                        .toList()),
+                                  ] else ...[
+                                    liveTvWidget(homeProvider.livetVList),
+                                  ]
+                                ],
+                              )
+                      ] else ...[
+                        const SizedBox.shrink(),
                       ],
-                    );
+                      if (homeProvider.tvshowsList.isNotEmpty) ...[
+                        ((kIsWeb || Constant.isTV) &&
+                                MediaQuery.of(context).size.width > 720)
+                            ? continueWatchingLayout(false)
+                            : Column(children: [
+                                /* tvShows  list */
+                                const SizedBox(height: 25),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      bottomPRovider.onItemTapped(2);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        MyText(
+                                          color: white,
+                                          text: "Tv Shows",
+                                          multilanguage: false,
+                                          textalign: TextAlign.center,
+                                          fontsizeNormal: 16,
+                                          fontsizeWeb: 16,
+                                          fontweight: FontWeight.w600,
+                                          maxline: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          fontstyle: FontStyle.normal,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                          size: 14,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (kIsWeb) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.website == true)
+                                      .toList()),
+                                ] else if (Constant.isTV) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.smartTv == true)
+                                      .toList()),
+                                ] else if (Platform.isAndroid ||
+                                    Platform.isIOS) ...[
+                                  tvShowsWidget(homeProvider.tvshowsList
+                                      .where((item) => item.mobile == true)
+                                      .toList()),
+                                ] else ...[
+                                  tvShowsWidget(homeProvider.tvshowsList),
+                                ],
+                                const SizedBox(height: 20),
+                              ]),
+                      ] else ...[
+                        const SizedBox.shrink(),
+                      ],
+                      const SizedBox(height: 40),
+                    ]);
+                    // continueWatchingLayout(true),
+
+                    // // // /* Remaining Sections */
+                    // continueWatchingLayout(false)
                   } else {
                     return const SizedBox.shrink();
                   }
                 }
+
+                // continueWatchingLayout(true),
+
+                // // // /* Remaining Sections */
+                // continueWatchingLayout(false)
               },
             ),
-            const SizedBox(height: 20),
 
             /* Web Footer */
             kIsWeb ? const FooterWeb() : const SizedBox.shrink(),
           ],
         ),
       ),
+    );
+  }
+
+  AlignedGridView tvShowsWidget(List<TvShowModel> list) {
+    return AlignedGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      itemCount: (list.length),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int position) {
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () async {
+            final adProvider = context.read<AdventisementsProvider>();
+            final random = Random();
+            final adventisements = adProvider.filterPreviewsAd();
+            // log(adventisements.length);
+            final ad = adventisements[random.nextInt(adventisements.length)];
+            try {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TvshowPlayer(
+                        urlLink: list[position].source.toString(),
+                        adURl:
+                            'https://media9tv.com/public/storage/${ad.videoPath}');
+                  },
+                ),
+              );
+              adProvider.setPreviewsAd(ad);
+            } catch (e) {
+              Utils.showSnackbar(context, "", "In correct video format", true);
+            }
+          },
+          child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: primaryDarkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: MyNetworkImage(
+                imageUrl: list[position].thumbnail.toString(),
+                fit: BoxFit.fill,
+                imgHeight: MediaQuery.of(context).size.height * 0.12,
+                imgWidth: MediaQuery.of(context).size.width,
+              )),
+        );
+      },
+    );
+  }
+
+  AlignedGridView liveTvWidget(List<LiveTvModel> list) {
+    return AlignedGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      itemCount: (list.length),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int position) {
+        return InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () async {
+            final adProvider = context.read<AdventisementsProvider>();
+            final random = Random();
+            final adventisements = adProvider.filterPreviewsAd();
+            // log(adventisements.length);
+            final ad = adventisements[random.nextInt(adventisements.length)];
+            try {
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return LiveTVPlayer(
+                  urlLink: list[position].liveSource.toString(),
+                  adURl: 'https://media9tv.com/public/storage/${ad.videoPath}',
+                );
+              }));
+              adProvider.setPreviewsAd(ad);
+            } catch (e) {
+              Utils.showSnackbar(context, "", "In correct video format", true);
+            }
+          },
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: primaryDarkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: MyNetworkImage(
+                imageUrl: list[position].thumbnail.toString(),
+                fit: BoxFit.fill,
+                imgHeight: MediaQuery.of(context).size.height * 0.12,
+                imgWidth: MediaQuery.of(context).size.width,
+              )),
+        );
+      },
     );
   }
 
@@ -472,8 +726,9 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _mobileHomeBanner(List<banner.Result>? sectionBannerList) {
-    if ((sectionBannerList?.length ?? 0) > 0) {
+  Widget _mobileHomeBanner(
+      List<SlidesModel>? slidesList, SlidesProvider provider) {
+    if ((slidesList?.length ?? 0) > 0) {
       return Stack(
         alignment: AlignmentDirectional.bottomCenter,
         clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -482,7 +737,7 @@ class HomeState extends State<Home> {
             width: MediaQuery.of(context).size.width,
             height: Dimens.homeBanner,
             child: CarouselSlider.builder(
-              itemCount: (sectionBannerList?.length ?? 0),
+              itemCount: (slidesList?.length ?? 0),
               carouselController: carouselController,
               options: CarouselOptions(
                 initialPage: 0,
@@ -497,7 +752,7 @@ class HomeState extends State<Home> {
                     Duration(milliseconds: Constant.animationDuration),
                 viewportFraction: 1.0,
                 onPageChanged: (val, _) async {
-                  await sectionDataProvider.setCurrentBanner(val);
+                  await provider.setCurrentBanner(val);
                 },
               ),
               itemBuilder:
@@ -506,16 +761,16 @@ class HomeState extends State<Home> {
                   focusColor: white,
                   borderRadius: BorderRadius.circular(0),
                   onTap: () {
-                    log("Clicked on index ==> $index");
-                    openDetailPage(
-                      (sectionBannerList?[index].videoType ?? 0) == 2
-                          ? "showdetail"
-                          : "videodetail",
-                      sectionBannerList?[index].id ?? 0,
-                      sectionBannerList?[index].upcomingType ?? 0,
-                      sectionBannerList?[index].videoType ?? 0,
-                      sectionBannerList?[index].typeId ?? 0,
-                    );
+                    log.log("Clicked on index ==> $index");
+                    // openDetailPage(
+                    //   (sectionBannerList?[index].videoType ?? 0) == 2
+                    //       ? "showdetail"
+                    //       : "videodetail",
+                    //   sectionBannerList?[index].id ?? 0,
+                    //   sectionBannerList?[index].upcomingType ?? 0,
+                    //   sectionBannerList?[index].videoType ?? 0,
+                    //   sectionBannerList?[index].typeId ?? 0,
+                    // );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
@@ -526,7 +781,7 @@ class HomeState extends State<Home> {
                           width: MediaQuery.of(context).size.width,
                           height: Dimens.homeBanner,
                           child: MyNetworkImage(
-                            imageUrl: sectionBannerList?[index].landscape ?? "",
+                            imageUrl: slidesList?[index].imagePath ?? "",
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -556,11 +811,11 @@ class HomeState extends State<Home> {
           ),
           Positioned(
             bottom: 0,
-            child: Consumer<SectionDataProvider>(
-              builder: (context, sectionDataProvider, child) {
+            child: Consumer<SlidesProvider>(
+              builder: (context, slidesProvideer, child) {
                 return AnimatedSmoothIndicator(
-                  count: (sectionBannerList?.length ?? 0),
-                  activeIndex: sectionDataProvider.cBannerIndex ?? 0,
+                  count: (slidesList?.length ?? 0),
+                  activeIndex: slidesProvideer.currentSlideIndex ?? 0,
                   effect: const ScrollingDotsEffect(
                     spacing: 8,
                     radius: 4,
@@ -580,165 +835,163 @@ class HomeState extends State<Home> {
     }
   }
 
-  Widget _webHomeBanner(List<banner.Result>? sectionBannerList) {
-    if ((sectionBannerList?.length ?? 0) > 0) {
-      return SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: Dimens.homeWebBanner,
-        child: CarouselSlider.builder(
-          itemCount: (sectionBannerList?.length ?? 0),
-          carouselController: carouselController,
-          options: CarouselOptions(
-            initialPage: 0,
-            height: Dimens.homeWebBanner,
-            enlargeCenterPage: false,
-            autoPlay: true,
-            autoPlayCurve: Curves.easeInOutQuart,
-            enableInfiniteScroll: true,
-            autoPlayInterval: Duration(milliseconds: Constant.bannerDuration),
-            autoPlayAnimationDuration:
-                Duration(milliseconds: Constant.animationDuration),
-            viewportFraction: 0.95,
-            onPageChanged: (val, _) async {
-              await sectionDataProvider.setCurrentBanner(val);
-            },
-          ),
-          itemBuilder: (BuildContext context, int index, int pageViewIndex) {
-            return InkWell(
-              focusColor: white,
-              borderRadius: BorderRadius.circular(4),
-              onTap: () {
-                log("Clicked on index ==> $index");
-                openDetailPage(
-                  (sectionBannerList?[index].videoType ?? 0) == 2
-                      ? "showdetail"
-                      : "videodetail",
-                  sectionBannerList?[index].id ?? 0,
-                  sectionBannerList?[index].upcomingType ?? 0,
-                  sectionBannerList?[index].videoType ?? 0,
-                  sectionBannerList?[index].typeId ?? 0,
-                );
+  Widget _webHomeBanner(
+      List<SlidesModel>? slidesList, SlidesProvider provider) {
+    if ((slidesList?.length ?? 0) > 0) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 0),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: kIsWeb ? Dimens.homeWebBanner + 120 : Dimens.homeWebBanner,
+          child: CarouselSlider.builder(
+            itemCount: (slidesList?.length ?? 0),
+            carouselController: carouselController,
+            options: CarouselOptions(
+              initialPage: 0,
+              height:
+                  kIsWeb ? Dimens.homeWebBanner + 120 : Dimens.homeWebBanner,
+              enlargeCenterPage: false,
+              autoPlay: true,
+              autoPlayCurve: Curves.easeInOutQuart,
+              enableInfiniteScroll: true,
+              autoPlayInterval: Duration(milliseconds: Constant.bannerDuration),
+              autoPlayAnimationDuration:
+                  Duration(milliseconds: Constant.animationDuration),
+              viewportFraction: 0.94,
+              onPageChanged: (val, _) async {
+                await provider.setCurrentBanner(val);
               },
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  child: Stack(
-                    alignment: AlignmentDirectional.centerEnd,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width *
-                            (Dimens.webBannerImgPr),
-                        height: Dimens.homeWebBanner,
-                        child: MyNetworkImage(
-                          imageUrl: sectionBannerList?[index].landscape ?? "",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(0),
-                        width: MediaQuery.of(context).size.width,
-                        height: Dimens.homeWebBanner,
-                        alignment: Alignment.centerLeft,
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              lightBlack,
-                              lightBlack,
-                              lightBlack,
-                              lightBlack,
-                              transparentColor,
-                              transparentColor,
-                              transparentColor,
-                              transparentColor,
-                              transparentColor,
-                            ],
+            ),
+            itemBuilder: (BuildContext context, int index, int pageViewIndex) {
+              return InkWell(
+                focusColor: white,
+                borderRadius: BorderRadius.circular(4),
+                onTap: () {
+                  log.log("Clicked on index ==> $index");
+                },
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    // clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          //  *
+                          // (Dimens.webBannerImgPr),
+                          height: kIsWeb
+                              ? Dimens.homeWebBanner + 120
+                              : Dimens.homeWebBanner,
+                          child: MyNetworkImage(
+                            imageUrl: slidesList?[index].imagePath ?? "",
+                            fit: BoxFit.fill,
                           ),
                         ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: Dimens.homeWebBanner,
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width *
-                                  (1.0 - Dimens.webBannerImgPr),
-                              constraints: const BoxConstraints(minHeight: 0),
-                              padding:
-                                  const EdgeInsets.fromLTRB(35, 50, 55, 35),
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  MyText(
-                                    color: white,
-                                    text: sectionBannerList?[index].name ?? "",
-                                    textalign: TextAlign.start,
-                                    fontsizeNormal: 14,
-                                    fontsizeWeb: 25,
-                                    fontweight: FontWeight.w700,
-                                    multilanguage: false,
-                                    maxline: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    fontstyle: FontStyle.normal,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  MyText(
-                                    color: whiteLight,
-                                    text: sectionBannerList?[index]
-                                            .categoryName ??
-                                        "",
-                                    textalign: TextAlign.start,
-                                    fontsizeNormal: 14,
-                                    fontweight: FontWeight.w600,
-                                    fontsizeWeb: 15,
-                                    multilanguage: false,
-                                    maxline: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    fontstyle: FontStyle.normal,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Expanded(
-                                    child: MyText(
-                                      color: whiteLight,
-                                      text: sectionBannerList?[index]
-                                              .description ??
-                                          "",
-                                      textalign: TextAlign.start,
-                                      fontsizeNormal: 14,
-                                      fontweight: FontWeight.w600,
-                                      fontsizeWeb: 15,
-                                      multilanguage: false,
-                                      maxline:
-                                          (MediaQuery.of(context).size.width <
-                                                  1000)
-                                              ? 2
-                                              : 5,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontstyle: FontStyle.normal,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Expanded(child: SizedBox()),
-                          ],
-                        ),
-                      ),
-                    ],
+                        // Container(
+                        //   padding: const EdgeInsets.all(0),
+                        //   width: MediaQuery.of(context).size.width,
+                        //   height: Dimens.homeWebBanner,
+                        //   alignment: Alignment.centerLeft,
+                        //   decoration: const BoxDecoration(
+                        //     gradient: LinearGradient(
+                        //       begin: Alignment.centerLeft,
+                        //       end: Alignment.centerRight,
+                        //       colors: [
+                        //         lightBlack,
+                        //         lightBlack,
+                        //         lightBlack,
+                        //         lightBlack,
+                        //         transparentColor,
+                        //         transparentColor,
+                        //         transparentColor,
+                        //         transparentColor,
+                        //         transparentColor,
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        // Container(
+                        //   width: MediaQuery.of(context).size.width,
+                        //   height: Dimens.homeWebBanner,
+                        //   alignment: Alignment.centerLeft,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       Container(
+                        //         width: MediaQuery.of(context).size.width *
+                        //             (1.0 - Dimens.webBannerImgPr),
+                        //         constraints: const BoxConstraints(minHeight: 0),
+                        //         padding:
+                        //             const EdgeInsets.fromLTRB(35, 50, 55, 35),
+                        //         alignment: Alignment.centerLeft,
+                        //         child: const Column(
+                        //           mainAxisAlignment: MainAxisAlignment.start,
+                        //           crossAxisAlignment: CrossAxisAlignment.start,
+                        //           children: [
+                        // MyText(
+                        //   color: white,
+                        //   text: slidesList?[index].title ?? "",
+                        //   textalign: TextAlign.start,
+                        //   fontsizeNormal: 14,
+                        //   fontsizeWeb: 25,
+                        //   fontweight: FontWeight.w700,
+                        //   multilanguage: false,
+                        //   maxline: 2,
+                        //   overflow: TextOverflow.ellipsis,
+                        //   fontstyle: FontStyle.normal,
+                        // ),
+                        // const SizedBox(height: 12),
+                        // MyText(
+                        //   color: whiteLight,
+                        //   text: sectionBannerList?[index]
+                        //           .categoryName ??
+                        //       "",
+                        //   textalign: TextAlign.start,
+                        //   fontsizeNormal: 14,
+                        //   fontweight: FontWeight.w600,
+                        //   fontsizeWeb: 15,
+                        //   multilanguage: false,
+                        //   maxline: 2,
+                        //   overflow: TextOverflow.ellipsis,
+                        //   fontstyle: FontStyle.normal,
+                        // ),
+                        // const SizedBox(height: 8),
+                        // Expanded(
+                        //   child: MyText(
+                        //     color: whiteLight,
+                        //     text:
+                        //         slidesList?[index].description ?? "",
+                        //     textalign: TextAlign.start,
+                        //     fontsizeNormal: 14,
+                        //     fontweight: FontWeight.w600,
+                        //     fontsizeWeb: 15,
+                        //     multilanguage: false,
+                        //     maxline:
+                        //         (MediaQuery.of(context).size.width <
+                        //                 1000)
+                        //             ? 2
+                        //             : 5,
+                        //     overflow: TextOverflow.ellipsis,
+                        //     fontstyle: FontStyle.normal,
+                        //   ),
+                        // ),
+                        //   ],
+                        // ),
+                        // ),
+                        // const Expanded(child: SizedBox()),
+                        // ],
+                        // ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     } else {
@@ -746,8 +999,11 @@ class HomeState extends State<Home> {
     }
   }
 
-  Widget continueWatchingLayout(List<ContinueWatching>? continueWatchingList) {
-    if ((continueWatchingList?.length ?? 0) > 0) {
+  Widget continueWatchingLayout(bool isLiveTv) {
+    int selectedIndex = 0;
+    List<dynamic> list =
+        isLiveTv ? homeProvider.livetVList : homeProvider.tvshowsList;
+    if ((list.isNotEmpty)) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -755,17 +1011,57 @@ class HomeState extends State<Home> {
           const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: MyText(
-              color: white,
-              text: "continuewatching",
-              multilanguage: true,
-              textalign: TextAlign.center,
-              fontsizeNormal: 14,
-              fontsizeWeb: 16,
-              fontweight: FontWeight.w600,
-              maxline: 1,
-              overflow: TextOverflow.ellipsis,
-              fontstyle: FontStyle.normal,
+            child: InkWell(
+              focusColor: Colors.white30,
+              borderRadius: BorderRadius.circular(4),
+              onTap: () {
+                if (isLiveTv) {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setCurrentPage(bottomView2);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const LiveTv();
+                      },
+                    ),
+                  );
+                } else {
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .setCurrentPage(bottomView3);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const TvShows();
+                      },
+                    ),
+                  );
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    color: white,
+                    text: isLiveTv ? "Live Tv" : 'Tv Shows',
+                    multilanguage: false,
+                    textalign: TextAlign.center,
+                    fontsizeNormal: 16,
+                    fontsizeWeb: 16,
+                    fontweight: FontWeight.w600,
+                    maxline: 1,
+                    overflow: TextOverflow.ellipsis,
+                    fontstyle: FontStyle.normal,
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 14,
+                  )
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -773,121 +1069,160 @@ class HomeState extends State<Home> {
             width: MediaQuery.of(context).size.width,
             height: Dimens.heightContiLand,
             child: ListView.separated(
-              itemCount: (continueWatchingList?.length ?? 0),
+              itemCount: (list.length),
               shrinkWrap: true,
               padding: const EdgeInsets.only(left: 20, right: 20),
               scrollDirection: Axis.horizontal,
-              physics: const PageScrollPhysics(parent: BouncingScrollPhysics()),
+              physics:
+                  const ClampingScrollPhysics(), //const PageScrollPhysics(parent: BouncingScrollPhysics()),
               separatorBuilder: (context, index) => const SizedBox(
                 width: 5,
               ),
               itemBuilder: (BuildContext context, int index) {
-                return Stack(
-                  alignment: AlignmentDirectional.bottomStart,
-                  children: [
-                    InkWell(
-                      focusColor: white,
-                      borderRadius: BorderRadius.circular(4),
-                      onTap: () {
-                        log("Clicked on index ==> $index");
-                        openDetailPage(
-                          (continueWatchingList?[index].videoType ?? 0) == 2
-                              ? "showdetail"
-                              : "videodetail",
-                          (continueWatchingList?[index].videoType ?? 0) == 2
-                              ? (continueWatchingList?[index].showId ?? 0)
-                              : (continueWatchingList?[index].id ?? 0),
-                          0,
-                          continueWatchingList?[index].videoType ?? 0,
-                          continueWatchingList?[index].typeId ?? 0,
-                        );
-                      },
-                      child: Container(
-                        width: Dimens.widthContiLand,
-                        height: Dimens.heightContiLand,
-                        alignment: Alignment.center,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: MyNetworkImage(
-                            imageUrl:
-                                continueWatchingList?[index].landscape ?? "",
-                            fit: BoxFit.cover,
-                            imgHeight: MediaQuery.of(context).size.height,
-                            imgWidth: MediaQuery.of(context).size.width,
+                return InkWell(
+                  onFocusChange: (value) {
+                    // print(index);
+                    // print(value);
+                    // setState(() {
+                    //   hoverIndex = i;
+                    //   widget.selectedIndex = i;
+                    // });
+                  },
+                  focusColor: Colors.white70,
+                  borderRadius: BorderRadius.circular(4),
+                  // autofocus: selectedIndex == index ? true : false,
+                  onTap: () async {
+                    final adProvider = context.read<AdventisementsProvider>();
+                    final random = Random();
+                    final adventisements = adProvider.filterPreviewsAd();
+                    // log(adventisements.length);
+                    final ad =
+                        adventisements[random.nextInt(adventisements.length)];
+                    if (isLiveTv) {
+                      try {
+                        await Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return LiveTVPlayer(
+                            urlLink: list[index]!.liveSource.toString(),
+                            adURl:
+                                'https://media9tv.com/public/storage/${ad.videoPath}',
+                          );
+                        }));
+                        adProvider.setPreviewsAd(ad);
+                      } catch (e) {
+                        Utils.showSnackbar(
+                            context, "", "In correct video format", true);
+                      }
+                    } else {
+                      try {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return TvshowPlayer(
+                                  urlLink: list[index]!.source.toString(),
+                                  adURl:
+                                      'https://media9tv.com/public/storage/${ad.videoPath}');
+                            },
                           ),
-                        ),
+                        );
+                        adProvider.setPreviewsAd(ad);
+                      } catch (e) {
+                        Utils.showSnackbar(
+                            context, "", "In correct video format", true);
+                      }
+                    }
+                  },
+                  child:
+                      // Stack(
+                      //   alignment: AlignmentDirectional.bottomStart,
+                      //   children: [
+                      Container(
+                    width: Dimens.widthContiLand,
+                    height: Dimens.heightContiLand,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: MyNetworkImage(
+                        imageUrl: list[index]?.thumbnail ?? "",
+                        fit: BoxFit.fill,
+                        imgHeight: MediaQuery.of(context).size.height,
+                        imgWidth: MediaQuery.of(context).size.width,
                       ),
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, bottom: 8),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: () async {
-                              openPlayer(
-                                  "ContinueWatch", index, continueWatchingList);
-                            },
-                            child: MyImage(
-                              width: 30,
-                              height: 30,
-                              imagePath: "play.png",
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: Dimens.widthContiLand,
-                          constraints: const BoxConstraints(minWidth: 0),
-                          padding: const EdgeInsets.all(3),
-                          child: LinearPercentIndicator(
-                            padding: const EdgeInsets.all(0),
-                            barRadius: const Radius.circular(2),
-                            lineHeight: 4,
-                            percent: Utils.getPercentage(
-                                continueWatchingList?[index].videoDuration ?? 0,
-                                continueWatchingList?[index].stopTime ?? 0),
-                            backgroundColor: secProgressColor,
-                            progressColor: primaryColor,
-                          ),
-                        ),
-                        (continueWatchingList?[index].releaseTag != null &&
-                                (continueWatchingList?[index].releaseTag ?? "")
-                                    .isNotEmpty)
-                            ? Container(
-                                decoration: const BoxDecoration(
-                                  color: black,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(4),
-                                    bottomRight: Radius.circular(4),
-                                  ),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                alignment: Alignment.center,
-                                width: Dimens.widthContiLand,
-                                height: 15,
-                                child: MyText(
-                                  color: white,
-                                  multilanguage: false,
-                                  text:
-                                      continueWatchingList?[index].releaseTag ??
-                                          "",
-                                  textalign: TextAlign.center,
-                                  fontsizeNormal: 6,
-                                  fontweight: FontWeight.w700,
-                                  fontsizeWeb: 10,
-                                  maxline: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontstyle: FontStyle.normal,
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ],
-                    ),
-                  ],
+                  ),
+                  // Column(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: <Widget>[
+                  //     Padding(
+                  //       padding: const EdgeInsets.only(left: 10, bottom: 8),
+                  //       child: InkWell(
+                  //         borderRadius: BorderRadius.circular(20),
+                  //         onTap: () async {
+                  //           // openPlayer(
+                  //           //     "ContinueWatch", index, liveTvList);
+                  //         },
+                  //         child: MyImage(
+                  //           width: 30,
+                  //           height: 30,
+                  //           imagePath: "play.png",
+                  //         ),
+                  //       ),
+                  //     ),
+                  // Container(
+                  //   width: Dimens.widthContiLand,
+                  //   constraints: const BoxConstraints(minWidth: 0),
+                  //   padding: const EdgeInsets.all(3),
+                  //   child: LinearPercentIndicator(
+                  //     padding: const EdgeInsets.all(0),
+                  //     barRadius: const Radius.circular(2),
+                  //     lineHeight: 4,
+                  //     percent: Utils.getPercentage(
+                  //         liveTvList?[index].videoDuration ?? 0,
+                  //         continueWatchingList?[index].stopTime ?? 0),
+                  //     backgroundColor: secProgressColor,
+                  //     progressColor: primaryColor,
+                  //   ),
+                  // ),
+                  // (continueWatchingList?[index].releaseTag != null &&
+                  //         (continueWatchingList?[index].releaseTag ?? "")
+                  //             .isNotEmpty)
+                  //     ? Container(
+                  //         decoration: const BoxDecoration(
+                  //           color: black,
+                  //           borderRadius: BorderRadius.only(
+                  //             bottomLeft: Radius.circular(4),
+                  //             bottomRight: Radius.circular(4),
+                  //           ),
+                  //           shape: BoxShape.rectangle,
+                  //         ),
+                  //         alignment: Alignment.center,
+                  //         width: Dimens.widthContiLand,
+                  //         height: 15,
+                  //         child: MyText(
+                  //           color: white,
+                  //           multilanguage: false,
+                  //           text:
+                  //               continueWatchingList?[index].releaseTag ??
+                  //                   "",
+                  //           textalign: TextAlign.center,
+                  //           fontsizeNormal: 6,
+                  //           fontweight: FontWeight.w700,
+                  //           fontsizeWeb: 10,
+                  //           maxline: 1,
+                  //           overflow: TextOverflow.ellipsis,
+                  //           fontstyle: FontStyle.normal,
+                  //         ),
+                  //       )
+                  // : const SizedBox.shrink(),
+                  //   ],
+                  // ),
+                  // ],
+                  // ),
                 );
               },
             ),
@@ -1042,16 +1377,16 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              log.log("Clicked on index ==> $index");
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthLand,
@@ -1091,16 +1426,16 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              log.log("Clicked on index ==> $index");
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthPort,
@@ -1140,16 +1475,16 @@ class HomeState extends State<Home> {
             focusColor: white,
             borderRadius: BorderRadius.circular(4),
             onTap: () {
-              log("Clicked on index ==> $index");
-              openDetailPage(
-                (sectionDataList?[index].videoType ?? 0) == 2
-                    ? "showdetail"
-                    : "videodetail",
-                sectionDataList?[index].id ?? 0,
-                upcomingType ?? 0,
-                sectionDataList?[index].videoType ?? 0,
-                sectionDataList?[index].typeId ?? 0,
-              );
+              log.log("Clicked on index ==> $index");
+              // openDetailPage(
+              //   (sectionDataList?[index].videoType ?? 0) == 2
+              //       ? "showdetail"
+              //       : "videodetail",
+              //   sectionDataList?[index].id ?? 0,
+              //   upcomingType ?? 0,
+              //   sectionDataList?[index].videoType ?? 0,
+              //   sectionDataList?[index].typeId ?? 0,
+              // );
             },
             child: Container(
               width: Dimens.widthSquare,
@@ -1192,7 +1527,7 @@ class HomeState extends State<Home> {
                 focusColor: white,
                 borderRadius: BorderRadius.circular(4),
                 onTap: () {
-                  log("Clicked on index ==> $index");
+                  log.log("Clicked on index ==> $index");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1288,7 +1623,7 @@ class HomeState extends State<Home> {
                 focusColor: white,
                 borderRadius: BorderRadius.circular(4),
                 onTap: () {
-                  log("Clicked on index ==> $index");
+                  log.log("Clicked on index ==> $index");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1393,7 +1728,7 @@ class HomeState extends State<Home> {
       vStopTime: continueWatchingList?[index].stopTime ?? 0,
     );
     if (isContinues != null && isContinues == true) {
-      getTabData(0, homeProvider.sectionTypeModel.result);
+      // getTabData(0, homeProvider.sectionTypeModel.result);
       Future.delayed(Duration.zero).then((value) {
         if (!mounted) return;
         setState(() {});

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:dtlive/model/sectionbannermodel.dart';
-import 'package:dtlive/model/sectionlistmodel.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/sectionbannermodel.dart';
+import 'package:media9/model/sectionlistmodel.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class SectionDataProvider extends ChangeNotifier {

@@ -2,23 +2,22 @@
 <html>
 
 <head>
-
   <base href="/">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="OTT Flutter App">
+  <meta name="description" content="MEDIA9 OTT Platform , A Digital News and TV Show">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS meta tags & icons pwa -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="dtlive">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="Media9">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
-  <title>DTLive</title>
+  <title>Media9</title>
+  <!-- Android pwa option-->
   <link rel="manifest" href="manifest.json">
 
   <script>
@@ -27,14 +26,18 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  
+
 
   <!-- Google login -->
-  <meta name="google-signin-client_id"
-    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com">
+  <!-- <meta name="google-signin-client_id"
+    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com"> -->
 
   <!-- Open new Tab -->
   <script src="script.js" type="application/javascript"></script>
-
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
+    defer></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> -->
   <style>
     .container {
       height: 100vh;
@@ -54,7 +57,8 @@
     }
 
     .indicator {
-      width: 50vw;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -65,55 +69,80 @@
     <img class="indicator" src="./assets/loading.gif" />
   </div>
 
+  <script src="install.js"></script>
+  <!-- <h1>How to add Richer Install UI to your web app</h1>
+    <ol>
+      <li>
+        Install the app by clicking the button below. After the installation,
+        the button is disabled.
+        <p>
+          <button disabled type="button">Install</button>
+        </p>
+      </li>
+      <li>
+        When you click on install a dialog similar to the ones from app stores
+        will be displayed.
+      </li>
+      <li>
+        The dialog includes the `description` and `screenshots` set in the app
+        manifest.
+      </li>
+      <li>
+        Screenshots should be different depending if the app is being installed
+        on a mobile or desktop device, according to the `form_factor` value set
+        for the screenshots on the manifest
+      </li>
+    </ol> -->
+
+  <!-- <script src="main.dart.js" type="application/javascript"></script>
+    <a id="triggerYouTubeVideoPlayer" class="afterglow" href="#videoPlayer"></a>
+    <video id="youTubeVideoPlayer" width="960" height="540" data-skin="dark">
+    </video> -->
+
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyCJ7G3BQmwI6koeECdtn5Wl21BceZk_oyQ",
-      authDomain: "primevideoapp-43bf6.firebaseapp.com",
-      projectId: "primevideoapp-43bf6",
-      storageBucket: "primevideoapp-43bf6.appspot.com",
-      messagingSenderId: "346606981660",
-      appId: "1:346606981660:web:455544c2a46ec6152fc5d9"
+      apiKey: "AIzaSyBarzc3A0TQVUjN7lq62FnVoFfb2KCODmg",
+      authDomain: "media9-2f1ab.firebaseapp.com",
+      projectId: "media9-2f1ab",
+      storageBucket: "media9-2f1ab.appspot.com",
+      messagingSenderId: "244449345510",
+      appId: "1:244449345510:web:4c90b7bb43302fb8c56027"
     };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" type="application/javascript"></script>
-
-  <!-- <script>
-    window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
-      }).then(function (engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function (appRunner) {
-        return appRunner.runApp();
-      });
-    });
-  </script> -->
   <script>
-    window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function (engineInitializer) {
-          engineInitializer.initializeEngine().then(function (appRunner) {
-            appRunner.runApp();
-          });
-        }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function (ev) {
+        navigator.serviceWorker.register('/flutter_service_worker.js');
       });
-    });
+    }
+  </script>
+
+  <script>
+      window.addEventListener('load', function (ev) {
+        setTimeout(function () {
+          _flutter.loader.loadEntrypoint({
+            serviceWorker: {
+              serviceWorkerVersion: serviceWorkerVersion,
+            },
+            onEntrypointLoaded: function (engineInitializer) {
+              engineInitializer.initializeEngine().then(function (appRunner) {
+                appRunner.runApp();
+              });
+            }
+          });
+        }, 1300);
+      });
   </script>
 
   <script type="text/javascript">window.flutterWebRenderer = "html";</script>

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:dtlive/model/generalsettingmodel.dart';
-import 'package:dtlive/model/loginregistermodel.dart';
-import 'package:dtlive/model/pagesmodel.dart';
-import 'package:dtlive/model/sociallinkmodel.dart';
-import 'package:dtlive/utils/sharedpre.dart';
-import 'package:dtlive/webservice/apiservices.dart';
+import 'package:media9/model/generalsettingmodel.dart';
+import 'package:media9/model/loginregistermodel.dart';
+import 'package:media9/model/pagesmodel.dart';
+import 'package:media9/model/sociallinkmodel.dart';
+import 'package:media9/utils/sharedpre.dart';
+import 'package:media9/webservice/apiservices.dart';
 import 'package:flutter/material.dart';
 
 class GeneralProvider extends ChangeNotifier {
@@ -45,7 +45,7 @@ class GeneralProvider extends ChangeNotifier {
 
   Future<void> getPages() async {
     loading = true;
-    pagesModel = await ApiService().getPages();
+    // pagesModel = await ApiService().getPages();
     debugPrint("getPages status :==> ${pagesModel.status}");
     debugPrint("getPages list :==> ${pagesModel.result}");
     loading = false;

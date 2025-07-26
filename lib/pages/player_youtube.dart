@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:dtlive/provider/playerprovider.dart';
-import 'package:dtlive/utils/color.dart';
-import 'package:dtlive/utils/constant.dart';
-import 'package:dtlive/utils/utils.dart';
+import 'package:media9/provider/playerprovider.dart';
+import 'package:media9/utils/color.dart';
+import 'package:media9/utils/constant.dart';
+import 'package:media9/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +13,7 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 class PlayerYoutube extends StatefulWidget {
   final int? videoId, videoType, typeId, otherId, stopTime;
   final String? playType, videoUrl, vUploadType, videoThumb;
-  const PlayerYoutube(
+   PlayerYoutube(
       this.playType,
       this.videoId,
       this.videoType,
@@ -23,15 +23,14 @@ class PlayerYoutube extends StatefulWidget {
       this.stopTime,
       this.vUploadType,
       this.videoThumb,
-      {Key? key})
-      : super(key: key);
+      {super.key});
 
   @override
   State<PlayerYoutube> createState() => PlayerYoutubeState();
 }
 
 class PlayerYoutubeState extends State<PlayerYoutube> {
-  YoutubePlayerController? controller;
+  late YoutubePlayerController controller;
   bool fullScreen = false;
   late PlayerProvider playerProvider;
   int? playerCPosition, videoDuration;
@@ -68,15 +67,15 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
       ),
     );
 
-    Future.delayed(Duration.zero).then((value) {
+    Future.delayed(const Duration(microseconds: 200)).then((value) {
       if (!mounted) return;
       setState(() {});
     });
-    if (widget.playType == "Video" || widget.playType != "Show") {
-      /* Add Video view */
-      await playerProvider.addVideoView(widget.videoId.toString(),
-          widget.videoType.toString(), widget.otherId.toString());
-    }
+    // if (widget.playType == "Video" || widget.playType != "Show") {
+    //   /* Add Video view */
+    //   await playerProvider.addVideoView(widget.videoId.toString(),
+    //       widget.videoType.toString(), widget.otherId.toString());
+    // }
   }
 
   @override
@@ -110,35 +109,35 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
   }
 
   Widget _buildPlayer() {
-    if (controller == null) {
-      return Utils.pageLoader();
-    } else {
-      return YoutubePlayerScaffold(
-        backgroundColor: appBgColor,
-        controller: controller!,
-        autoFullScreen: true,
-        defaultOrientations: const [
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ],
-        builder: (context, player) {
-          return Scaffold(
-            body: Center(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
+    return YoutubePlayerScaffold(
+      backgroundColor: appBgColor,
+      controller: controller,
+      autoFullScreen: true,
+      defaultOrientations: const [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+      builder: (context, player) {
+        return Scaffold(
+          body: Center(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (controller.value.playerState == PlayerState.playing) {
                   return player;
-                },
-              ),
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
   }
 
   @override
   void dispose() {
-    controller?.close();
+    controller.close();
     if (!(kIsWeb || Constant.isTV)) {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     }
@@ -156,23 +155,26 @@ class PlayerYoutubeState extends State<PlayerYoutube> {
     log("onBackPressed playerCPosition :===> $playerCPosition");
     log("onBackPressed videoDuration :===> $videoDuration");
     log("onBackPressed playType :===> ${widget.playType}");
-    if (widget.playType == "Video" || widget.playType == "Show") {
-      if ((playerCPosition ?? 0) > 0) {
-        /* Add to Continue */
-        await playerProvider.addToContinue(
-            "${widget.videoId}", "${widget.videoType}", "$playerCPosition");
-        if (!mounted) return Future.value(false);
-        Navigator.pop(context, true);
-        return Future.value(true);
-      } else {
-        if (!mounted) return Future.value(false);
-        Navigator.pop(context, false);
-        return Future.value(true);
-      }
-    } else {
-      if (!mounted) return Future.value(false);
-      Navigator.pop(context, false);
-      return Future.value(true);
-    }
+    if (!mounted) return Future.value(false);
+    Navigator.pop(context, false);
+    return Future.value(true);
+    // if (widget.playType == "Video" || widget.playType == "Show") {
+    //   if ((playerCPosition ?? 0) > 0) {
+    //     /* Add to Continue */
+    //     // await playerProvider.addToContinue(
+    //     //     "${widget.videoId}", "${widget.videoType}", "$playerCPosition");
+    //     if (!mounted) return Future.value(false);
+    //     Navigator.pop(context, true);
+    //     return Future.value(true);
+    //   } else {
+    //     if (!mounted) return Future.value(false);
+    //     Navigator.pop(context, false);
+    //     return Future.value(true);
+    //   }
+    // } else {
+    //   if (!mounted) return Future.value(false);
+    //   Navigator.pop(context, false);
+    //   return Future.value(true);
+    // }
   }
 }

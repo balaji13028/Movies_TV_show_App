@@ -1,16 +1,16 @@
-import 'package:dtlive/model/subtitlemodel.dart';
+import 'package:media9/model/subtitlemodel.dart';
 
 class Constant {
   static const String baseurl = 'https://media9tv.com/api/';
 
   static String? appName = "Media9";
-  static String? appPackageName = "com.divinetechs.dtlive";
+  static String? appPackageName = "com.media9newsnetwork.media9";
   static String? appleAppId = "6449380090";
-  static String? appVersion = "1";
+  static String? appVersion = "2";
   static String? appBuildNumber = "1.0";
 
   /* OneSignal App ID */
-  static const String oneSignalAppId = "";
+  static const String oneSignalAppId = "2a745c02-e74d-4292-bce9-7ec184fb9e9c";
 
   /* Constant for TV check */
   static bool isTV = false;
@@ -20,7 +20,7 @@ class Constant {
   static String currency = "";
 
   static String androidAppShareUrlDesc =
-      "Let me recommend you this application\n\n$androidAppUrl";
+      "Download Media9 OTT Platform From Google Play Store\n\n$androidAppUrl\n\nClick Below Link For Media9 OTT Website Version\n\nhttps://media9tv.com";
   static String iosAppShareUrlDesc =
       "Let me recommend you this application\n\n$iosAppUrl";
 
@@ -45,6 +45,6 @@ class Constant {
   static int fixFourDigit = 1317;
   static int fixSixDigit = 161613;
 
-  static int bannerDuration = 10000; // in milliseconds
+  static int bannerDuration = 5000; // in milliseconds
   static int animationDuration = 800; // in milliseconds
 }

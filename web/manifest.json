@@ -1,12 +1,13 @@
 {
-    "name": "DTLive",
-    "short_name": "dtlive",
-    "start_url": ".",
+    "name": "Media9",
+    "short_name": "Media9",
+    "start_url": "./",
+    "scope":".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#ffffff",
+    "theme_color": "#0e0e16",
     "orientation": "portrait-primary",
+    "description": "Compress and compare images with different codecs right in your browser.",
     "prefer_related_applications": false,
     "icons": [
         {
@@ -30,6 +31,15 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/media1.jpg",
+            "sizes": "640x320",
+            "type": "image/jpg",
+            "form_factor": "wide",
+            "label": "Wonder Widgets"
         }
     ]
 }
