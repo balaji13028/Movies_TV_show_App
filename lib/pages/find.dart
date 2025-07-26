@@ -14,8 +14,8 @@ import 'package:media9/widget/mytext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+// import 'package:speech_to_text/speech_recognition_result.dart';
+// import 'package:speech_to_text/speech_to_text.dart';
 
 class Find extends StatefulWidget {
   const Find({super.key});
@@ -27,7 +27,7 @@ class Find extends StatefulWidget {
 class FindState extends State<Find> {
   final searchController = TextEditingController();
   late FindProvider findProvider = FindProvider();
-  final SpeechToText _speechToText = SpeechToText();
+  // final SpeechToText _speechToText = SpeechToText();
   bool speechEnabled = false, _isListening = false;
   String _lastWords = '';
 
@@ -41,14 +41,14 @@ class FindState extends State<Find> {
 
   /// This has to happen only once per app
   void _initSpeech() async {
-    speechEnabled = await _speechToText.initialize();
+    // speechEnabled = await _speechToText.initialize();
     setState(() {});
   }
 
   /// Each time to start a speech recognition session
   void _startListening() async {
     debugPrint("<============== _startListening ==============>");
-    await _speechToText.listen(onResult: _onSpeechResult);
+    // await _speechToText.listen(onResult: _onSpeechResult);
     setState(() {
       _isListening = true;
     });
@@ -66,7 +66,7 @@ class FindState extends State<Find> {
   /// listen method.
   void _stopListening() async {
     debugPrint("<============== _stopListening ==============>");
-    await _speechToText.stop();
+    // await _speechToText.stop();
     if (!mounted) return;
     setState(() {
       _lastWords = '';
@@ -76,30 +76,30 @@ class FindState extends State<Find> {
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) async {
-    debugPrint("<============== _onSpeechResult ==============>");
-    _lastWords = result.recognizedWords;
-    debugPrint("_lastWords ==============> $_lastWords");
-    if (_lastWords.isNotEmpty && _isListening) {
-      searchController.text = _lastWords.toString();
-      _isListening = false;
-      if (!mounted) return;
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return Search(
-              searchText: searchController.text.toString(),
-            );
-          },
-        ),
-      );
-      setState(() {
-        _lastWords = '';
-        searchController.clear();
-      });
-    }
-  }
+  // void _onSpeechResult(SpeechRecognitionResult result) async {
+  //   debugPrint("<============== _onSpeechResult ==============>");
+  //   _lastWords = result.recognizedWords;
+  //   debugPrint("_lastWords ==============> $_lastWords");
+  //   if (_lastWords.isNotEmpty && _isListening) {
+  //     searchController.text = _lastWords.toString();
+  //     _isListening = false;
+  //     if (!mounted) return;
+  //     await Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) {
+  //           return Search(
+  //             searchText: searchController.text.toString(),
+  //           );
+  //         },
+  //       ),
+  //     );
+  //     setState(() {
+  //       _lastWords = '';
+  //       searchController.clear();
+  //     });
+  //   }
+  // }
 
   void _getData() async {
     findProvider = Provider.of<FindProvider>(context, listen: false);

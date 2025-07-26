@@ -27,7 +27,7 @@ import 'package:media9/utils/utils.dart';
 import 'package:media9/widget/myimage.dart';
 import 'package:media9/widget/mytext.dart';
 import 'package:media9/widget/nodata.dart';
-import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
+// import 'package:paytm_allinonesdk/paytm_allinonesdk.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 // import 'package:razorpay_web/razorpay_web.dart';
@@ -1296,32 +1296,32 @@ class AllPaymentState extends State<AllPayment> {
         if (paymentProvider.payTmModel.result != null) {
           if (paymentProvider.payTmModel.result?.paytmChecksum != null) {
             try {
-              var response = AllInOneSdk.startTransaction(
-                payTmMerchantID,
-                payTmOrderId,
-                payTmTxnAmount,
-                paymentProvider.payTmModel.result?.paytmChecksum ?? "",
-                payTmCallbackURL,
-                payTmIsStaging,
-                true,
-                true,
-              );
-              response.then((value) {
-                debugPrint("value ====> $value");
-                setState(() {
-                  paytmResult = value.toString();
-                });
-              }).catchError((onError) {
-                if (onError is PlatformException) {
-                  setState(() {
-                    paytmResult = "${onError.message} \n  ${onError.details}";
-                  });
-                } else {
-                  setState(() {
-                    paytmResult = onError.toString();
-                  });
-                }
-              });
+              // var response = AllInOneSdk.startTransaction(
+              //   payTmMerchantID,
+              //   payTmOrderId,
+              //   payTmTxnAmount,
+              //   paymentProvider.payTmModel.result?.paytmChecksum ?? "",
+              //   payTmCallbackURL,
+              //   payTmIsStaging,
+              //   true,
+              //   true,
+              // );
+              // response.then((value) {
+              //   debugPrint("value ====> $value");
+              //   setState(() {
+              //     paytmResult = value.toString();
+              //   });
+              // }).catchError((onError) {
+              //   if (onError is PlatformException) {
+              //     setState(() {
+              //       paytmResult = "${onError.message} \n  ${onError.details}";
+              //     });
+              //   } else {
+              //     setState(() {
+              //       paytmResult = onError.toString();
+              //     });
+              //   }
+              // });
             } catch (err) {
               paytmResult = err.toString();
             }

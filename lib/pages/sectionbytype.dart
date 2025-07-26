@@ -34,7 +34,7 @@ class SectionByType extends StatefulWidget {
 
 class SectionByTypeState extends State<SectionByType> {
   late SectionByTypeProvider sectionByTypeProvider;
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
 
   @override
   void initState() {

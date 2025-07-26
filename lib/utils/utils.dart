@@ -24,7 +24,8 @@ import 'package:media9/widget/mytext.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_share/flutter_share.dart';
+import 'package:share_plus/share_plus.dart';
+// import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
@@ -1011,9 +1012,9 @@ class Utils {
       } else {
         shareMessage = "$shareDesc\n${Constant.iosAppUrl}";
       }
-      await FlutterShare.share(
-        title: Constant.appName ?? "media9",
-        linkUrl: shareMessage,
+      await Share.share(
+        shareMessage,
+        subject: Constant.appName ?? "media9",
       );
     } catch (e) {
       debugPrint("shareFile Exception ===> $e");
@@ -1054,9 +1055,9 @@ class Utils {
 
   static Future<void> shareApp(shareMessage) async {
     try {
-      await FlutterShare.share(
-        title: Constant.appName ?? "",
-        linkUrl: shareMessage,
+      await Share.share(
+        shareMessage,
+        subject: Constant.appName ?? "media9",
       );
     } catch (e) {
       debugPrint("shareFile Exception ===> $e");

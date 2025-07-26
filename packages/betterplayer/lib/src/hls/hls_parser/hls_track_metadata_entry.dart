@@ -29,5 +29,5 @@ class HlsTrackMetadataEntry {
 
   @override
   // ignore: deprecated_member_use
-  int get hashCode => hashValues(groupId, name, variantInfos);
+  int get hashCode => Object.hash(groupId, name, variantInfos);
 }

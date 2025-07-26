@@ -16,7 +16,6 @@ import 'package:media9/widget/nodata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:social_share/social_share.dart';
 
 class MyEpisodeDownloads extends StatefulWidget {
   final int showId, videoType, typeId;
@@ -828,15 +827,15 @@ class _MyEpisodeDownloadsState extends State<MyEpisodeDownloads> {
                     borderRadius: BorderRadius.circular(5),
                     onTap: () {
                       Navigator.pop(context);
-                      SocialShare.copyToClipboard(
-                        text: Platform.isIOS
-                            ? "Hey! I'm watching ${myEpisodeList?[position].description ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
-                            : "Hey! I'm watching ${myEpisodeList?[position].description ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
-                      ).then((data) {
-                        debugPrint(data);
-                        Utils.showSnackbar(
-                            context, "success", "link_copied", true);
-                      });
+                      // SocialShare.copyToClipboard(
+                      //   text: Platform.isIOS
+                      //       ? "Hey! I'm watching ${myEpisodeList?[position].description ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
+                      //       : "Hey! I'm watching ${myEpisodeList?[position].description ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
+                      // ).then((data) {
+                      //   debugPrint(data);
+                      //   Utils.showSnackbar(
+                      //       context, "success", "link_copied", true);
+                      // });
                     },
                     child: Container(
                       height: 45,

@@ -41,7 +41,7 @@ class TVHomeState extends State<TVHome> {
   SharedPre sharedPref = SharedPre();
   final TextEditingController searchController = TextEditingController();
   late HomeProvider homeProvider;
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
   int? videoId, videoType, typeId;
   bool isSearchEnable = false;
   String? currentPage, langCatName, mSearchText;

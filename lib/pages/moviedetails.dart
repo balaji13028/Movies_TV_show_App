@@ -36,7 +36,7 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:social_share/social_share.dart';
+import 'package:social_sharing_plus/social_sharing_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -3402,6 +3402,7 @@ class MovieDetailsState extends State<MovieDetails> with RouteAware {
     );
   }
 
+
   buildShareWithDialog() {
     showModalBottomSheet(
       context: context,
@@ -3519,15 +3520,16 @@ class MovieDetailsState extends State<MovieDetails> with RouteAware {
                     focusColor: white,
                     onTap: () {
                       Navigator.pop(context);
-                      SocialShare.copyToClipboard(
-                        text: Platform.isIOS
-                            ? "Hey! I'm watching ${videoDetailsProvider.sectionDetailModel.result?.name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
-                            : "Hey! I'm watching ${videoDetailsProvider.sectionDetailModel.result?.name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
-                      ).then((data) {
-                        debugPrint(data);
-                        Utils.showSnackbar(
-                            context, "success", "link_copied", true);
-                      });
+
+                      // SocialShare.copyToClipboard(
+                      //   text: Platform.isIOS
+                      //       ? "Hey! I'm watching ${videoDetailsProvider.sectionDetailModel.result?.name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
+                      //       : "Hey! I'm watching ${videoDetailsProvider.sectionDetailModel.result?.name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
+                      // ).then((data) {
+                      //   debugPrint(data);
+                      //   Utils.showSnackbar(
+                      //       context, "success", "link_copied", true);
+                      // });
                     },
                     child: _buildDialogItems(
                       icon: "ic_link.png",

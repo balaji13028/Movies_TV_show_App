@@ -15,8 +15,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+// import 'package:speech_to_text/speech_recognition_result.dart';
+// import 'package:speech_to_text/speech_to_text.dart';
 
 class Search extends StatefulWidget {
   final String? searchText;
@@ -29,7 +29,7 @@ class Search extends StatefulWidget {
 class SearchState extends State<Search> {
   final searchController = TextEditingController();
   late SearchProvider searchProvider = SearchProvider();
-  final SpeechToText _speechToText = SpeechToText();
+  // final SpeechToText _speechToText = SpeechToText();
   bool speechEnabled = false, _isListening = false;
   String _lastWords = '';
 
@@ -44,14 +44,14 @@ class SearchState extends State<Search> {
 
   /// This has to happen only once per app
   void _initSpeech() async {
-    speechEnabled = await _speechToText.initialize();
-    setState(() {});
+    // speechEnabled = await _speechToText.initialize();
+    // setState(() {});
   }
 
   /// Each time to start a speech recognition session
   void _startListening() async {
     debugPrint("<============== _startListening ==============>");
-    await _speechToText.listen(onResult: _onSpeechResult);
+    // await _speechToText.listen(onResult: _onSpeechResult);
     setState(() {
       _isListening = true;
     });
@@ -71,24 +71,24 @@ class SearchState extends State<Search> {
     debugPrint("<============== _stopListening ==============>");
     _lastWords = '';
     _isListening = false;
-    await _speechToText.stop();
+    // await _speechToText.stop();
   }
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    debugPrint("<============== _onSpeechResult ==============>");
-    setState(() async {
-      _lastWords = result.recognizedWords;
-      debugPrint("_lastWords ==============> $_lastWords");
-      if (_lastWords.isNotEmpty && _isListening) {
-        searchController.text = _lastWords.toString();
-        _isListening = false;
-        await searchProvider.getSearchVideo(_lastWords.toString());
-        _lastWords = '';
-      }
-    });
-  }
+  // void _onSpeechResult(SpeechRecognitionResult result) {
+  //   debugPrint("<============== _onSpeechResult ==============>");
+  //   setState(() async {
+  //     _lastWords = result.recognizedWords;
+  //     debugPrint("_lastWords ==============> $_lastWords");
+  //     if (_lastWords.isNotEmpty && _isListening) {
+  //       searchController.text = _lastWords.toString();
+  //       _isListening = false;
+  //       await searchProvider.getSearchVideo(_lastWords.toString());
+  //       _lastWords = '';
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
