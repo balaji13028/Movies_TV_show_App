@@ -650,7 +650,6 @@ class _CommonAppBarState extends State<CommonAppBar> {
                   ),
                   if (findProvider.searchController.text.toString().isNotEmpty)
                     InkWell(
-                      focusColor: Colors.white,
                       borderRadius: BorderRadius.circular(5),
                       onTap: () async {
                         debugPrint("Click on Clear!");
