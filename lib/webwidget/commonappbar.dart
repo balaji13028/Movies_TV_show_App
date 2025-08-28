@@ -21,6 +21,8 @@ import 'package:provider/provider.dart';
 
 import 'package:pwa_install/pwa_install.dart';
 
+import '../provider/livetv_provider.dart';
+
 class CommonAppBar extends StatefulWidget {
   const CommonAppBar({super.key});
 
@@ -31,7 +33,7 @@ class CommonAppBar extends StatefulWidget {
 class _CommonAppBarState extends State<CommonAppBar> {
   final JSHelper _jsHelper = JSHelper();
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final TextEditingController searchController = TextEditingController();
+  // final TextEditingController searchController = TextEditingController();
   final bool _isPromptReady = false;
   int? videoId, videoType, typeId;
   String? langCatName, mSearchText;
@@ -484,6 +486,12 @@ class _CommonAppBarState extends State<CommonAppBar> {
           //   ),
           // ),
           const Spacer(),
+          Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+            return Visibility(
+                visible: homeProvider.currentPage == bottomView2,
+                child: searchBox());
+          }),
+          SizedBox(width: 20),
           Visibility(
             visible: PWAInstall().installPromptEnabled,
             child: InkWell(
@@ -514,39 +522,157 @@ class _CommonAppBarState extends State<CommonAppBar> {
             ),
           ),
           /* Logout */
-          Consumer<HomeProvider>(
-            builder: (context, homeProvider, child) {
-              if (Constant.userID != null) {
-                return InkWell(
-                  focusColor: white,
-                  onTap: () async {
-                    if (Constant.userID != null) {
-                      _buildLogoutDialog();
-                    }
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: MyText(
+          // Consumer<HomeProvider>(
+          //   builder: (context, homeProvider, child) {
+          //     if (Constant.userID != null) {
+          //       return InkWell(
+          //         focusColor: white,
+          //         onTap: () async {
+          //           if (Constant.userID != null) {
+          //             _buildLogoutDialog();
+          //           }
+          //         },
+          //         borderRadius: BorderRadius.circular(8),
+          //         child: Padding(
+          //           padding: const EdgeInsets.all(8),
+          //           child: MyText(
+          //             color: white,
+          //             multilanguage: true,
+          //             text: "sign_out",
+          //             fontsizeNormal: 14,
+          //             fontweight: FontWeight.w600,
+          //             fontsizeWeb: 14,
+          //             maxline: 1,
+          //             overflow: TextOverflow.ellipsis,
+          //             textalign: TextAlign.center,
+          //             fontstyle: FontStyle.normal,
+          //           ),
+          //         ),
+          //       );
+          //     } else {
+          //       return const SizedBox.shrink();
+          //     }
+          //   },
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget searchBox() {
+    return Expanded(
+      child: Container(
+        // width: MediaQuery.of(context).size.width,
+        height: 46,
+        margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+        decoration: BoxDecoration(
+          color: primaryDarkColor,
+          border: Border.all(
+            color: primaryLight,
+            width: 0.5,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5),
+          ),
+        ),
+        child: Consumer<LivetvProvider>(
+          builder: (context, findProvider, child) {
+            return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 50,
+                    height: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    child: MyImage(
+                      width: 20,
+                      height: 20,
+                      imagePath: "ic_find.png",
                       color: white,
-                      multilanguage: true,
-                      text: "sign_out",
-                      fontsizeNormal: 14,
-                      fontweight: FontWeight.w600,
-                      fontsizeWeb: 14,
-                      maxline: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textalign: TextAlign.center,
-                      fontstyle: FontStyle.normal,
                     ),
                   ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
-        ],
+                  Expanded(
+                    child: Container(
+                        padding: EdgeInsets.only(right: 5),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        alignment: Alignment.center,
+                        child: TextField(
+                          // onSubmitted: (value) async {
+                          //   if (value.isNotEmpty) {
+                          //     await Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) {
+                          //           return Search(
+                          //             searchText: value.toString(),
+                          //           );
+                          //         },
+                          //       ),
+                          //     );
+                          //     setState(() {
+                          //       searchController.clear();
+                          //     });
+                          //   }
+                          // },
+                          onTapOutside: (v) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          onChanged: (value) async {
+                            findProvider.filterLiveTvData(value);
+                          },
+                          textInputAction: TextInputAction.done,
+                          obscureText: false,
+                          controller: findProvider.searchController,
+                          keyboardType: TextInputType.text,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            color: white,
+                            fontSize: 15,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            filled: false,
+                            fillColor: Colors.transparent,
+                            hintStyle: TextStyle(
+                              color: Colors.white60,
+                              fontSize: 15,
+                              overflow: TextOverflow.ellipsis,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            hintText: 'Search by name or channel no...',
+                          ),
+                        ),
+                      ),
+                  ),
+                  if (findProvider.searchController.text.toString().isNotEmpty)
+                    InkWell(
+                      borderRadius: BorderRadius.circular(5),
+                      onTap: () async {
+                        debugPrint("Click on Clear!");
+                        findProvider.searchController.clear();
+                        findProvider.clearSearchList();
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        // setState(() {});
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        padding: const EdgeInsets.all(15),
+                        alignment: Alignment.center,
+                        child: MyImage(
+                          imagePath: "ic_close.png",
+                          color: white,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    )
+                ]);
+          },
+        ),
       ),
     );
   }

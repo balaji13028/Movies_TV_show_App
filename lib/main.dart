@@ -52,15 +52,29 @@ import 'package:provider/provider.dart';
 import 'package:pwa_install/pwa_install.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+
+_getDeviceInfo() async {
+  if (Platform.isAndroid) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    bool isTv =
+    androidInfo.systemFeatures.contains('android.software.leanback');
+    Constant.isTV = isTv;
+    log("isTV =======================> ${Constant.isTV}");
+  }
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Locales.init(['en', 'ar', 'hi', 'pt']);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 // Add this
+  if (!kIsWeb) {
+    _getDeviceInfo();
+  }
   PWAInstall().setup(installCallback: () {
     log('APP INSTALLED!');
   });
-  if (!kIsWeb) {
+  if (!kIsWeb && !Constant.isTV) {
     await FlutterDownloader.initialize();
     //Remove this method to stop OneSignal Debugging
     await OneSignal.Debug.setLogLevel(OSLogLevel.debug);
@@ -280,18 +294,5 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
       ),
     );
-  }
-
-  _getDeviceInfo() async {
-    if (Platform.isAndroid) {
-      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      bool isTv =
-          androidInfo.systemFeatures.contains('android.software.leanback');
-      setState(() {
-        Constant.isTV = isTv;
-      });
-      log("isTV =======================> ${Constant.isTV}");
-    }
   }
 }

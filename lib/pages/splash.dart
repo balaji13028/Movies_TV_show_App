@@ -43,15 +43,16 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
-  playVideo() {
+  void playVideo() {
     print('is tv');
     if (Constant.isTV) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
       ]);
       print('is tv');
-      _controller =
-          VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
+      // _controller = VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
+      _controller = VideoPlayerController.asset('assets/videos/Spalsh Screen TV Video.mp4');
+      print('_controller $_controller');
       _controller.initialize().then((_) {
         _controller.setLooping(false);
         Timer(const Duration(milliseconds: 100), () {
@@ -68,7 +69,8 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         DeviceOrientation.portraitUp,
       ]);
       _controller =
-          VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
+          // VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
+          VideoPlayerController.asset("assets/videos/Spalsh Screen Mobile Video.mp4");
       _controller.initialize().then((_) {
         _controller.setLooping(false);
         Timer(const Duration(milliseconds: 100), () {
@@ -168,7 +170,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     if (!mounted) return;
   }
 
-  navigator() {
+  void navigator() {
     Future.delayed(const Duration(milliseconds: 0), () {
       if (kIsWeb || Constant.isTV) {
         return Navigator.pushReplacement(
