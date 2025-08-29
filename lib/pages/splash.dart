@@ -51,7 +51,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       ]);
       print('is tv');
       // _controller = VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
-      _controller = VideoPlayerController.asset('assets/videos/Spalsh Screen TV Video.mp4');
+      _controller = VideoPlayerController.asset('assets/videos/splash_screen_tv_video.mp4');
       print('_controller $_controller');
       _controller.initialize().then((_) {
         _controller.setLooping(false);
@@ -70,7 +70,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       ]);
       _controller =
           // VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
-          VideoPlayerController.asset("assets/videos/Spalsh Screen Mobile Video.mp4");
+          VideoPlayerController.asset("assets/videos/splash_screen_mobile_video.mp4");
       _controller.initialize().then((_) {
         _controller.setLooping(false);
         Timer(const Duration(milliseconds: 100), () {
@@ -150,7 +150,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
         splashIconSize: size.height,
         centered: true,
-        animationDuration: Duration(milliseconds: Constant.isTV ? 1980 : 1980),
+        animationDuration: Duration(milliseconds: Constant.isTV ? 2660 : 2660),
         splashTransition: SplashTransition.fadeTransition,
         // customTween: Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
         pageTransitionType: PageTransitionType.rightToLeftWithFade,
