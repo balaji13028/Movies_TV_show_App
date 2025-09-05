@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:media9/model/adventisement_model.dart';
 import 'package:media9/model/avatarmodel.dart';
 import 'package:media9/model/castdetailmodel.dart';
@@ -876,7 +877,8 @@ class ApiService {
   ///homepage list of live tv and show tv list
   Future getHomeScreenList() async {
     try {
-      String home = "get-livetv-tvshow-homepage";
+      bool isMobile = !kIsWeb && Constant.isTV==false;
+      String home = "get-livetv-tvshow-homepage?isMobile=$isMobile";
       Response response = await dio.get(
         '$baseUrl$home',
         options: optHeaders,

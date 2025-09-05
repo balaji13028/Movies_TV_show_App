@@ -31,7 +31,7 @@ class Subscription extends StatefulWidget {
 
 class SubscriptionState extends State<Subscription> {
   late SubscriptionProvider subscriptionProvider;
-  CarouselController pageController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
 
   @override
   void initState() {
@@ -185,7 +185,7 @@ class SubscriptionState extends State<Subscription> {
     if (packageList != null) {
       return CarouselSlider.builder(
         itemCount: packageList.length,
-        carouselController: pageController,
+        carouselController: carouselController,
         options: CarouselOptions(
           initialPage: 0,
           height: MediaQuery.of(context).size.height,

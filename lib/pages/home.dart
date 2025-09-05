@@ -54,7 +54,7 @@ class HomeState extends State<Home> {
   late SectionDataProvider sectionDataProvider;
   final FirebaseAuth auth = FirebaseAuth.instance;
   SharedPre sharedPref = SharedPre();
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
   final tabScrollController = ScrollController();
   late ListObserverController observerController;
   late HomeProvider homeProvider;

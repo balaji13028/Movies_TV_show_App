@@ -12,7 +12,7 @@ import 'package:media9/utils/sharedpre.dart';
 import 'package:media9/utils/strings.dart';
 import 'package:media9/utils/utils.dart';
 import 'package:media9/widget/mytext.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ProfileEditWeb extends StatefulWidget {
@@ -24,7 +24,7 @@ class ProfileEditWeb extends StatefulWidget {
 
 class _ProfileEditWebState extends State<ProfileEditWeb> {
   SharedPre sharePref = SharedPre();
-  final ImagePicker imagePicker = ImagePicker();
+  // final ImagePicker imagePicker = ImagePicker();
   File? pickedImageFile;
   String? userId, userName;
   final nameController = TextEditingController();
@@ -236,17 +236,17 @@ class _ProfileEditWebState extends State<ProfileEditWeb> {
 
   /// Get from gallery
   void getFromGallery() async {
-    final XFile? pickedFile = await imagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1000,
-      maxHeight: 1000,
-      imageQuality: 100,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        pickedImageFile = File(pickedFile.path);
-        log("Gallery pickedImageFile ==> ${pickedImageFile?.path}");
-      });
-    }
+    // final XFile? pickedFile = await imagePicker.pickImage(
+    //   source: ImageSource.gallery,
+    //   maxWidth: 1000,
+    //   maxHeight: 1000,
+    //   imageQuality: 100,
+    // );
+    // if (pickedFile != null) {
+    //   setState(() {
+    //     pickedImageFile = File(pickedFile.path);
+    //     log("Gallery pickedImageFile ==> ${pickedImageFile?.path}");
+    //   });
+    // }
   }
 }

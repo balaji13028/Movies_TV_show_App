@@ -50,7 +50,7 @@ class SchemeData {
 
   @override
   // ignore: deprecated_member_use
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
       /*uuid, */
       licenseServerUrl,
       mimeType,

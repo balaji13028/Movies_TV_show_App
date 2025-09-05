@@ -2,6 +2,7 @@
 class LiveTvModel {
   int? id;
   String? channelName;
+  String? channelNo;
   String? thumbnail;
   String? description;
   String? websiteAddress;
@@ -16,6 +17,7 @@ class LiveTvModel {
   LiveTvModel({
     this.id,
     this.channelName,
+    this.channelNo,
     this.thumbnail,
     this.description,
     this.websiteAddress,
@@ -31,6 +33,7 @@ class LiveTvModel {
   factory LiveTvModel.fromMap(Map<String, dynamic> json) => LiveTvModel(
         id: json["id"],
         channelName: json["channel_name"],
+    channelNo: json["channel_no"],
         thumbnail: json["thumbnail"],
         description: json["description"],
         websiteAddress: json["website_address"],
@@ -50,6 +53,7 @@ class LiveTvModel {
   Map<String, dynamic> toMap() => {
         "id": id,
         "channel_name": channelName,
+        "channel_no": channelNo,
         "thumbnail": thumbnail,
         "description": description,
         "website_address": websiteAddress,
@@ -64,6 +68,6 @@ class LiveTvModel {
 
   @override
   String toString() {
-    return 'LiveTvModel(id: $id, channelName: $channelName, thumbnail: $thumbnail, description: $description, websiteAddress: $websiteAddress, smartTv: $smartTv, mobile: $mobile, website: $website, liveSource: $liveSource, sequence: $sequence, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'LiveTvModel(id: $id, channelName: $channelName, channelNo:$channelNo, thumbnail: $thumbnail, description: $description, websiteAddress: $websiteAddress, smartTv: $smartTv, mobile: $mobile, website: $website, liveSource: $liveSource, sequence: $sequence, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

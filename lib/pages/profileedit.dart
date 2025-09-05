@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:media9/pages/profileavatar.dart';
 import 'package:media9/utils/dimens.dart';
 import 'package:media9/widget/myusernetworkimg.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:media9/provider/profileprovider.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/sharedpre.dart';
@@ -26,7 +26,7 @@ class ProfileEdit extends StatefulWidget {
 class ProfileEditState extends State<ProfileEdit> {
   late ProgressDialog prDialog;
   SharedPre sharePref = SharedPre();
-  final ImagePicker imagePicker = ImagePicker();
+  // final ImagePicker imagePicker = ImagePicker();
   File? pickedImageFile;
   bool? isSwitched;
   String? userId, userName;
@@ -433,34 +433,34 @@ class ProfileEditState extends State<ProfileEdit> {
 
   /// Get from gallery
   void getFromGallery() async {
-    final XFile? pickedFile = await imagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1000,
-      maxHeight: 1000,
-      imageQuality: 100,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        pickedImageFile = File(pickedFile.path);
-        log("Gallery pickedImageFile ==> ${pickedImageFile?.path}");
-      });
-    }
+    // final XFile? pickedFile = await imagePicker.pickImage(
+    //   source: ImageSource.gallery,
+    //   maxWidth: 1000,
+    //   maxHeight: 1000,
+    //   imageQuality: 100,
+    // );
+    // if (pickedFile != null) {
+    //   setState(() {
+    //     pickedImageFile = File(pickedFile.path);
+    //     log("Gallery pickedImageFile ==> ${pickedImageFile?.path}");
+    //   });
+    // }
   }
 
   /// Get from Camera
   void getFromCamera() async {
-    final XFile? pickedFile = await imagePicker.pickImage(
-      source: ImageSource.camera,
-      maxWidth: 1000,
-      maxHeight: 1000,
-      imageQuality: 100,
-    );
-    if (pickedFile != null) {
-      setState(() {
-        pickedImageFile = File(pickedFile.path);
-        log("Camera pickedImageFile ==> ${pickedImageFile?.path}");
-      });
-    }
+    // final XFile? pickedFile = await imagePicker.pickImage(
+    //   source: ImageSource.camera,
+    //   maxWidth: 1000,
+    //   maxHeight: 1000,
+    //   imageQuality: 100,
+    // );
+    // if (pickedFile != null) {
+    //   setState(() {
+    //     pickedImageFile = File(pickedFile.path);
+    //     log("Camera pickedImageFile ==> ${pickedImageFile?.path}");
+    //   });
+    // }
   }
 
   /// Get from Avatar

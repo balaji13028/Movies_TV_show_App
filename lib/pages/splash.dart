@@ -43,15 +43,16 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
-  playVideo() {
+  void playVideo() {
     print('is tv');
     if (Constant.isTV) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
       ]);
       print('is tv');
-      _controller =
-          VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
+      // _controller = VideoPlayerController.asset('assets/videos/tv_splash_video.mp4');
+      _controller = VideoPlayerController.asset('assets/videos/splash_screen_tv_video.mp4');
+      print('_controller $_controller');
       _controller.initialize().then((_) {
         _controller.setLooping(false);
         Timer(const Duration(milliseconds: 100), () {
@@ -68,7 +69,8 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         DeviceOrientation.portraitUp,
       ]);
       _controller =
-          VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
+          // VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
+          VideoPlayerController.asset("assets/videos/splash_screen_mobile_video.mp4");
       _controller.initialize().then((_) {
         _controller.setLooping(false);
         Timer(const Duration(milliseconds: 100), () {
@@ -148,7 +150,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
         splashIconSize: size.height,
         centered: true,
-        animationDuration: Duration(milliseconds: Constant.isTV ? 1980 : 1980),
+        animationDuration: Duration(milliseconds: Constant.isTV ? 2600 : 2660),
         splashTransition: SplashTransition.fadeTransition,
         // customTween: Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
         pageTransitionType: PageTransitionType.rightToLeftWithFade,
@@ -168,7 +170,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     if (!mounted) return;
   }
 
-  navigator() {
+  void navigator() {
     Future.delayed(const Duration(milliseconds: 0), () {
       if (kIsWeb || Constant.isTV) {
         return Navigator.pushReplacement(

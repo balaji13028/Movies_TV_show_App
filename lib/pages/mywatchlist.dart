@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:social_share/social_share.dart';
 
 class MyWatchlist extends StatefulWidget {
   const MyWatchlist({Key? key}) : super(key: key);
@@ -911,15 +910,15 @@ class _MyWatchlistState extends State<MyWatchlist> {
                     borderRadius: BorderRadius.circular(5),
                     onTap: () {
                       Navigator.pop(context);
-                      SocialShare.copyToClipboard(
-                        text: Platform.isIOS
-                            ? "Hey! I'm watching ${watchlistProvider.watchlistModel.result?[position].name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
-                            : "Hey! I'm watching ${watchlistProvider.watchlistModel.result?[position].name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
-                      ).then((data) {
-                        debugPrint(data);
-                        Utils.showSnackbar(
-                            context, "success", "link_copied", true);
-                      });
+                      // SocialShare.copyToClipboard(
+                      //   text: Platform.isIOS
+                      //       ? "Hey! I'm watching ${watchlistProvider.watchlistModel.result?[position].name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://apps.apple.com/us/app/${Constant.appName?.toLowerCase()}/${Constant.appPackageName} \n"
+                      //       : "Hey! I'm watching ${watchlistProvider.watchlistModel.result?[position].name ?? ""}. Check it out now on ${Constant.appName}! \nhttps://play.google.com/store/apps/details?id=${Constant.appPackageName} \n",
+                      // ).then((data) {
+                      //   debugPrint(data);
+                      //   Utils.showSnackbar(
+                      //       context, "success", "link_copied", true);
+                      // });
                     },
                     child: _buildDialogItems(
                       icon: "ic_link.png",
