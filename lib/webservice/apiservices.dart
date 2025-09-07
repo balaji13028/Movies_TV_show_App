@@ -877,7 +877,7 @@ class ApiService {
   ///homepage list of live tv and show tv list
   Future getHomeScreenList() async {
     try {
-      bool isMobile = !kIsWeb || Constant.isTV==false;
+      bool isMobile = !kIsWeb && Constant.isTV==false;
       String home = "get-livetv-tvshow-homepage?isMobile=$isMobile";
       Response response = await dio.get(
         '$baseUrl$home',

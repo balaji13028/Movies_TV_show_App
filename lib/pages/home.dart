@@ -127,7 +127,6 @@ class HomeState extends State<Home> {
       log.log("upcomingType ==> $upcomingType");
       log.log("videoType =====> $videoType");
       log.log("typeID ========> $typeID");
-
       Utils.openDetails(
         context: context,
         videoId: int.parse(videoID),
