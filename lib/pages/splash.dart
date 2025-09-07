@@ -150,7 +150,7 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
         splashIconSize: size.height,
         centered: true,
-        animationDuration: Duration(milliseconds: Constant.isTV ? 2660 : 2660),
+        animationDuration: Duration(milliseconds: Constant.isTV ? 2600 : 2660),
         splashTransition: SplashTransition.fadeTransition,
         // customTween: Tween(begin: const Offset(1.0, 0.0), end: Offset.zero),
         pageTransitionType: PageTransitionType.rightToLeftWithFade,
