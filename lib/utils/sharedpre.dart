@@ -21,6 +21,16 @@ class SharedPre {
     prefs.setBool(key, value);
   }
 
+  Future<int?>? readInt(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(key)??1;
+  }
+
+  Future<void> saveInt(String key, int value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
+  }
+
   remove(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(key);

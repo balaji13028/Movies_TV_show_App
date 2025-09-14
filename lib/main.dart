@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:media9/firebase_options.dart';
+import 'package:media9/model/poster_ads_model.dart';
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
 import 'package:media9/pagetransition.dart';
@@ -27,6 +28,7 @@ import 'package:media9/provider/livetv_provider.dart';
 import 'package:media9/provider/menulist_provider.dart';
 import 'package:media9/provider/paymentprovider.dart';
 import 'package:media9/provider/playerprovider.dart';
+import 'package:media9/provider/poster_ads_provider.dart';
 import 'package:media9/provider/profileprovider.dart';
 import 'package:media9/provider/purchaselistprovider.dart';
 import 'package:media9/provider/rentstoreprovider.dart';
@@ -54,7 +56,8 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 
 
-_getDeviceInfo() async {
+bool adShownThisSession = false;
+Future<void> _getDeviceInfo() async {
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -166,6 +169,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => SlidesProvider()),
       ChangeNotifierProvider(create: (_) => BottombarProvider()),
       ChangeNotifierProvider(create: (_) => AdventisementsProvider()),
+      ChangeNotifierProvider(create: (_) => PosterAdsProvider()),
       ChangeNotifierProvider(create: (_) => MenulistProvider()),
     ], child: const RestartWidget(child: MyApp())),
   );

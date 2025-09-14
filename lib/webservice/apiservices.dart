@@ -37,6 +37,8 @@ import 'package:media9/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+import '../model/poster_ads_model.dart';
+
 class ApiService {
   String baseUrl = Constant.baseurl;
 
@@ -842,6 +844,31 @@ class ApiService {
       if (response.statusCode == 200) {
         List<dynamic> list = response.data['data'];
         return list.map((item) => AdventisementModel.fromMap(item)).toList();
+      }
+      // rentModel = RentModel.fromJson(response.data);
+      // return rentModel;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  /// Get Poster Ads list
+  Future<List<PosterAdsModel>?> getPosterAdsList() async {
+    try {
+      String endPoint = "posterAds";
+      Response response = await dio.get(
+        '$baseUrl$endPoint',
+        options: optHeaders,
+        data: {
+          'user_id': Constant.userID,
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> list = response.data['data'];
+        if(list.isNotEmpty) {
+          return list.map((item) => PosterAdsModel.fromMap(item)).toList();
+        }
       }
       // rentModel = RentModel.fromJson(response.data);
       // return rentModel;
