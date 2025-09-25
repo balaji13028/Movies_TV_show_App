@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:media9/model/live_tv_model.dart';
 import 'package:media9/model/menulist_model.dart';
@@ -249,6 +250,30 @@ class HomeState extends State<Home> {
       curve: Curves.easeInOut,
       duration: const Duration(milliseconds: 300),
     );
+  }
+
+  Future<bool> _onWillPop(BuildContext context) async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // force user to choose
+      builder: (context) => AlertDialog(
+        title: Text('Exit App?', style: TextStyle(color: Colors.white)),
+        content: Text('Are you sure you want to exit?',
+            style: TextStyle(color: Colors.white70)),
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: Colors.tealAccent)),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: Text('Exit', style: TextStyle(color: Colors.redAccent)),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+    return shouldExit ?? false;
   }
 
   @override

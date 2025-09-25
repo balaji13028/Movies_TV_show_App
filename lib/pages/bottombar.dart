@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
+
 class Bottombar extends StatefulWidget {
   const Bottombar({super.key});
 
@@ -36,6 +38,7 @@ class BottombarState extends State<Bottombar> {
   @override
   void initState() {
     bottomPRovider = Provider.of<BottombarProvider>(context, listen: false);
+    bottomPRovider.selectdindex= 0;
     // selectedIndex = bottomPRovider.selectdindex;
     super.initState();
   }
@@ -43,14 +46,52 @@ class BottombarState extends State<Bottombar> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: onBackPressed,
+      onWillPop: ()async{
+        var provider = Provider.of<BottombarProvider>(context, listen: false);
+        if (provider.selectdindex != 0) {
+          provider.selectdindex=0;
+          provider.onItemTapped(0);
+          return false;
+        }
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[900], // Dark background
+              titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+              contentTextStyle: const TextStyle(color: Colors.white70),
+              title: const Text('Confirmation'),
+              content: const Text('Are you sure you want to exit?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('No', style: TextStyle(color: Colors.tealAccent)),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Yes', style: TextStyle(color: Colors.redAccent)),
+                ),
+              ],
+            );
+          },
+        );
+
+        if (shouldPop == true) {
+
+          adShownThisSession=false;
+          SystemNavigator.pop(); // ✅ Close the app safely
+          return true;
+        }
+        print('99999999999999');
+        return false;
+      },
       child: Consumer<BottombarProvider>(builder: (context, provider, child) {
         return Scaffold(
           body: Center(
             child: widgetOptions[provider.selectdindex],
           ),
           bottomNavigationBar: Container(
-            height: Platform.isIOS ? 92 : 70,
+            height: Platform.isIOS ? 92 : 92,
             alignment: Alignment.center,
             color: black,
             child: BottomNavigationBar(
@@ -187,17 +228,52 @@ class BottombarState extends State<Bottombar> {
     );
   }
 
+  Future<bool> _onWillPop() async {
+    if (bottomPRovider.selectdindex != 0) {
+      // If not on first tab, go back to first tab
+      bottomPRovider.selectdindex =0;
+      return false; // Prevent app from exiting
+    }
+
+    // On first tab, ask for exit confirmation
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit App?'),
+        content: const Text('Are you sure you want to exit?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Exit'),
+          ),
+        ],
+      ),
+    );
+    return shouldExit ?? false;
+  }
+
   Future<bool> onBackPressed() async {
     if (bottomPRovider.selectdindex == 0) {
-      DateTime now = DateTime.now();
-      if (currentBackPressTime == null ||
-          now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
-        currentBackPressTime = now;
-        Utils.showSnackbar(context, "", "exit_warning", true);
-        return Future.value(false);
-      }
-      SystemNavigator.pop();
-      return Future.value(true);
+      // bool res = await _onWillPop(context);
+      // // DateTime now = DateTime.now();
+      // // if (currentBackPressTime == null ||
+      // //     now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      // //   currentBackPressTime = now;
+      // //   Utils.showSnackbar(context, "", "exit_warning", true);
+      // //   return Future.value(false);
+      // // }
+      // if (res) {
+      //   SystemNavigator.pop();
+      //   return Future.value(true);
+      // } else {
+      //   return Future.value(false);
+      // }
+      return false;
     } else {
       // bottomPRovider.onItemTapped(0);
       return Future.value(false);
