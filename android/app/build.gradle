@@ -37,7 +37,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace 'com.media9newsnetwork.media9'
-    compileSdkVersion 35
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -57,7 +57,7 @@ android {
     defaultConfig {
         applicationId "com.media9newsnetwork.media9"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -69,22 +69,22 @@ android {
 //        }
     }
 
-    flavorDimensions "device"
-
-    productFlavors {
-        mobile {
-            dimension "device"
-            targetSdkVersion 35
-            versionNameSuffix "-mobile"
-            manifestPlaceholders = [LEANBACK_REQUIRED: "false"]
-        }
-        tv {
-            dimension "device"
-            targetSdkVersion 34 // or 34
-            versionNameSuffix "-tv"
-            manifestPlaceholders = [LEANBACK_REQUIRED: "true"]
-        }
-    }
+//    flavorDimensions "device"
+//
+//    productFlavors {
+//        mobile {
+//            dimension "device"
+//            targetSdkVersion 35
+//            versionNameSuffix "-mobile"
+//            manifestPlaceholders = [LEANBACK_REQUIRED: "false"]
+//        }
+//        tv {
+//            dimension "device"
+//            targetSdkVersion 34 // or 34
+//            versionNameSuffix "-tv"
+//            manifestPlaceholders = [LEANBACK_REQUIRED: "true"]
+//        }
+//    }
 
     signingConfigs {
         release {
