@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:media9/model/live_tv_model.dart';
 import 'package:media9/model/menulist_model.dart';
@@ -15,6 +16,7 @@ import 'package:media9/model/sectionlistmodel.dart' as list;
 import 'package:media9/model/sectionlistmodel.dart';
 import 'package:media9/model/slides_model.dart';
 import 'package:media9/model/tvshowmodel.dart';
+import 'package:media9/pages/homeAdPoster.dart';
 import 'package:media9/pages/live_tv.dart';
 import 'package:media9/pages/livetv_player.dart';
 import 'package:media9/pages/tv_shows.dart';
@@ -23,6 +25,7 @@ import 'package:media9/pages/videosbyid.dart';
 import 'package:media9/provider/adventisements_provider.dart';
 import 'package:media9/provider/bottombar_provider.dart';
 import 'package:media9/provider/homeprovider.dart';
+import 'package:media9/provider/poster_ads_provider.dart';
 import 'package:media9/provider/sectiondataprovider.dart';
 import 'package:media9/provider/slides_provider.dart';
 import 'package:media9/shimmer/shimmerutils.dart';
@@ -42,6 +45,8 @@ import 'package:provider/provider.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../main.dart';
+
 class Home extends StatefulWidget {
   final String? pageName;
   const Home({super.key, required this.pageName});
@@ -58,6 +63,7 @@ class HomeState extends State<Home> {
   final tabScrollController = ScrollController();
   late ListObserverController observerController;
   late HomeProvider homeProvider;
+  late PosterAdsProvider posterAdsProvider;
   late BottombarProvider bottomPRovider;
   int? videoId, videoType, typeId;
   String? currentPage,
@@ -84,6 +90,7 @@ class HomeState extends State<Home> {
         Provider.of<SectionDataProvider>(context, listen: false);
     bottomPRovider = Provider.of<BottombarProvider>(context, listen: false);
     homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    posterAdsProvider = Provider.of<PosterAdsProvider>(context, listen: false);
     observerController =
         ListObserverController(controller: tabScrollController);
     currentPage = widget.pageName ?? "";
@@ -142,16 +149,45 @@ class HomeState extends State<Home> {
       OneSignal.Notifications.requestPermission(true);
     }
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
-    final adeventisementProvider =
+    final adventisementProvider =
         Provider.of<AdventisementsProvider>(context, listen: false);
     // await homeProvider.getMenuList();
-    await adeventisementProvider.getAdvenmtisementsList();
-    await slidesProvider.getSlides();
-    await homeProvider.gethomeScreenData();
+    if (!kIsWeb && (Constant.isTV == false)) {
+      await posterAdsProvider.getPosterAdsList();
+    }
+    await Future.wait([
+      slidesProvider.getSlides(),
+      homeProvider.gethomeScreenData(),
+      adventisementProvider.getAdvenmtisementsList(),
+    ]);
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
       setState(() {});
     });
+    if(posterAdsProvider.posterAds.isNotEmpty && !adShownThisSession && !kIsWeb && (Constant.isTV == false)){
+      // String img = await posterAdsProvider.getDisplayAd();
+      SchedulerBinding.instance.addPostFrameCallback((_)async{
+        try {
+          final nextAd = await posterAdsProvider.getDisplayAd();
+          if (nextAd?.posterPath != null) {
+            adShownThisSession = true;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (_) =>
+                    FullScreenAd(
+                      imageUrl: nextAd!.posterPath!,
+                      onClose: () => Navigator.pop(context),
+                    ),
+              ),
+            );
+          }
+        }catch(e){
+          debugPrint(e.toString());
+        }
+      });
+    }
     // generalsetting.getGeneralsetting();
     // generalsetting.getPages();
     Utils.getCurrencySymbol();
@@ -214,6 +250,30 @@ class HomeState extends State<Home> {
       curve: Curves.easeInOut,
       duration: const Duration(milliseconds: 300),
     );
+  }
+
+  Future<bool> _onWillPop(BuildContext context) async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // force user to choose
+      builder: (context) => AlertDialog(
+        title: Text('Exit App?', style: TextStyle(color: Colors.white)),
+        content: Text('Are you sure you want to exit?',
+            style: TextStyle(color: Colors.white70)),
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(color: Colors.tealAccent)),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: Text('Exit', style: TextStyle(color: Colors.redAccent)),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+    return shouldExit ?? false;
   }
 
   @override
@@ -291,6 +351,12 @@ class HomeState extends State<Home> {
             : Stack(
                 children: [
                   tabItem(),
+                  // if (posterAdsProvider.posterAds.isNotEmpty)
+                  //   Positioned(
+                  //       child: HomeAdPoster(
+                  //           imageUrl:
+                  //               posterAdsProvider.posterAds.first.posterPath ??
+                  //                   "")),
                   // if (homeProvider.menulist.isNotEmpty) ...[
                   //   Container(
                   //     width: MediaQuery.of(context).size.width,
