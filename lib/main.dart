@@ -3,15 +3,12 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:media9/firebase_options.dart';
-import 'package:media9/model/poster_ads_model.dart';
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
 import 'package:media9/pagetransition.dart';
@@ -49,96 +46,28 @@ import 'package:media9/restartapp_wiget.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pwa_install/pwa_install.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-
-
 bool adShownThisSession = false;
-Future<void> _getDeviceInfo() async {
-  if (Platform.isAndroid) {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    bool isTv =
-    androidInfo.systemFeatures.contains('android.software.leanback');
-    Constant.isTV = isTv;
-    log("isTV =======================> ${Constant.isTV}");
-  }
-}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Locales.init(['en', 'ar', 'hi', 'pt']);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-// Add this
-  if (!kIsWeb) {
-    _getDeviceInfo();
+  
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    log('Firebase initialization error: $e');
   }
+  
+  await Locales.init(['en', 'ar', 'hi', 'pt']);
   PWAInstall().setup(installCallback: () {
     log('APP INSTALLED!');
   });
-  if (!kIsWeb && !Constant.isTV) {
-    await FlutterDownloader.initialize();
-    //Remove this method to stop OneSignal Debugging
-    await OneSignal.Debug.setLogLevel(OSLogLevel.debug);
-
-    await OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-    OneSignal.initialize(Constant.oneSignalAppId);
-    // OneSignal.shared.setAppId(Constant.oneSignalAppId);
-    OneSignal.LiveActivities.setupDefault();
-    // The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt.
-    // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-    OneSignal.User.pushSubscription.addObserver((state) {
-      print(OneSignal.User.pushSubscription.optedIn);
-      print(OneSignal.User.pushSubscription.id);
-      print(OneSignal.User.pushSubscription.token);
-      print(state.current.jsonRepresentation());
-    });
-
-    OneSignal.User.addObserver((state) {
-      var userState = state.jsonRepresentation();
-      print('OneSignal user changed: $userState');
-    });
-
-    OneSignal.Notifications.addPermissionObserver((state) {
-      print("Has permission $state");
-    });
-
-    OneSignal.Notifications.addClickListener((event) {
-      print('NOTIFICATION CLICK LISTENER CALLED WITH EVENT: $event');
-    });
-
-    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-      print(
-          'NOTIFICATION WILL DISPLAY LISTENER CALLED WITH: ${event.notification.jsonRepresentation()}');
-
-      /// Display Notification, preventDefault to not display
-      event.preventDefault();
-
-      /// Do async work
-
-      /// notification.display() to display after preventing default
-      event.notification.display();
-      final notification = event.notification;
-      // event.  .complete(notification);
-    });
-
-    // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-    //   log("Accepted permission: ===> $accepted");
-    // });
-    // OneSignal.shared.setNotificationWillShowInForegroundHandler(
-    //     (OSNotificationReceivedEvent event) {
-    //   // Will be called whenever a notification is received in foreground
-    //   // Display Notification, pass null param for not displaying the notification
-    //   final notification = event.notification;
-    //   event.complete(notification);
-    //   debugPrint("this is notification title: ${notification.title}");
-    //   debugPrint("this is notification body:  ${notification.body}");
-    //   debugPrint(
-    //       "this is notification additional data: ${notification.additionalData}");
-    // });
-  }
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AvatarProvider()),
@@ -192,7 +121,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     if (!kIsWeb) {
       Utils.enableScreenCapture();
-      _getDeviceInfo();
       WidgetsBinding.instance.addObserver(this);
     }
     super.initState();
@@ -213,7 +141,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     previewsSate = state;
     // print(previewsSate);
     // print('state = $state');
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       if (state == AppLifecycleState.resumed &&
               previewsSate == AppLifecycleState.inactive ||
           previewsSate == AppLifecycleState.hidden ||
@@ -268,25 +196,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ],
             );
           },
-          home: (kIsWeb)
-              ? const Home(pageName: "")
-              : AnimatedSplashScreen(
-                  curve: Curves.easeOutExpo,
-                  splashIconSize: double.infinity,
-                  duration: 80, // Duration for splash screen transition
-                  splashTransition:
-                      SplashTransition.fadeTransition, // Transition type
-                  backgroundColor: Colors.white,
-                  splash: SizedBox(
-                    height: size.height,
-                    width: size.width,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  pageTransitionType: PageTransitionType.fade,
-                  nextScreen: const Splash(),
-                ),
+          home: const Home(pageName: ""),
+
           scrollBehavior: const MaterialScrollBehavior().copyWith(
             dragDevices: {
               PointerDeviceKind.mouse,

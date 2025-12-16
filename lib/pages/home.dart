@@ -280,99 +280,10 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appBgColor,
-      appBar: (kIsWeb || Constant.isTV)
-          ? null
-          : AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: appBgColor,
-              toolbarHeight: 65,
-              title: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                alignment: Alignment.center,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  splashColor: transparentColor,
-                  highlightColor: transparentColor,
-                  onTap: () async {
-                    // await getTabData(0, homeProvider.sectionTypeModel.result);
-                  },
-                  child: MyImage(
-                      width: 120, height: 120, imagePath: "appicon.png"),
-                ),
-              ), // This is the title in the app bar.
-            ),
       body: SafeArea(
-        child: (kIsWeb || Constant.isTV)
-            ? _webAppBarWithDetails()
-            : _mobileAppBarWithDetails(),
+        child: _webAppBarWithDetails()
       ),
     );
-  }
-
-  Widget _mobileAppBarWithDetails() {
-    return NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              // sliver: SliverAppBar(
-              //   automaticallyImplyLeading: false,
-              //   backgroundColor: appBgColor,
-              //   toolbarHeight: 65,
-              //   title: Container(
-              //     width: MediaQuery.of(context).size.width,
-              //     height: MediaQuery.of(context).size.height,
-              //     alignment: Alignment.center,
-              //     child: InkWell(
-              //       borderRadius: BorderRadius.circular(8),
-              //       splashColor: transparentColor,
-              //       highlightColor: transparentColor,
-              //       onTap: () async {
-              //         await getTabData(
-              //             0,
-              //             homeProvider.menulist
-              //                 .where((item) => item.home == 1)
-              //                 .toList());
-              //       },
-              //       child: MyImage(
-              //           width: 120, height: 120, imagePath: "appicon.png"),
-              //     ),
-              //   ), // This is the title in the app bar.
-              //   pinned: false,
-              //   expandedHeight: 0,
-              //   forceElevated: innerBoxIsScrolled,
-              // ),
-            ),
-          ];
-        },
-        body: homeProvider.loading
-            ? ShimmerUtils.buildHomeMobileShimmer(context)
-            : Stack(
-                children: [
-                  tabItem(),
-                  // if (posterAdsProvider.posterAds.isNotEmpty)
-                  //   Positioned(
-                  //       child: HomeAdPoster(
-                  //           imageUrl:
-                  //               posterAdsProvider.posterAds.first.posterPath ??
-                  //                   "")),
-                  // if (homeProvider.menulist.isNotEmpty) ...[
-                  //   Container(
-                  //     width: MediaQuery.of(context).size.width,
-                  //     height: Dimens.homeTabHeight,
-                  //     padding: const EdgeInsets.only(top: 8, bottom: 8),
-                  //     color: black.withOpacity(0.8),
-                  //     child: tabTitle(homeProvider.menulist
-                  //         .where((item) => item.home == 1)
-                  //         .toList()),
-                  //   ),
-                  // ],
-                ],
-              )
-        // : const NoData(title: '', subTitle: '')
-        // : const NoData(title: '', subTitle: ''),
-        );
   }
 
   Widget _webAppBarWithDetails() {

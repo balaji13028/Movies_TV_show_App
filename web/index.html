@@ -1,152 +1,204 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+
+<!--<head>-->
+<!--  <base href="/">-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta content="IE=Edge" http-equiv="X-UA-Compatible">-->
+<!--  <meta name="description" content="MEDIA9 OTT Platform , A Digital News and TV Show">-->
+
+<!--  &lt;!&ndash; iOS meta tags & icons pwa &ndash;&gt;-->
+<!--  <meta name="mobile-web-app-capable" content="yes">-->
+<!--  <meta name="apple-mobile-web-app-status-bar-style" content="black">-->
+<!--  <meta name="apple-mobile-web-app-title" content="Media9">-->
+<!--  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.jpg">-->
+
+<!--  &lt;!&ndash; Favicon &ndash;&gt;-->
+<!--  <link rel="icon" type="image/png" href="favicon.png" />-->
+
+<!--  <title>Media9</title>-->
+<!--  &lt;!&ndash; Android pwa option&ndash;&gt;-->
+<!--  <link rel="manifest" href="manifest.json">-->
+
+<!--  <script>-->
+<!--    // The value below is injected by flutter build, do not touch.-->
+<!--    var serviceWorkerVersion = "{{flutter_service_worker_version}}";-->
+<!--  </script>-->
+<!--  &lt;!&ndash; This script adds the flutter initialization JS code &ndash;&gt;-->
+<!--  <script src="flutter.js" defer></script>-->
+<!--&lt;!&ndash;  <script src="flutter_bootstrap.js" async></script>&ndash;&gt;-->
+
+
+
+<!--  &lt;!&ndash; Google login &ndash;&gt;-->
+<!--  &lt;!&ndash; <meta name="google-signin-client_id"-->
+<!--    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com"> &ndash;&gt;-->
+
+<!--  &lt;!&ndash; Open new Tab &ndash;&gt;-->
+<!--  <script src="script.js" type="application/javascript"></script>-->
+<!--  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"-->
+<!--    defer></script>-->
+<!--  &lt;!&ndash; <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> &ndash;&gt;-->
+<!--  <style>-->
+<!--    .container {-->
+<!--      height: 100vh;-->
+<!--      width: 100%;-->
+<!--      display: flex;-->
+<!--      /* Default Axis is X*/-->
+<!--      justify-content: center;-->
+<!--      /* Main Axis */-->
+<!--      align-items: center;-->
+<!--      /* Cross Axis */-->
+<!--    }-->
+
+<!--    body {-->
+<!--      width: 100%;-->
+<!--      height: 100%;-->
+<!--      background-color: black;-->
+<!--    }-->
+
+<!--    .indicator {-->
+<!--      width: 100%;-->
+<!--      height: 100%;-->
+<!--    }-->
+<!--  </style>-->
+<!--</head>-->
+
+<!--<body style="overflow: hidden">-->
+
+<!--  <div id="loading_indicator" class="container">-->
+<!--    <img class="indicator" src="./assets/loading_splash.gif" />-->
+<!--  </div>-->
+
+
+<!--  <script src="install.js"></script>-->
+
+<!--  <script type="module">-->
+<!--    // Import the functions you need from the SDKs you need-->
+<!--    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";-->
+<!--    // TODO: Add SDKs for Firebase products that you want to use-->
+<!--    // https://firebase.google.com/docs/web/setup#available-libraries-->
+
+
+<!--    // Your web app's Firebase configuration-->
+<!--    const firebaseConfig = {-->
+<!--      apiKey: "AIzaSyBarzc3A0TQVUjN7lq62FnVoFfb2KCODmg",-->
+<!--      authDomain: "media9-2f1ab.firebaseapp.com",-->
+<!--      projectId: "media9-2f1ab",-->
+<!--      storageBucket: "media9-2f1ab.appspot.com",-->
+<!--      messagingSenderId: "244449345510",-->
+<!--      appId: "1:244449345510:web:4c90b7bb43302fb8c56027"-->
+<!--    };-->
+
+<!--    // Initialize Firebase-->
+<!--    const app = initializeApp(firebaseConfig);-->
+<!--  </script>-->
+<!--  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" type="application/javascript"></script>-->
+<!--&lt;!&ndash;  <script>&ndash;&gt;-->
+<!--&lt;!&ndash;    if ('serviceWorker' in navigator) {&ndash;&gt;-->
+<!--&lt;!&ndash;      window.addEventListener('load', function (ev) {&ndash;&gt;-->
+<!--&lt;!&ndash;        navigator.serviceWorker.register('/flutter_service_worker.js');&ndash;&gt;-->
+<!--&lt;!&ndash;      });&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+<!--&lt;!&ndash;  </script>&ndash;&gt;-->
+
+<!--  <script>-->
+<!--    window.addEventListener('load', function () {-->
+<!--      _flutter.loader.load({-->
+<!--        onEntrypointLoaded: function(engineInitializer) {-->
+<!--          engineInitializer.initializeEngine().then(appRunner => appRunner.runApp());-->
+<!--        }-->
+<!--      });-->
+<!--    });-->
+<!--  </script>-->
+
+<!--  <script type="text/javascript">window.flutterWebRenderer = "html";</script>-->
+
+<!--</body>-->
+
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html>
-
 <head>
-  <base href="/">
+  <base href="/" />
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="MEDIA9 OTT Platform , A Digital News and TV Show">
-
-  <!-- iOS meta tags & icons pwa -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Media9">
+
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.jpg">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
-
-  <title>Media9</title>
-  <!-- Android pwa option-->
   <link rel="manifest" href="manifest.json">
+  <script>var serviceWorkerVersion = "{{flutter_service_worker_version}}";</script>
+  <title>Media9</title>
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
-  
-
-
-  <!-- Google login -->
-  <!-- <meta name="google-signin-client_id"
-    content="346606981660-juds0qd8k9p651md7gv38bd1bn9jq66v.apps.googleusercontent.com"> -->
-
-  <!-- Open new Tab -->
   <script src="script.js" type="application/javascript"></script>
-  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js"
-    defer></script>
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/afterglowplayer@1.x"></script> -->
+
   <style>
+    body {
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
+    }
     .container {
       height: 100vh;
       width: 100%;
       display: flex;
-      /* Default Axis is X*/
       justify-content: center;
-      /* Main Axis */
       align-items: center;
-      /* Cross Axis */
     }
-
-    body {
-      width: 100%;
-      height: 100%;
-      background-color: black;
-    }
-
     .indicator {
       width: 100%;
       height: 100%;
     }
   </style>
+
+
 </head>
 
-<body style="overflow: hidden">
+<body>
 
-  <div id="loading_indicator" class="container">
-    <img class="indicator" src="./assets/loading.gif" />
-  </div>
+<div id="loading_indicator" class="container">
+  <img class="indicator" src="./assets/loading_splash.gif" />
+</div>
 
-  <script src="install.js"></script>
-  <!-- <h1>How to add Richer Install UI to your web app</h1>
-    <ol>
-      <li>
-        Install the app by clicking the button below. After the installation,
-        the button is disabled.
-        <p>
-          <button disabled type="button">Install</button>
-        </p>
-      </li>
-      <li>
-        When you click on install a dialog similar to the ones from app stores
-        will be displayed.
-      </li>
-      <li>
-        The dialog includes the `description` and `screenshots` set in the app
-        manifest.
-      </li>
-      <li>
-        Screenshots should be different depending if the app is being installed
-        on a mobile or desktop device, according to the `form_factor` value set
-        for the screenshots on the manifest
-      </li>
-    </ol> -->
+<!-- Your external libraries AFTER BODY (good) -->
+<script src="install.js"></script>
 
-  <!-- <script src="main.dart.js" type="application/javascript"></script>
-    <a id="triggerYouTubeVideoPlayer" class="afterglow" href="#videoPlayer"></a>
-    <video id="youTubeVideoPlayer" width="960" height="540" data-skin="dark">
-    </video> -->
+<!-- Firebase initialization is handled by Flutter/Dart code, not needed here -->
+<!-- Removed JavaScript Firebase initialization to avoid conflicts -->
 
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBarzc3A0TQVUjN7lq62FnVoFfb2KCODmg",
-      authDomain: "media9-2f1ab.firebaseapp.com",
-      projectId: "media9-2f1ab",
-      storageBucket: "media9-2f1ab.appspot.com",
-      messagingSenderId: "244449345510",
-      appId: "1:244449345510:web:4c90b7bb43302fb8c56027"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest" type="application/javascript"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function (ev) {
-        navigator.serviceWorker.register('/flutter_service_worker.js');
-      });
-    }
-  </script>
-
-  <script>
-      window.addEventListener('load', function (ev) {
-        setTimeout(function () {
-          _flutter.loader.loadEntrypoint({
-            serviceWorker: {
-              serviceWorkerVersion: serviceWorkerVersion,
-            },
-            onEntrypointLoaded: function (engineInitializer) {
-              engineInitializer.initializeEngine().then(function (appRunner) {
-                appRunner.runApp();
-              });
-            }
-          });
-        }, 1300);
-      });
-  </script>
-
-  <script type="text/javascript">window.flutterWebRenderer = "html";</script>
+<!-- THIS MUST BE THE LAST SCRIPT -->
+<script src="flutter_bootstrap.js" async></script>
 
 </body>
-
 </html>
+
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--  <base href="" />-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Media9</title>-->
+<!--  <link rel="manifest" href="manifest.json">-->
+<!--  <script>var serviceWorkerVersion = "{{flutter_service_worker_version}}";</script>-->
+<!--  <script src="flutter.js" defer></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="loading_indicator">-->
+<!--  <img src="./assets/loading_splash.gif"/>-->
+<!--</div>-->
+
+<!--<script src="flutter_bootstrap.js" async></script>-->
+<!--</body>-->
+<!--</html>-->
+
