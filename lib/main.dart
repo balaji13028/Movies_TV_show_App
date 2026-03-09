@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:media9/firebase_options.dart';
-import 'package:media9/model/poster_ads_model.dart';
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
 import 'package:media9/pagetransition.dart';
@@ -62,19 +61,25 @@ Future<void> _getDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     bool isTv =
-    androidInfo.systemFeatures.contains('android.software.leanback');
+        androidInfo.systemFeatures.contains('android.software.leanback');
     Constant.isTV = isTv;
     log("isTV =======================> ${Constant.isTV}");
   }
 }
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Add this fallback for default run
+  if (!kIsWeb) {
+    await _getDeviceInfo();
+  }
+  await mainCommon();
+}
+
+Future<void> mainCommon() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Locales.init(['en', 'ar', 'hi', 'pt']);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-// Add this
-  if (!kIsWeb) {
-    _getDeviceInfo();
-  }
   PWAInstall().setup(installCallback: () {
     log('APP INSTALLED!');
   });
@@ -192,7 +197,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     if (!kIsWeb) {
       Utils.enableScreenCapture();
-      _getDeviceInfo();
       WidgetsBinding.instance.addObserver(this);
     }
     super.initState();
