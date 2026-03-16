@@ -69,22 +69,6 @@ android {
 //        }
     }
 
-    flavorDimensions "device"
-
-    productFlavors {
-        mobile {
-            dimension "device"
-            targetSdkVersion 35
-            versionNameSuffix "-mobile"
-            manifestPlaceholders = [LEANBACK_REQUIRED: "false"]
-        }
-        tv {
-            dimension "device"
-            targetSdkVersion 34 // or 34
-            versionNameSuffix "-tv"
-            manifestPlaceholders = [LEANBACK_REQUIRED: "true"]
-        }
-    }
 
     signingConfigs {
         release {

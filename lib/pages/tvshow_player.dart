@@ -36,9 +36,12 @@ class TvshowPlayerState extends State<TvshowPlayer> {
     _adController =
         VideoPlayerController.networkUrl(Uri.parse(widget.adURl.toString()));
     controller = YoutubePlayerController(
-      params: const YoutubePlayerParams(
+      params: YoutubePlayerParams(
         showControls: true,
         mute: false,
+        origin: 'https://www.youtube-nocookie.com',
+        // color: 'white',
+        enableJavaScript: true,
         showFullscreenButton: true,
         loop: false,
       ),
@@ -89,8 +92,8 @@ class TvshowPlayerState extends State<TvshowPlayer> {
         mute: false,
         showFullscreenButton: true,
         loop: false,
-        // enableJavaScript: false,
-        // : true,
+        origin: 'https://www.youtube-nocookie.com',
+        enableJavaScript: true,
       ),
     );
     // }

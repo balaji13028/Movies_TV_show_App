@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_locales/flutter_locales.dart';
 import 'package:media9/firebase_options.dart';
-import 'package:media9/model/poster_ads_model.dart';
 import 'package:media9/pages/home.dart';
 import 'package:media9/pages/splash.dart';
 import 'package:media9/pagetransition.dart';
@@ -57,24 +55,13 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 
 bool adShownThisSession = false;
-Future<void> _getDeviceInfo() async {
-  if (Platform.isAndroid) {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    bool isTv =
-    androidInfo.systemFeatures.contains('android.software.leanback');
-    Constant.isTV = isTv;
-    log("isTV =======================> ${Constant.isTV}");
-  }
-}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Constant.isTV = false; // Strictly mobile branch
+  
   await Locales.init(['en', 'ar', 'hi', 'pt']);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-// Add this
-  if (!kIsWeb) {
-    _getDeviceInfo();
-  }
   PWAInstall().setup(installCallback: () {
     log('APP INSTALLED!');
   });
@@ -192,7 +179,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     if (!kIsWeb) {
       Utils.enableScreenCapture();
-      _getDeviceInfo();
       WidgetsBinding.instance.addObserver(this);
     }
     super.initState();

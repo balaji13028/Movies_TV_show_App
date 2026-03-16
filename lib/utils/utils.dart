@@ -1039,7 +1039,7 @@ class Utils {
         Platform.isAndroid ? Constant.appPackageName : Constant.appleAppId;
     final url = Uri.parse(
       Platform.isAndroid
-          ? "market://details?id=$appId"
+          ? Constant.androidAppUrl
           : "https://apps.apple.com/app/id$appId",
     );
     debugPrint("_launchUrl url ===> $url");

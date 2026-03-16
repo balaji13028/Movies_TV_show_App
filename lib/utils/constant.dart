@@ -19,8 +19,15 @@ class Constant {
   static String currencySymbol = "";
   static String currency = "";
 
-  static String androidAppShareUrlDesc =
-      "Download Media9 OTT Platform From Google Play Store\n\n$androidAppUrl\n\nClick Below Link For Media9 OTT Website Version\n\nhttps://media9tv.com";
+  static String androidAppShareUrlDesc ='''
+     For Mobile And Smart TV, Download Media9 OTT Platform From Google Play Store and Watch Live TV and TV Shows.
+
+     https://play.google.com/store/apps/details?id=com.media9newsnetwork.media9
+
+     Click Below Link For Media9 OTT Website Version
+
+     https://media9tv.com
+      ''';
   static String iosAppShareUrlDesc =
       "Let me recommend you this application\n\n$iosAppUrl";
 
