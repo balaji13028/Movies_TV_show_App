@@ -41,6 +41,7 @@ class TvshowPlayerState extends State<TvshowPlayer> {
         mute: false,
         showFullscreenButton: true,
         loop: false,
+        origin: 'https://www.youtube-nocookie.com',
       ),
     );
     _initPlayer();
@@ -89,6 +90,7 @@ class TvshowPlayerState extends State<TvshowPlayer> {
         mute: false,
         showFullscreenButton: true,
         loop: false,
+        origin: 'https://www.youtube-nocookie.com',
         // enableJavaScript: false,
         // : true,
       ),

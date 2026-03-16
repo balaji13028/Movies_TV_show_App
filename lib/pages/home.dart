@@ -1168,7 +1168,7 @@ class HomeState extends State<Home> {
                         await Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return LiveTVPlayer(
-                            urlLink: list[index]!.liveSource.toString(),
+                            urlLink: list[index??0]!.liveSource.toString(),
                             adURl:
                                 'https://media9tv.com/public/storage/${ad.videoPath}',
                           );

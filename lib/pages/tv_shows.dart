@@ -175,7 +175,7 @@ class _TvShowsState extends State<TvShows> {
             final random = Random();
             final adventisements = adProvider.filterPreviewsAd();
             // log(adventisements.length);
-            final ad = adventisements[random.nextInt(adventisements.length)];
+            final ad = adventisements[random.nextInt(adventisements.length??0)];
             try {
               await Navigator.push(
                 context,
