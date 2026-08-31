@@ -53,7 +53,6 @@ import 'package:pwa_install/pwa_install.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 
-
 bool adShownThisSession = false;
 
 void main() async {

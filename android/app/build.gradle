@@ -37,7 +37,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace 'com.media9newsnetwork.media9'
-    compileSdkVersion 35
+    compileSdkVersion 36
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -57,7 +57,7 @@ android {
     defaultConfig {
         applicationId "com.media9newsnetwork.media9"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -122,5 +122,5 @@ dependencies {
     implementation 'com.android.support:multidex:2.0.1'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
-    implementation "com.android.billingclient:billing:7.0.0"
+    implementation "com.android.billingclient:billing:8.0.0"
 }
