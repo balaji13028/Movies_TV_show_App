@@ -138,5 +138,5 @@ dependencies {
     implementation 'com.android.support:multidex:2.0.1'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
-    implementation "com.android.billingclient:billing:7.0.0"
+    implementation "com.android.billingclient:billing:8.0.0"
 }
