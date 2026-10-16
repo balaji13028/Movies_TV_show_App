@@ -31,25 +31,29 @@ class PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            // You can use this to update a custom loading bar if needed
+            // Optional: update loading progress
           },
           onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true; // Start loading
-            });
+            if (mounted) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
           },
           onPageFinished: (String url) {
-            setState(() {
-              _isLoading = false; // Finished loading
-            });
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
           },
           onWebResourceError: (WebResourceError error) {
-            // Handle web resource errors here if needed
+            debugPrint('WebView error: ${error.description}');
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('')) {
-              return NavigationDecision.prevent;
-            }
+            debugPrint('Navigating to: ${request.url}');
+
+            // Allow navigation inside the WebView
             return NavigationDecision.navigate;
           },
         ),

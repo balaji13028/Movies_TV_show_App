@@ -70,10 +70,10 @@ class SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       ]);
       _controller =
           // VideoPlayerController.asset("assets/videos/mobile_splash_video.mp4");
-          VideoPlayerController.asset("assets/videos/splash_screen_mobile_video.mp4");
+          VideoPlayerController.asset("assets/videos/Mobile_Splash.mp4");
       _controller.initialize().then((_) {
         _controller.setLooping(false);
-        Timer(const Duration(milliseconds: 100), () {
+        Timer(const Duration(milliseconds: 180), () {
           setState(() {
             _controller.play();
           });

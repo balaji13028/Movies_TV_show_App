@@ -3,133 +3,295 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:media9/provider/playerprovider.dart';
 import 'package:media9/utils/color.dart';
 import 'package:media9/utils/constant.dart';
 import 'package:media9/utils/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class TvshowPlayer extends StatefulWidget {
-  final String adURl;
+  final String? adURl;
   final String urlLink;
-  const TvshowPlayer({super.key, required this.urlLink, required this.adURl});
+
+  const TvshowPlayer({
+    super.key,
+    required this.urlLink,
+    required this.adURl,
+  });
 
   @override
   State<TvshowPlayer> createState() => TvshowPlayerState();
 }
 
 class TvshowPlayerState extends State<TvshowPlayer> {
-  late YoutubePlayerController controller;
-  late VideoPlayerController _adController;
-  bool fullScreen = false;
+  YoutubePlayerController? controller;
+  VideoPlayerController? _adController;
+
   bool adCompleted = false;
-  late PlayerProvider playerProvider;
+  bool isLoading = true;
+  bool isError = false;
+  bool _startingYoutube = false;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
-    playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    _adController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.adURl.toString()));
-    controller = YoutubePlayerController(
-      params: YoutubePlayerParams(
-        showControls: true,
-        mute: false,
-        origin: 'https://www.youtube-nocookie.com',
-        // color: 'white',
-        enableJavaScript: true,
-        showFullscreenButton: true,
-        loop: false,
-      ),
+
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
     );
-    _initPlayer();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+
+    _initializePlayer();
   }
 
-  _initPlayer() async {
-    await _adController.initialize().then((_) {
-      setState(() {});
-      _adController.play();
-    });
+  Future<void> _initializePlayer() async {
+    final adUrl = widget.adURl?.trim();
 
-    _adController.addListener(() {
-      if (_adController.value.position == _adController.value.duration) {
-        try {
+    // Play the advertisement first, when available.
+    if (adUrl != null && adUrl.isNotEmpty) {
+      try {
+        final adController = VideoPlayerController.networkUrl(
+          Uri.parse(adUrl),
+        );
+
+        _adController = adController;
+
+        await adController.initialize();
+
+        if (!mounted) return;
+
+        adController.addListener(_onAdChanged);
+
+        await adController.play();
+
+        if (mounted) {
           setState(() {
-            adCompleted = true;
+            isLoading = false;
           });
-          _initTvshowPlayer();
-        } catch (e) {
-          print(e);
         }
+
+        // Wait until the ad finishes before initializing YouTube.
+        return;
+      } catch (e, stackTrace) {
+        log('Advertisement initialization error: $e',
+            stackTrace: stackTrace);
+
+        // Continue to YouTube if the ad cannot be played.
+        if (mounted) {
+          await _initializeYoutube();
+        }
+        return;
       }
-    });
+    }
+
+    // No advertisement URL: start YouTube directly.
+    await _initializeYoutube();
   }
 
-  _initTvshowPlayer() async {
-    debugPrint("videoUrl :===> ${widget.urlLink}");
-    var videoId = YoutubePlayerController.convertUrlToId(widget.urlLink);
-    debugPrint("videoId :====> $videoId");
-    // if (Constant.isTV) {
-    //   controller = YoutubePlayerController(
-    //     params: const YoutubePlayerParams(
-    //       mute: false,
-    //       showControls: true,
-    //       showFullscreenButton: true,
-    //     ),
-    //   );
+  void _onAdChanged() {
+    final ad = _adController;
 
-    //   controller.loadVideoById(videoId: videoId.toString());
-    // } else {
-    controller = YoutubePlayerController.fromVideoId(
-      videoId: videoId ?? '',
-      autoPlay: true,
-      params: const YoutubePlayerParams(
-        showControls: true,
-        mute: false,
-        showFullscreenButton: true,
-        loop: false,
-        origin: 'https://www.youtube-nocookie.com',
-        enableJavaScript: true,
-      ),
-    );
-    // }
-    print(controller.value.playerState);
-    Future.delayed(const Duration(microseconds: 200)).then((value) async {
-      if (!mounted) return;
-      setState(() {});
+    if (ad == null ||
+        !ad.value.isInitialized ||
+        !ad.value.isCompleted ||
+        adCompleted) {
+      return;
+    }
+
+    ad.removeListener(_onAdChanged);
+
+    if (!mounted) return;
+
+    setState(() {
+      adCompleted = true;
+      isLoading = true;
     });
-    print(controller.value.playerState);
-    // if (widget.playType == "Video" || widget.playType != "Show") {
-    //   /* Add Video view */
-    //   await playerProvider.addVideoView(widget.videoId.toString(),
-    //       widget.videoType.toString(), widget.otherId.toString());
-    // }
+
+    _initializeYoutube();
+  }
+
+  Future<void> _initializeYoutube() async {
+    if (_startingYoutube || !mounted) return;
+
+    _startingYoutube = true;
+
+    try {
+      final videoId =
+      YoutubePlayerController.convertUrlToId(widget.urlLink);
+
+      if (videoId == null || videoId.isEmpty) {
+        throw Exception('Invalid YouTube URL: ${widget.urlLink}');
+      }
+
+      log('YouTube video ID: $videoId');
+
+      final youtubeController = YoutubePlayerController.fromVideoId(
+        videoId: videoId,
+        autoPlay: true,
+        params: const YoutubePlayerParams(
+          showControls: true,
+          mute: false,
+          showFullscreenButton: true,
+          loop: false,
+          origin: 'https://www.youtube-nocookie.com',
+          enableJavaScript: true,
+        ),
+      );
+
+      if (!mounted) {
+        youtubeController.close();
+        return;
+      }
+
+      controller = youtubeController;
+
+      setState(() {
+        isLoading = false;
+        isError = false;
+      });
+    } catch (e, stackTrace) {
+      log('YouTube initialization error: $e',
+          stackTrace: stackTrace);
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          isError = true;
+        });
+      }
+    } finally {
+      _startingYoutube = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    final ad = _adController;
+    final showAd = !adCompleted && ad != null;
+
     return WillPopScope(
       onWillPop: onBackPressed,
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: SafeArea(
           child: Stack(
             children: [
-              if (adCompleted == false) ...[
-                _adController.value.isInitialized
-                    ? Center(
-                        child: AspectRatio(
-                            aspectRatio: _adController.value.aspectRatio,
-                            child: VideoPlayer(_adController)),
-                      )
-                    : const Center(
-                        child: CircularProgressIndicator(color: Colors.white))
-              ] else
-                _buildPlayer(),
+              // Advertisement with circular countdown.
+              if (showAd)
+                Center(
+                  child: ad.value.isInitialized
+                      ? AspectRatio(
+                    aspectRatio: ad.value.aspectRatio > 0
+                        ? ad.value.aspectRatio
+                        : 16 / 9,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: VideoPlayer(ad),
+                        ),
+
+                        // Circular timer in the bottom-right corner.
+                        Positioned(
+                          right: 20,
+                          top: 20,
+                          child: ValueListenableBuilder<
+                              VideoPlayerValue>(
+                            valueListenable: ad,
+                            builder: (context, value, child) {
+                              final duration =
+                                  value.duration.inSeconds;
+                              final position =
+                                  value.position.inSeconds;
+
+                              final remaining = duration > 0
+                                  ? (duration - position)
+                                  .clamp(0, duration)
+                                  : 0;
+
+                              final progress = duration > 0
+                                  ? (position / duration)
+                                  .clamp(0.0, 1.0)
+                                  : 0.0;
+
+                              return Container(
+                                width: 58,
+                                height: 58,
+                                decoration: BoxDecoration(
+                                  color: Colors.black
+                                      .withOpacity(0.65),
+                                  shape: BoxShape.circle,
+                                ),
+                                padding:
+                                const EdgeInsets.all(4),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child:
+                                      CircularProgressIndicator(
+                                        value: progress,
+                                        strokeWidth: 3,
+                                        backgroundColor:
+                                        Colors.white30,
+                                        valueColor:
+                                        AlwaysStoppedAnimation<
+                                            Color>(
+                                          primaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '$remaining',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 19,
+                                        fontWeight:
+                                        FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                      : const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+
+              // YouTube is only shown after the ad completes.
+              else if (!isError && controller != null)
+                _buildYoutubePlayer()
+
+              // Loading indicator.
+              else if (!isError)
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+
+              // Error message.
+              if (isError)
+                const Center(
+                  child: Text(
+                    'Unable to load video',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+              // Back button.
               if (!kIsWeb)
                 Positioned(
                   top: 15,
@@ -150,97 +312,68 @@ class TvshowPlayerState extends State<TvshowPlayer> {
     );
   }
 
-  Widget _buildPlayer() {
+  Widget _buildYoutubePlayer() {
+    final youtubeController = controller!;
+
     if (kIsWeb || Constant.isTV) {
-      controller.toggleFullScreen();
       return YoutubePlayerControllerProvider(
-        controller: controller,
-        child: Builder(
-          builder: (context) {
-            return YoutubePlayer(controller: controller);
-            // Access the controller as:
-            // `YoutubePlayerControllerProvider.of(context)`
-            // or `controller.ytController`.
-          },
+        controller: youtubeController,
+        child: YoutubePlayer(
+          controller: youtubeController,
         ),
       );
-      // return AspectRatio(
-      //     aspectRatio: 16 / 9, child: YoutubePlayer(controller: controller));
-    } else {
-      return YoutubePlayerScaffold(
-        backgroundColor: appBgColor,
-        controller: controller,
-        autoFullScreen: true,
-        defaultOrientations: const [
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ],
-        builder: (context, player) {
-          // print(player);
-          return Scaffold(
-            body: Center(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  // print(controller.value.playerState);
-                  if (controller.value.playerState == PlayerState.playing) {
-                    return player;
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
-            ),
-          );
-        },
-      );
     }
-  }
 
-  @override
-  void dispose() {
-    try {
-      controller.pauseVideo();
-      _adController.dispose();
-      if (!kIsWeb || !Constant.isTV) {
-        controller.close();
-      }
-    } catch (e) {
-      print(e);
-    }
-    if (!(kIsWeb || Constant.isTV)) {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    }
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
-    super.dispose();
+    return YoutubePlayerScaffold(
+      backgroundColor: appBgColor,
+      controller: youtubeController,
+      autoFullScreen: true,
+      defaultOrientations: const [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+      builder: (context, player) {
+        return Center(child: player);
+      },
+    );
   }
 
   Future<bool> onBackPressed() async {
     if (!(kIsWeb || Constant.isTV)) {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
     }
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
-    if (!mounted) return Future.value(false);
+
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+
+    if (!mounted) return false;
+
     Navigator.pop(context, false);
-    return Future.value(true);
-    // if (widget.playType == "Video" || widget.playType == "Show") {
-    //   if ((playerCPosition ?? 0) > 0) {
-    //     /* Add to Continue */
-    //     // await playerProvider.addToContinue(
-    //     //     "${widget.videoId}", "${widget.videoType}", "$playerCPosition");
-    //     if (!mounted) return Future.value(false);
-    //     Navigator.pop(context, true);
-    //     return Future.value(true);
-    //   } else {
-    //     if (!mounted) return Future.value(false);
-    //     Navigator.pop(context, false);
-    //     return Future.value(true);
-    //   }
-    // } else {
-    //   if (!mounted) return Future.value(false);
-    //   Navigator.pop(context, false);
-    //   return Future.value(true);
-    // }
+    return true;
+  }
+
+  @override
+  void dispose() {
+    _adController?.removeListener(_onAdChanged);
+    _adController?.dispose();
+
+    controller?.close();
+
+    if (!(kIsWeb || Constant.isTV)) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    }
+
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+
+    super.dispose();
   }
 }

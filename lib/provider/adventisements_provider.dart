@@ -1,34 +1,55 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:media9/model/adventisement_model.dart';
-import 'package:media9/utils/constant.dart';
 import 'package:media9/webservice/apiservices.dart';
 
-class AdventisementsProvider extends ChangeNotifier {
-  List<AdventisementModel> adventisements = [];
+class AdvertisementsProvider extends ChangeNotifier {
+  List<AdvertisementModel> advertisements = [];
   bool loading = false;
-  AdventisementModel? previewsad;
+  AdvertisementModel? previewsad;
 
-  Future<void> getAdvenmtisementsList() async {
-    debugPrint("getRentVideoList userID :==> ${Constant.userID}");
+  int _currentAdIndex = 0;
+
+
+  Future<void> getAdvertisementsList() async {
     loading = true;
-    var data = await ApiService().getAdvenmtisementsList();
-    if (data != null) {
-      adventisements = data;
+    notifyListeners();
+
+    try {
+      final data = await ApiService().getAdvenmtisementsList();
+
+      if (data != null) {
+        advertisements = List<AdvertisementModel>.from(data)
+          ..sort((a, b) =>
+              (a.sequence ?? 0).compareTo(b.sequence ?? 0));
+      }
+
+      _currentAdIndex = 0;
+
+      debugPrint('Advertisements length: ${advertisements.length}');
+    } catch (e) {
+      debugPrint('Failed to load advertisements: $e');
+    } finally {
+      loading = false;
+      notifyListeners();
     }
-    debugPrint("adventisements length :==> ${adventisements.length}");
-    loading = false;
-    notifyListeners();
   }
 
-  setPreviewsAd(currentAd) {
-    previewsad = currentAd;
-    notifyListeners();
-  }
+  /// Returns the next advertisement in sequence order.
+  /// Loops back to the first advertisement after the last one.
+  AdvertisementModel? getNextPreviewsAd() {
+    if (advertisements.isEmpty) {
+      return null;
+    }
 
-  List<AdventisementModel> filterPreviewsAd() {
-    // log(previewsad?.sequence.toString());
-    final adlist = adventisements.where((ad) => ad != previewsad).toList();
+    final ad = advertisements[_currentAdIndex];
+
+    _currentAdIndex = (_currentAdIndex + 1) % advertisements.length;
+
+    previewsad = ad;
     notifyListeners();
-    return adlist;
+
+    return ad;
   }
 }

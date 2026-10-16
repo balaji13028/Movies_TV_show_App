@@ -154,7 +154,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => LivetvProvider()),
       ChangeNotifierProvider(create: (_) => SlidesProvider()),
       ChangeNotifierProvider(create: (_) => BottombarProvider()),
-      ChangeNotifierProvider(create: (_) => AdventisementsProvider()),
+      ChangeNotifierProvider(create: (_) => AdvertisementsProvider()),
       ChangeNotifierProvider(create: (_) => PosterAdsProvider()),
       ChangeNotifierProvider(create: (_) => MenulistProvider()),
     ], child: const RestartWidget(child: MyApp())),
