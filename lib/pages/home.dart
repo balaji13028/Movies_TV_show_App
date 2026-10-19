@@ -150,7 +150,7 @@ class HomeState extends State<Home> {
     }
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
     final adventisementProvider =
-        Provider.of<AdventisementsProvider>(context, listen: false);
+        Provider.of<AdvertisementsProvider>(context, listen: false);
     // await homeProvider.getMenuList();
     if (!kIsWeb && (Constant.isTV == false)) {
       await posterAdsProvider.getPosterAdsList();
@@ -158,7 +158,7 @@ class HomeState extends State<Home> {
     await Future.wait([
       slidesProvider.getSlides(),
       homeProvider.gethomeScreenData(),
-      adventisementProvider.getAdvenmtisementsList(),
+      adventisementProvider.getAdvertisementsList(),
     ]);
     Future.delayed(Duration.zero).then((value) {
       if (!mounted) return;
@@ -672,11 +672,9 @@ class HomeState extends State<Home> {
         return InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: () async {
-            final adProvider = context.read<AdventisementsProvider>();
-            final random = Random();
-            final adventisements = adProvider.filterPreviewsAd();
-            // log(adventisements.length);
-            final ad = adventisements[random.nextInt(adventisements.length)];
+            final adProvider = context.read<AdvertisementsProvider>();
+
+            final ad = adProvider.getNextPreviewsAd();
             try {
               await Navigator.push(
                 context,
@@ -684,12 +682,11 @@ class HomeState extends State<Home> {
                   builder: (context) {
                     return TvshowPlayer(
                         urlLink: list[position].source.toString(),
-                        adURl:
-                            'https://media9tv.com/public/storage/${ad.videoPath}');
+                        adURl: ad!=null?
+                            'https://media9tv.com/public/storage/${ad.videoPath}':null);
                   },
                 ),
               );
-              adProvider.setPreviewsAd(ad);
             } catch (e) {
               Utils.showSnackbar(context, "", "In correct video format", true);
             }
@@ -725,20 +722,17 @@ class HomeState extends State<Home> {
         return InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: () async {
-            final adProvider = context.read<AdventisementsProvider>();
-            final random = Random();
-            final adventisements = adProvider.filterPreviewsAd();
-            // log(adventisements.length);
-            final ad = adventisements[random.nextInt(adventisements.length)];
+            final adProvider = context.read<AdvertisementsProvider>();
+
+            final ad = adProvider.getNextPreviewsAd();
             try {
               await Navigator.push(context,
                   MaterialPageRoute(builder: (context) {
                 return LiveTVPlayer(
                   urlLink: list[position].liveSource.toString(),
-                  adURl: 'https://media9tv.com/public/storage/${ad.videoPath}',
+                  adURl:ad!=null? 'https://media9tv.com/public/storage/${ad.videoPath}':null,
                 );
               }));
-              adProvider.setPreviewsAd(ad);
             } catch (e) {
               Utils.showSnackbar(context, "", "In correct video format", true);
             }
@@ -1157,23 +1151,19 @@ class HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(4),
                   // autofocus: selectedIndex == index ? true : false,
                   onTap: () async {
-                    final adProvider = context.read<AdventisementsProvider>();
-                    final random = Random();
-                    final adventisements = adProvider.filterPreviewsAd();
-                    // log(adventisements.length);
-                    final ad =
-                        adventisements[random.nextInt(adventisements.length)];
+                    final adProvider = context.read<AdvertisementsProvider>();
+
+                    final ad = adProvider.getNextPreviewsAd();
                     if (isLiveTv) {
                       try {
                         await Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return LiveTVPlayer(
-                            urlLink: list[index??0]!.liveSource.toString(),
-                            adURl:
-                                'https://media9tv.com/public/storage/${ad.videoPath}',
+                            urlLink: list[index]!.liveSource.toString(),
+                            adURl: ad!=null?
+                                'https://media9tv.com/public/storage/${ad.videoPath}':null,
                           );
                         }));
-                        adProvider.setPreviewsAd(ad);
                       } catch (e) {
                         Utils.showSnackbar(
                             context, "", "In correct video format", true);
@@ -1186,12 +1176,11 @@ class HomeState extends State<Home> {
                             builder: (context) {
                               return TvshowPlayer(
                                   urlLink: list[index]!.source.toString(),
-                                  adURl:
-                                      'https://media9tv.com/public/storage/${ad.videoPath}');
+                                  adURl: ad!=null?
+                                      'https://media9tv.com/public/storage/${ad.videoPath}':null);
                             },
                           ),
                         );
-                        adProvider.setPreviewsAd(ad);
                       } catch (e) {
                         Utils.showSnackbar(
                             context, "", "In correct video format", true);

@@ -344,68 +344,68 @@ class SettingState extends State<Setting> {
                     ],
                   ),
                 ),
-                _buildLine(16.0, 16.0, context),
+                // _buildLine(16.0, 16.0, context),
 
                 /* Clear Cache */
-                if (!Platform.isIOS)
-                  InkWell(
-                    borderRadius: BorderRadius.circular(2),
-                    onTap: () async {
-                      if (!(kIsWeb || Constant.isTV)) Utils.deleteCacheDir();
-                      if (!mounted) return;
-                      Utils.showSnackbar(
-                          context, "success", "cacheclearmsg", true);
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      constraints: BoxConstraints(
-                        minHeight: Dimens.minHeightSettings,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyText(
-                                  color: white,
-                                  text: "clearcatch",
-                                  fontsizeNormal: 14,
-                                  multilanguage: true,
-                                  maxline: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontweight: FontWeight.w500,
-                                  textalign: TextAlign.start,
-                                  fontstyle: FontStyle.normal,
-                                ),
-                                const SizedBox(height: 5),
-                                MyText(
-                                  color: otherColor,
-                                  text: "clearlocallycatch",
-                                  fontsizeNormal: 12,
-                                  maxline: 1,
-                                  multilanguage: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontweight: FontWeight.w500,
-                                  textalign: TextAlign.start,
-                                  fontstyle: FontStyle.normal,
-                                ),
-                              ],
-                            ),
-                          ),
-                          MyImage(
-                            width: 28,
-                            height: 28,
-                            imagePath: "ic_clear.png",
-                            color: primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (!Platform.isIOS) _buildLine(16.0, 16.0, context),
+                // if (!Platform.isIOS)
+                //   InkWell(
+                //     borderRadius: BorderRadius.circular(2),
+                //     onTap: () async {
+                //       if (!(kIsWeb || Constant.isTV)) Utils.deleteCacheDir();
+                //       if (!mounted) return;
+                //       Utils.showSnackbar(
+                //           context, "success", "cacheclearmsg", true);
+                //     },
+                //     child: Container(
+                //       width: MediaQuery.of(context).size.width,
+                //       constraints: BoxConstraints(
+                //         minHeight: Dimens.minHeightSettings,
+                //       ),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Expanded(
+                //             child: Column(
+                //               mainAxisAlignment: MainAxisAlignment.center,
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               children: [
+                //                 MyText(
+                //                   color: white,
+                //                   text: "clearcatch",
+                //                   fontsizeNormal: 14,
+                //                   multilanguage: true,
+                //                   maxline: 1,
+                //                   overflow: TextOverflow.ellipsis,
+                //                   fontweight: FontWeight.w500,
+                //                   textalign: TextAlign.start,
+                //                   fontstyle: FontStyle.normal,
+                //                 ),
+                //                 const SizedBox(height: 5),
+                //                 MyText(
+                //                   color: otherColor,
+                //                   text: "clearlocallycatch",
+                //                   fontsizeNormal: 12,
+                //                   maxline: 1,
+                //                   multilanguage: true,
+                //                   overflow: TextOverflow.ellipsis,
+                //                   fontweight: FontWeight.w500,
+                //                   textalign: TextAlign.start,
+                //                   fontstyle: FontStyle.normal,
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //           MyImage(
+                //             width: 28,
+                //             height: 28,
+                //             imagePath: "ic_clear.png",
+                //             color: primaryColor,
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // if (!Platform.isIOS) _buildLine(16.0, 16.0, context),
 
                 /* SignIn / SignOut */
                 // InkWell(
@@ -433,7 +433,7 @@ class SettingState extends State<Setting> {
                 //     subTitleMultilang: true,
                 //   ),
                 // ),
-                // _buildLine(16.0, 16.0,context),
+                _buildLine(16.0, 16.0,context),
 
                 /* Rate App */
                 InkWell(
@@ -467,29 +467,50 @@ class SettingState extends State<Setting> {
                 _buildLine(16.0, 16.0, context),
 
                 /* Delete Account */
-                if (Constant.userID != null)
-                  InkWell(
-                    borderRadius: BorderRadius.circular(2),
-                    onTap: () async {
-                      if (Constant.userID != null) {
-                        deleteConfirmDialog(context);
-                      } else {
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginSocial(),
-                          ),
-                        );
-                        setState(() {});
-                      }
-                    },
-                    child: _buildSettingButton(
-                        title: 'delete_account',
-                        subTitle: '',
-                        titleMultilang: true,
-                        subTitleMultilang: false,
-                        context: context),
-                  ),
-                if (Constant.userID != null) _buildLine(8.0, 8.0, context),
+                // if (Constant.userID != null)
+                //   InkWell(
+                //     borderRadius: BorderRadius.circular(2),
+                //     onTap: () async {
+                //       if (Constant.userID != null) {
+                //         deleteConfirmDialog(context);
+                //       } else {
+                //         await Navigator.of(context).push(
+                //           MaterialPageRoute(
+                //             builder: (context) => const LoginSocial(),
+                //           ),
+                //         );
+                //         setState(() {});
+                //       }
+                //     },
+                //     child: _buildSettingButton(
+                //         title: 'delete_account',
+                //         subTitle: '',
+                //         titleMultilang: true,
+                //         subTitleMultilang: false,
+                //         context: context),
+                //   ),
+                // if (Constant.userID != null) _buildLine(8.0, 8.0, context),
+                InkWell(
+                  borderRadius: BorderRadius.circular(2),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyPolicyScreen(
+                          title: 'E-Paper',
+                          url:
+                          'https://epaper.media9news.com/',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _buildSettingButton(
+                      title: 'E-Paper',
+                      subTitle: 'Read Media9 RashtraSarvochha online',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
+                ),
+                _buildLine(16.0, 16.0, context),
                 InkWell(
                   borderRadius: BorderRadius.circular(2),
                   onTap: () {
@@ -501,7 +522,28 @@ class SettingState extends State<Setting> {
                   },
                   child: _buildSettingButton(
                       title: 'About us',
-                      subTitle: '',
+                      subTitle: 'Learn more about Media9',
+                      titleMultilang: false,
+                      subTitleMultilang: false,
+                      context: context),
+                ),
+                _buildLine(16.0, 16.0, context),
+                InkWell(
+                  borderRadius: BorderRadius.circular(2),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrivacyPolicyScreen(
+                          title: 'Media9 News',
+                          url:
+                          'https://media9news.com/',
+                        ),
+                      ),
+                    );
+                  },
+                  child: _buildSettingButton(
+                      title: 'Media9 News',
+                      subTitle: 'Your trusted source for the latest news, updates.',
                       titleMultilang: false,
                       subTitleMultilang: false,
                       context: context),
@@ -522,7 +564,7 @@ class SettingState extends State<Setting> {
                   },
                   child: _buildSettingButton(
                       title: 'Privacy Policy',
-                      subTitle: '',
+                      subTitle: 'Understand how we handle your data',
                       titleMultilang: false,
                       subTitleMultilang: false,
                       context: context),
@@ -543,7 +585,7 @@ class SettingState extends State<Setting> {
                   },
                   child: _buildSettingButton(
                       title: 'Terms & Conditions',
-                      subTitle: '',
+                      subTitle: 'Understand our terms and policies',
                       titleMultilang: false,
                       subTitleMultilang: false,
                       context: context),
@@ -663,12 +705,16 @@ class SettingState extends State<Setting> {
   }
 
   Widget _buildLine(double topMargin, double bottomMargin, context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 0.5,
-      margin: EdgeInsets.only(top: topMargin, bottom: bottomMargin),
-      color: otherColor,
+    return Padding(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Divider(color: otherColor),
     );
+    //   Container(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: 0.5,
+    //   margin: EdgeInsets.only(top: topMargin, bottom: bottomMargin),
+    //   color: otherColor,
+    // );
   }
 
   _languageChangeDialog(context) {

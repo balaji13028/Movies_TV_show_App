@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class AdventisementModel {
+class AdvertisementModel {
   int? id;
   String? title;
   String? videoPath;
@@ -10,7 +10,7 @@ class AdventisementModel {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  AdventisementModel({
+  AdvertisementModel({
     this.id,
     this.title,
     this.videoPath,
@@ -32,8 +32,8 @@ class AdventisementModel {
     };
   }
 
-  factory AdventisementModel.fromMap(Map<String, dynamic> map) {
-    return AdventisementModel(
+  factory AdvertisementModel.fromMap(Map<String, dynamic> map) {
+    return AdvertisementModel(
       id: map['id'] != null ? map['id'] as int : null,
       title: map['title'] != null ? map['title'] as String : null,
       videoPath: map['video_path'] != null ? map['video_path'] as String : null,
@@ -50,8 +50,8 @@ class AdventisementModel {
 
   String toJson() => json.encode(toMap());
 
-  factory AdventisementModel.fromJson(String source) =>
-      AdventisementModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AdvertisementModel.fromJson(String source) =>
+      AdvertisementModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

@@ -831,7 +831,7 @@ class ApiService {
   }
 
   /// Adventisements list
-  Future<List<AdventisementModel>?> getAdvenmtisementsList() async {
+  Future<List<AdvertisementModel>?> getAdvenmtisementsList() async {
     try {
       String rentList = "advertisement";
       Response response = await dio.get(
@@ -843,7 +843,7 @@ class ApiService {
       );
       if (response.statusCode == 200) {
         List<dynamic> list = response.data['data'];
-        return list.map((item) => AdventisementModel.fromMap(item)).toList();
+        return list.map((item) => AdvertisementModel.fromMap(item)).toList();
       }
       // rentModel = RentModel.fromJson(response.data);
       // return rentModel;

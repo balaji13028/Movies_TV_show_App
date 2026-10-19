@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_paypal/flutter_paypal.dart';
+// import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -1343,85 +1343,85 @@ class AllPaymentState extends State<AllPayment> {
   /* ********* Paypal START ********* */
   Future<void> _paypalInit() async {
     if (paymentProvider.paymentOptionModel.result?.paypal != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => UsePaypal(
-              sandboxMode: (paymentProvider
-                              .paymentOptionModel.result?.paypal?.isLive ??
-                          "") ==
-                      "1"
-                  ? false
-                  : true,
-              clientId:
-                  paymentProvider.paymentOptionModel.result?.paypal?.isLive ==
-                          "1"
-                      ? paymentProvider
-                              .paymentOptionModel.result?.paypal?.liveKey1 ??
-                          ""
-                      : paymentProvider
-                              .paymentOptionModel.result?.paypal?.testKey1 ??
-                          "",
-              secretKey: paymentProvider
-                          .paymentOptionModel.result?.paypal?.isLive ==
-                      "1"
-                  ? paymentProvider
-                          .paymentOptionModel.result?.paypal?.liveKey2 ??
-                      ""
-                  : paymentProvider
-                          .paymentOptionModel.result?.paypal?.testKey2 ??
-                      "",
-              returnURL: "return.example.com",
-              cancelURL: "cancel.example.com",
-              transactions: [
-                {
-                  "amount": {
-                    "total": '${paymentProvider.finalAmount}',
-                    "currency": "USD" /* Constant.currency */,
-                    "details": {
-                      "subtotal": '${paymentProvider.finalAmount}',
-                      "shipping": '0',
-                      "shipping_discount": 0
-                    }
-                  },
-                  "description": "The payment transaction description.",
-                  "item_list": {
-                    "items": [
-                      {
-                        "name": "${widget.itemTitle}",
-                        "quantity": 1,
-                        "price": '${paymentProvider.finalAmount}',
-                        "currency": "USD" /* Constant.currency */
-                      }
-                    ],
-                  }
-                }
-              ],
-              note: "Contact us for any questions on your order.",
-              onSuccess: (params) async {
-                debugPrint("onSuccess: ${params["paymentId"]}");
-                if (widget.payType == "Package") {
-                  addTransaction(
-                      widget.itemId,
-                      widget.itemTitle,
-                      paymentProvider.finalAmount,
-                      params["paymentId"],
-                      widget.currency);
-                } else if (widget.payType == "Rent") {
-                  addRentTransaction(widget.itemId, paymentProvider.finalAmount,
-                      widget.typeId, widget.videoType);
-                }
-              },
-              onError: (params) {
-                debugPrint("onError: ${params["message"]}");
-                Utils.showSnackbar(
-                    context, "fail", params["message"].toString(), false);
-              },
-              onCancel: (params) {
-                debugPrint('cancelled: $params');
-                Utils.showSnackbar(context, "fail", params.toString(), false);
-              }),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (BuildContext context) => UsePaypal(
+      //         sandboxMode: (paymentProvider
+      //                         .paymentOptionModel.result?.paypal?.isLive ??
+      //                     "") ==
+      //                 "1"
+      //             ? false
+      //             : true,
+      //         clientId:
+      //             paymentProvider.paymentOptionModel.result?.paypal?.isLive ==
+      //                     "1"
+      //                 ? paymentProvider
+      //                         .paymentOptionModel.result?.paypal?.liveKey1 ??
+      //                     ""
+      //                 : paymentProvider
+      //                         .paymentOptionModel.result?.paypal?.testKey1 ??
+      //                     "",
+      //         secretKey: paymentProvider
+      //                     .paymentOptionModel.result?.paypal?.isLive ==
+      //                 "1"
+      //             ? paymentProvider
+      //                     .paymentOptionModel.result?.paypal?.liveKey2 ??
+      //                 ""
+      //             : paymentProvider
+      //                     .paymentOptionModel.result?.paypal?.testKey2 ??
+      //                 "",
+      //         returnURL: "return.example.com",
+      //         cancelURL: "cancel.example.com",
+      //         transactions: [
+      //           {
+      //             "amount": {
+      //               "total": '${paymentProvider.finalAmount}',
+      //               "currency": "USD" /* Constant.currency */,
+      //               "details": {
+      //                 "subtotal": '${paymentProvider.finalAmount}',
+      //                 "shipping": '0',
+      //                 "shipping_discount": 0
+      //               }
+      //             },
+      //             "description": "The payment transaction description.",
+      //             "item_list": {
+      //               "items": [
+      //                 {
+      //                   "name": "${widget.itemTitle}",
+      //                   "quantity": 1,
+      //                   "price": '${paymentProvider.finalAmount}',
+      //                   "currency": "USD" /* Constant.currency */
+      //                 }
+      //               ],
+      //             }
+      //           }
+      //         ],
+      //         note: "Contact us for any questions on your order.",
+      //         onSuccess: (params) async {
+      //           debugPrint("onSuccess: ${params["paymentId"]}");
+      //           if (widget.payType == "Package") {
+      //             addTransaction(
+      //                 widget.itemId,
+      //                 widget.itemTitle,
+      //                 paymentProvider.finalAmount,
+      //                 params["paymentId"],
+      //                 widget.currency);
+      //           } else if (widget.payType == "Rent") {
+      //             addRentTransaction(widget.itemId, paymentProvider.finalAmount,
+      //                 widget.typeId, widget.videoType);
+      //           }
+      //         },
+      //         onError: (params) {
+      //           debugPrint("onError: ${params["message"]}");
+      //           Utils.showSnackbar(
+      //               context, "fail", params["message"].toString(), false);
+      //         },
+      //         onCancel: (params) {
+      //           debugPrint('cancelled: $params');
+      //           Utils.showSnackbar(context, "fail", params.toString(), false);
+      //         }),
+      //   ),
+      // );
     } else {
       Utils.showSnackbar(context, "", "payment_not_processed", true);
     }

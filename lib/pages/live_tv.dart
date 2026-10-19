@@ -324,21 +324,17 @@ class _LiveTvState extends State<LiveTv> {
           focusColor: Colors.white70,
           borderRadius: BorderRadius.circular(4),
           onTap: () async {
-            final adProvider = context.read<AdventisementsProvider>();
-            final random = Random();
-            final adventisements = adProvider.filterPreviewsAd();
-            // log(adventisements.length);
-            final ad = adventisements[random.nextInt(adventisements.length)];
-            // print('--------$ad');
+            final adProvider = context.read<AdvertisementsProvider>();
+
+            final ad = adProvider.getNextPreviewsAd();
             try {
               await Navigator.push(context,
                   MaterialPageRoute(builder: (context) {
                 return LiveTVPlayer(
                   urlLink: list[position].liveSource.toString(),
-                  adURl: 'https://media9tv.com/public/storage/${ad.videoPath}',
+                  adURl: ad!=null? 'https://media9tv.com/public/storage/${ad.videoPath}':null,
                 );
               }));
-              adProvider.setPreviewsAd(ad);
             } catch (e) {
               Utils.showSnackbar(context, "", "In correct video format", true);
             }

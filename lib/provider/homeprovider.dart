@@ -46,10 +46,10 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
     final slidesProvider = Provider.of<SlidesProvider>(context, listen: false);
     final adeventisementProvider =
-        Provider.of<AdventisementsProvider>(context, listen: false);
+        Provider.of<AdvertisementsProvider>(context, listen: false);
     // await homeProvider.getMenuList();
-    if (adeventisementProvider.adventisements.isEmpty) {
-      await adeventisementProvider.getAdvenmtisementsList();
+    if (adeventisementProvider.advertisements.isEmpty) {
+      await adeventisementProvider.getAdvertisementsList();
     }
     if (slidesProvider.slides.isEmpty) {
       await slidesProvider.getSlides();
