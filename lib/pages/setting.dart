@@ -557,7 +557,7 @@ class SettingState extends State<Setting> {
                         builder: (context) => const PrivacyPolicyScreen(
                           title: 'Privacy Policy',
                           url:
-                              'https://www.termsfeed.com/live/7cf2b76a-79bd-43f1-ab7b-e1b2e877e44e',
+                          'https://www.termsfeed.com/live/7cf2b76a-79bd-43f1-ab7b-e1b2e877e44e',
                         ),
                       ),
                     );
@@ -578,7 +578,7 @@ class SettingState extends State<Setting> {
                         builder: (context) => const PrivacyPolicyScreen(
                           title: 'Terms & Conditions',
                           url:
-                              'https://www.termsfeed.com/live/978c64e2-3de6-4584-91a2-4593f831b7b3',
+                          'https://www.termsfeed.com/live/978c64e2-3de6-4584-91a2-4593f831b7b3',
                         ),
                       ),
                     );
@@ -626,10 +626,10 @@ class SettingState extends State<Setting> {
                       MaterialPageRoute(
                         builder: (context) => AboutPrivacyTerms(
                           appBarTitle: generalProvider
-                                  .pagesModel.result?[position].pageName ??
+                              .pagesModel.result?[position].pageName ??
                               '',
                           loadURL: generalProvider
-                                  .pagesModel.result?[position].url ??
+                              .pagesModel.result?[position].url ??
                               '',
                         ),
                       ),
@@ -637,7 +637,7 @@ class SettingState extends State<Setting> {
                   },
                   child: _buildSettingButton(
                       title: generalProvider
-                              .pagesModel.result?[position].pageName ??
+                          .pagesModel.result?[position].pageName ??
                           '',
                       subTitle: '',
                       titleMultilang: false,
@@ -688,17 +688,17 @@ class SettingState extends State<Setting> {
           subTitle.isEmpty
               ? const SizedBox.shrink()
               : MyText(
-                  color: otherColor,
-                  text: subTitle,
-                  fontsizeNormal: 12,
-                  fontsizeWeb: 14,
-                  multilanguage: subTitleMultilang,
-                  maxline: 2,
-                  overflow: TextOverflow.ellipsis,
-                  fontweight: FontWeight.w500,
-                  textalign: TextAlign.start,
-                  fontstyle: FontStyle.normal,
-                ),
+            color: otherColor,
+            text: subTitle,
+            fontsizeNormal: 12,
+            fontsizeWeb: 14,
+            multilanguage: subTitleMultilang,
+            maxline: 2,
+            overflow: TextOverflow.ellipsis,
+            fontweight: FontWeight.w500,
+            textalign: TextAlign.start,
+            fontstyle: FontStyle.normal,
+          ),
         ],
       ),
     );
@@ -709,12 +709,6 @@ class SettingState extends State<Setting> {
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Divider(color: otherColor),
     );
-    //   Container(
-    //   width: MediaQuery.of(context).size.width,
-    //   height: 0.5,
-    //   margin: EdgeInsets.only(top: topMargin, bottom: bottomMargin),
-    //   color: otherColor,
-    // );
   }
 
   _languageChangeDialog(context) {
@@ -797,7 +791,7 @@ class SettingState extends State<Setting> {
                               ),
                               height: 48,
                               padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
+                              const EdgeInsets.only(left: 10, right: 10),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -836,7 +830,7 @@ class SettingState extends State<Setting> {
                               ),
                               height: 48,
                               padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
+                              const EdgeInsets.only(left: 10, right: 10),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -875,7 +869,7 @@ class SettingState extends State<Setting> {
                               ),
                               height: 48,
                               padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
+                              const EdgeInsets.only(left: 10, right: 10),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -1046,8 +1040,8 @@ class SettingState extends State<Setting> {
                                 context,
                                 listen: false);
                             final sectionDataProvider =
-                                Provider.of<SectionDataProvider>(context,
-                                    listen: false);
+                            Provider.of<SectionDataProvider>(context,
+                                listen: false);
                             await homeProvider.setSelectedTab(0);
                             await sectionDataProvider.clearProvider();
                             // Firebase Signout
